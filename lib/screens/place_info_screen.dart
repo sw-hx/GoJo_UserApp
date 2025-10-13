@@ -7,6 +7,8 @@ import 'package:go_jo_user_application/widgets/custom_commentField.dart';
 import 'package:go_jo_user_application/widgets/custom_divider.dart';
 import 'package:go_jo_user_application/widgets/custom_subTitleText.dart';
 
+//codded by zain
+
 class PlaceInfoScreen extends StatefulWidget {
   const PlaceInfoScreen({super.key});
 
