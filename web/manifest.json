@@ -1,6 +1,6 @@
 {
-    "name": "go_jo_user_application",
-    "short_name": "go_jo_user_application",
+    "name": "go_jo_company_ui",
+    "short_name": "go_jo_company_ui",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
