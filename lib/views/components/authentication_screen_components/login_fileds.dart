@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_jo_company_ui/theme.dart';
-import 'package:go_jo_company_ui/views/components/authentication_screen_components/login_text.dart';
+import 'package:go_jo_user_application/theme.dart';
+import 'package:go_jo_user_application/views/components/authentication_screen_components/login_text.dart';
 
 /// ### Made by [Mohammad]
 class LoginFields extends StatelessWidget {

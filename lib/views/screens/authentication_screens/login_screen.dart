@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:go_jo_company_ui/theme.dart';
-import 'package:go_jo_company_ui/views/components/authentication_screen_components/login_fileds.dart';
-import 'package:go_jo_company_ui/views/components/authentication_screen_components/login_text.dart';
-import 'package:go_jo_company_ui/views/components/button_default.dart';
-import 'package:go_jo_company_ui/views/components/logo.dart';
+import 'package:go_jo_user_application/theme.dart';
+import 'package:go_jo_user_application/views/components/authentication_screen_components/login_fileds.dart';
+import 'package:go_jo_user_application/views/components/authentication_screen_components/login_text.dart';
+import 'package:go_jo_user_application/views/components/button_default.dart';
+import 'package:go_jo_user_application/views/components/logo.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_jo_company_ui/views/components/text_button_default.dart';
+import 'package:go_jo_user_application/views/components/text_button_default.dart';
 
 ///### coded by Mohammad
 class LogInScreen extends StatelessWidget {
