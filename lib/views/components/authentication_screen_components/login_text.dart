@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_jo_company_ui/theme.dart';
+import 'package:go_jo_user_application/theme.dart';
 // import 'package:google_fonts/google_fonts.dart';
 
 /// ### Made by [Mohammad]

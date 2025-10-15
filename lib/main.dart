@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_jo_company_ui/views/screens/splash_screen/splash_screen.dart';
+import 'package:go_jo_user_application/views/screens/splash_screen/splash_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() {

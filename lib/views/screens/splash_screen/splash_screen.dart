@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_jo_company_ui/theme.dart';
-import 'package:go_jo_company_ui/views/screens/authentication_screens/login_screen.dart';
+import 'package:go_jo_user_application/theme.dart';
+import 'package:go_jo_user_application/views/screens/authentication_screens/login_screen.dart';
 
 ///## Coded by mohammad
 class SplashScreen extends StatefulWidget {

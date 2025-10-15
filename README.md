@@ -1,4 +1,4 @@
-# go_jo_company_ui
+# go_jo_user_application
 
 A new Flutter project.
 
