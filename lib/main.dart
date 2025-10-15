@@ -3,7 +3,6 @@ import 'package:go_jo_user_application/screens/place_info_screen.dart';
 import 'package:go_jo_user_application/views/screens/splash_screen/splash_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 void main() {
   runApp(
     ScreenUtilInit(
@@ -18,21 +17,24 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-//Code By zain
-//   // This widget is the root of your application.
-//   @override
-//   Widget build(BuildContext context) {
-// <<<<<<< zain_task1
-//     return ScreenUtilInit(
-//       designSize: const Size(360, 690),
-//       minTextAdapt: true,
-//       splitScreenMode: true,
-//       builder: (_ , child) {
-//         return MaterialApp(
-//           debugShowCheckedModeBanner: false,
-//           home:PlaceInfoScreen(),
-//           );
-//       },
+  //Code By zain
+  //   // This widget is the root of your application.
+  //   @override
+  //   Widget build(BuildContext context) {
+  // zain_task1
+  //     return ScreenUtilInit(
+  //       designSize: const Size(360, 690),
+  //       minTextAdapt: true,
+  //       splitScreenMode: true,
+  //       builder: (_ , child) {
+  //         return MaterialApp(
+  //           debugShowCheckedModeBanner: false,
+  //           home:PlaceInfoScreen(),
+  //           );
+  //       },
+  //this is the main class xain create at task 1
+  //PlaceInfoScreen()
+  Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
