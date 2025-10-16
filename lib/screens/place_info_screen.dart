@@ -1,11 +1,13 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_jo_user_application/widgets/custom_commentField.dart';
 import 'package:go_jo_user_application/widgets/custom_divider.dart';
-import 'package:go_jo_user_application/widgets/custom_subTitleText.dart';
+import 'package:go_jo_user_application/widgets/custom_TitleText.dart';
+import 'package:go_jo_user_application/widgets/custom_mainBar.dart';
+import 'package:go_jo_user_application/widgets/custom_weatherDay.dart';
+
+import '../widgets/custom_returnArrow.dart';
 
 //codded by zain
 
@@ -25,18 +27,7 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-            onPressed: (){},
-            icon: Transform.rotate(
-              angle: math.pi,
-              child: Icon(
-                Icons.double_arrow_rounded,
-                size: 50.sp,
-                color: Color(0xff0B3647),
-
-              ),
-            )
-        ),
+        leading: customReturnArrow(),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -47,8 +38,8 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
                     children: [
                       ClipRRect(
                       borderRadius: BorderRadius.circular(16.r),
-                      child: Image.network(
-                        "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/1bd1dc34-d999-4be9-b141-906607eb2124/d7dwoy2-ec57ffe3-0a33-43ea-8720-916052f047cb.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwic3ViIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsImF1ZCI6WyJ1cm46c2VydmljZTpmaWxlLmRvd25sb2FkIl0sIm9iaiI6W1t7InBhdGgiOiIvZi8xYmQxZGMzNC1kOTk5LTRiZTktYjE0MS05MDY2MDdlYjIxMjQvZDdkd295Mi1lYzU3ZmZlMy0wYTMzLTQzZWEtODcyMC05MTYwNTJmMDQ3Y2IuanBnIn1dXX0.btXAGJIq2-qvrsZI25FvHtK3xeC_yYJz3SfJshuzB_Q",
+                      child: Image.asset(
+                        'assets/images/petra.jpg',
                         height: 120.h,
                         width: double.infinity,
                         fit: BoxFit.cover,
@@ -122,10 +113,7 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
               ),
             ),
             customDivider(),
-            customTitleText(title: 'Details'),
-            SizedBox(
-              height: 10.h,
-            ),
+            customTitleText(title: 'Details',size: 22),
             Wrap(
               spacing: 30.w,
               runSpacing: 20.h,
@@ -229,8 +217,7 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
               ],
             ),
             customDivider(),
-            customTitleText(title: 'Photos'),
-            SizedBox(height: 10.h,),
+            customTitleText(title: 'Photos',size: 22),
             SizedBox(
               height: 200.h,
               child: ListView.builder(
@@ -241,8 +228,8 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
                     margin: EdgeInsets.only(right: 20.w),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8.r),
-                      child: Image.network('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/1bd1dc34-d999-4be9-b141-906607eb2124/d7dwoy2-ec57ffe3-0a33-43ea-8720-916052f047cb.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwic3ViIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsImF1ZCI6WyJ1cm46c2VydmljZTpmaWxlLmRvd25sb2FkIl0sIm9iaiI6W1t7InBhdGgiOiIvZi8xYmQxZGMzNC1kOTk5LTRiZTktYjE0MS05MDY2MDdlYjIxMjQvZDdkd295Mi1lYzU3ZmZlMy0wYTMzLTQzZWEtODcyMC05MTYwNTJmMDQ3Y2IuanBnIn1dXX0.btXAGJIq2-qvrsZI25FvHtK3xeC_yYJz3SfJshuzB_Q',
-                      width: 160.w,fit: BoxFit.cover,height: 200.h,
+                      child: Image.asset('assets/images/petra.jpg',
+                          width: 160.w,fit: BoxFit.cover,height: 200.h,
                       ),
                     ),
                   );
@@ -252,7 +239,7 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
               ),
             ),//list of photos
             customDivider(),
-            customTitleText(title: 'Rating'),
+            customTitleText(title: 'Rating',size: 22),
             Row(
               children: [
                 RatingBarIndicator(
@@ -277,9 +264,7 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
                 ),
               ],
             ),
-            SizedBox(height: 10.h,),
-            customTitleText(title: 'Comments'),
-            SizedBox(height: 10.h),
+            customTitleText(title: 'Comments',size: 22),
             SizedBox(
               height: 130.h,
               child: ListView.builder(
@@ -309,8 +294,9 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
             ),
             customDivider(),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                customTitleText(title: 'Rate'),
+                customTitleText(title: 'Rate',size: 22),
                 SizedBox(width: 20.w,),
                 RatingBar.builder(
                   initialRating: 0,
@@ -324,21 +310,94 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
                   },
                   ),
               ],
-            )
+            ),
+            customTitleText(title: 'Add a comment',size: 22),
+            TextFormField(
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey.shade300,
+                contentPadding: EdgeInsets.symmetric(vertical: 25.h),
+                suffixIcon: Icon(Icons.check, color: Colors.black,size: 30.sp,),
+                hintText: "Write here...",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none
+                ),
 
+            ),
+            ),
+            customDivider(),
+            customTitleText(title: 'Weather',size: 22),
+            SizedBox(
+              height: 120.h,
+              child: ListView.builder(
+                itemCount: 4,
+                  scrollDirection: Axis.horizontal,
 
+                  itemBuilder: (context,index){
+                    return customWeatherDayInfo();
+                  }
+              ),
+            ),
+            customDivider(),
+            customTitleText(title: 'Map',size: 22),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset('assets/images/map_image.png',
+                fit: BoxFit.cover,
+                  height: 100.h,
+                ),
+                Text(
+                  "See on map",
+                  style: TextStyle(
+                      fontSize: 20.sp,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+            customDivider(),
+            Text(
+              'Available Trips',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.amber,
+                fontSize: 30.sp,
+                fontWeight: FontWeight.bold
+              ),
 
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: SizedBox(
+                height: 60.h,
+                width: 250.w,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xff2F7898),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.r)
+                    )
 
-
-
-
-
-
-
-
+                  ),
+                    onPressed: (){}
+                    , child:Text(
+                    'New Adventure',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30.sp,
+                  ),
+                )
+                ),
+              ),
+            ),
+            SizedBox(height: 40.h,),
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavBar(currentIndex: 0,),
 
     );
   }
