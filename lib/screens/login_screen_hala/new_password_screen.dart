@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// coded by [Hala]
 class NewPasswordScreen extends StatefulWidget {
   const NewPasswordScreen({super.key});
 
@@ -27,7 +28,11 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
             const SizedBox(height: 40),
             const Text(
               "Set a New Password",
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.blueAccent),
+              style: TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+                color: Colors.blueAccent,
+              ),
             ),
             const SizedBox(height: 10),
             const Text(
@@ -43,7 +48,9 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                 labelText: "New Password",
                 filled: true,
                 fillColor: Colors.grey[200],
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
             ),
             const SizedBox(height: 15),
@@ -54,23 +61,35 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                 labelText: "Confirm Password",
                 filled: true,
                 fillColor: Colors.grey[200],
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
             ),
             const SizedBox(height: 30),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
-                padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 15),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 100,
+                  vertical: 15,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                ),
               ),
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Password changed successfully!")),
+                  const SnackBar(
+                    content: Text("Password changed successfully!"),
+                  ),
                 );
                 Navigator.popUntil(context, (route) => route.isFirst);
               },
-              child: const Text("Save Password", style: TextStyle(fontSize: 18, color: Colors.white)),
+              child: const Text(
+                "Save Password",
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
             ),
           ],
         ),

@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'success_screen.dart';
 import 'welcome_screen.dart';
 
+/// coded by [Hala]
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
+
+/// coded by [Hala]
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final nameController = TextEditingController();
