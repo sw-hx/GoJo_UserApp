@@ -1,62 +1,103 @@
+// conflict on suhib
+// import 'package:flutter/material.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:go_jo_user_application/pages/home_page.dart';
+
+// void main() {
+//   runApp(const MyApp());
+// }
+
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
+
+//   // This widget is the root of your application.
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       home: ScreenUtilInit(
+//       designSize: const Size(360, 690),
+//       minTextAdapt: true,
+//       splitScreenMode: true,
+//       builder: ( _ , child) {
+//         return MaterialApp(
+//             debugShowCheckedModeBanner: false,
+//             home:HomePage()
+
+//         );
+//       },
+//     ),);
+//   }
+// }
+
 import 'package:flutter/material.dart';
-import 'package:go_jo_user_application/screens/place_info_screen.dart';
-import 'package:go_jo_user_application/views/screens/splash_screen/splash_screen.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'screens/login_screen_hala/welcome_screen.dart';
 
 void main() {
-  runApp(
-    ScreenUtilInit(
-      minTextAdapt: true,
-      splitScreenMode: true,
-      designSize: Size(320, 568),
-      builder: (context, child) => const MyApp(),
-    ),
-  );
+  runApp(const GojoApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class GojoApp extends StatelessWidget {
+  const GojoApp({super.key});
 
-  //Code By zain
-  //   // This widget is the root of your application.
-  //   @override
-  //   Widget build(BuildContext context) {
-  // zain_task1
-  //     return ScreenUtilInit(
-  //       designSize: const Size(360, 690),
-  //       minTextAdapt: true,
-  //       splitScreenMode: true,
-  //       builder: (_ , child) {
-  //         return MaterialApp(
-  //           debugShowCheckedModeBanner: false,
-  //           home:PlaceInfoScreen(),
-  //           );
-  //       },
-  //this is the main class xain create at task 1
-  //PlaceInfoScreen()
+  /// # coded By [Hala]
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
+      title: 'GOJO',
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primaryColor: Colors.blueAccent,
+        scaffoldBackgroundColor: Colors.white,
+        useMaterial3: false,
+      ),
       home: const SplashScreen(),
     );
   }
 }
+
+/// # coded By [Hala]
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _navigateToWelcome();
+  }
+
+  _navigateToWelcome() async {
+    await Future.delayed(const Duration(seconds: 3)); // شاشة ترحيب 3 ثوانٍ
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+    );
+  }
+
+  /// # coded By [Hala]
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Text(
+          'GOJO',
+          style: TextStyle(
+            fontSize: 48,
+            fontWeight: FontWeight.bold,
+            color: Colors.blueAccent,
+            letterSpacing: 2,
+          ),
+        ),
+      ),
+    );
+  }
+}
+

@@ -8,6 +8,7 @@ class DefaultTheme {
   static const Color colorFieldBlue = Color.fromARGB(85, 142, 196, 212);
   static const Color colorBlackTextFont = Colors.black;
   static const Color colorWhiteTextFont = Colors.white;
+  static const double fontBlodSizeBig = 16;
 
   static TextStyle defaultFont({TextStyle? style}) {
     return GoogleFonts.openSans(textStyle: style);
