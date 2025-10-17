@@ -1,30 +1,103 @@
+// conflict on suhib
+// import 'package:flutter/material.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:go_jo_user_application/pages/home_page.dart';
+
+// void main() {
+//   runApp(const MyApp());
+// }
+
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
+
+//   // This widget is the root of your application.
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       home: ScreenUtilInit(
+//       designSize: const Size(360, 690),
+//       minTextAdapt: true,
+//       splitScreenMode: true,
+//       builder: ( _ , child) {
+//         return MaterialApp(
+//             debugShowCheckedModeBanner: false,
+//             home:HomePage()
+
+//         );
+//       },
+//     ),);
+//   }
+// }
+
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_jo_user_application/pages/home_page.dart';
+import 'screens/login_screen_hala/welcome_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const GojoApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class GojoApp extends StatelessWidget {
+  const GojoApp({super.key});
 
-  // This widget is the root of your application.
+  /// # coded By [Hala]
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'GOJO',
       debugShowCheckedModeBanner: false,
-      home: ScreenUtilInit(
-      designSize: const Size(360, 690),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: ( _ , child) {
-        return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home:HomePage()
-
-        );
-      },
-    ),);
+      theme: ThemeData(
+        primaryColor: Colors.blueAccent,
+        scaffoldBackgroundColor: Colors.white,
+        useMaterial3: false,
+      ),
+      home: const SplashScreen(),
+    );
   }
 }
+
+/// # coded By [Hala]
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _navigateToWelcome();
+  }
+
+  _navigateToWelcome() async {
+    await Future.delayed(const Duration(seconds: 3)); // شاشة ترحيب 3 ثوانٍ
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+    );
+  }
+
+  /// # coded By [Hala]
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Text(
+          'GOJO',
+          style: TextStyle(
+            fontSize: 48,
+            fontWeight: FontWeight.bold,
+            color: Colors.blueAccent,
+            letterSpacing: 2,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
