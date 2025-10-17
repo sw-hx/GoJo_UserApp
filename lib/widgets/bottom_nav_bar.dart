@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_jo_user_application/screens/events_screen.dart';
+import 'package:go_jo_user_application/screens/user_favorites_screen.dart';
 import '../pages/home_page.dart';
-import '../pages/fav_page.dart';
-import '../pages/event_page.dart';
+
 //coded by suhaib
 
 class BottomNavBar extends StatefulWidget {
@@ -23,10 +24,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
         nextPage = const HomePage();
         break;
       case 1:
-        nextPage = const FavoritesPage();
+        nextPage = const FavoritesScreen();
         break;
       case 2:
-        nextPage = const EventsPage();
+        nextPage = const EventsScreen();
         break;
       default:
         nextPage = const HomePage();
@@ -43,48 +44,49 @@ class _BottomNavBarState extends State<BottomNavBar> {
     final bool isMainPage = widget.currentIndex != null;
 
     return SafeArea(
-        top: false,
-        child: BottomNavigationBar(
-            backgroundColor: const Color(0xff123645),
-            selectedFontSize: 14,
-            currentIndex: isMainPage ? widget.currentIndex! : 0,
-            onTap: _onItemTapped,
-            selectedItemColor: isMainPage ? Colors.white : Colors.white70,
-            unselectedItemColor: Colors.white70,
-            showSelectedLabels: isMainPage,
-            showUnselectedLabels: false,
-            type: BottomNavigationBarType.fixed,
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home_outlined,
-                  color: isMainPage && widget.currentIndex == 0
-                      ? Colors.white
-                      : Colors.white70,
-                ),
-                label: "Home",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.favorite_border,
-                  color: isMainPage && widget.currentIndex == 1
-                      ? Colors.white
-                      : Colors.white70,
-                ),
-                label: "Favorites",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.event,
-                  color: isMainPage && widget.currentIndex == 2
-                      ? Colors.white
-                      : Colors.white70,
-                ),
-                label: "Events",
-              ),
-            ],
+      top: false,
+      child: BottomNavigationBar(
+        backgroundColor: const Color(0xff123645),
+        selectedFontSize: 14,
+        currentIndex: isMainPage ? widget.currentIndex! : 0,
+        onTap: _onItemTapped,
+        selectedItemColor: isMainPage ? Colors.white : Colors.white70,
+        unselectedItemColor: Colors.white70,
+        showSelectedLabels: isMainPage,
+        showUnselectedLabels: false,
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home_outlined,
+              color: isMainPage && widget.currentIndex == 0
+                  ? Colors.white
+                  : Colors.white70,
             ),
-        );
-    }
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.favorite_border,
+              color: isMainPage && widget.currentIndex == 1
+                  ? Colors.white
+                  : Colors.white70,
+            ),
+            label: "Favorites",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.event,
+              color: isMainPage && widget.currentIndex == 2
+                  ? Colors.white
+                  : Colors.white70,
+            ),
+            label: "Events",
+          ),
+        ],
+      ),
+    );
+  }
 }
+
 //coded by suhaib

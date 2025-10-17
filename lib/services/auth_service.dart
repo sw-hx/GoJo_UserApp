@@ -17,6 +17,7 @@ class AuthService {
     String email,
     String password,
     BuildContext context,
+    Future pushReplacement,
   ) async {
     ScaffoldMessenger.of(
       context,

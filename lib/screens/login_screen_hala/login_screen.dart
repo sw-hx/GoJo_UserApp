@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_jo_user_application/pages/home_page.dart';
 import 'forgot_password_screen.dart';
 import 'signup_screen.dart';
 import '../../services/auth_service.dart';
@@ -137,6 +138,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       emailController.text,
                       passwordController.text,
                       context,
+
+                      //////////////////////////
+                      ///
+                      ///EDIT in login page need some authintication ///
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                      ),
+
+                      ///
+                      ///
                     );
                   },
                   child: const Text(

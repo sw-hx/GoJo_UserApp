@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_jo_user_application/widgets/custom_TitleText.dart';
 import 'package:go_jo_user_application/widgets/custom_userFavCard.dart';
 
@@ -12,30 +11,26 @@ class FavoritesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: customReturnArrow(),
-      ),
+      appBar: AppBar(leading: customReturnArrow()),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            customTitleText(title: 'Favorites',size: 35),
+            customTitleText(title: 'Favorites', size: 35),
             Expanded(
               child: ListView.builder(
                 itemCount: 3,
-                  itemBuilder: (context,index){
+                itemBuilder: (context, index) {
                   return customUserFavCard();
-
-                  }),
+                },
+              ),
             ),
           ],
         ),
       ),
 
-      bottomNavigationBar: BottomNavBar(currentIndex: 1,),
-
-
+      bottomNavigationBar: BottomNavBar(currentIndex: 1),
     );
   }
 }

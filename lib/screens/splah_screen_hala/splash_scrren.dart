@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_jo_user_application/theme.dart';
 import '../login_screen_hala/welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {

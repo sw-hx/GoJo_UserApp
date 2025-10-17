@@ -1,28 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-Widget customUserFavCard(){
-
+Widget customUserFavCard() {
   return Padding(
-    padding:  EdgeInsets.symmetric(vertical: 12),
+    padding: EdgeInsets.symmetric(vertical: 12),
     child: ClipRRect(
-      borderRadius: BorderRadius.circular(20.r),
+      borderRadius: BorderRadius.circular(20),
       child: Stack(
         alignment: Alignment.center,
         children: [
           Image.asset(
             'assets/images/petra.jpg',
-            height: 100.h,
+            height: 100,
             width: double.infinity,
             fit: BoxFit.cover,
           ),
           Center(
             child: Text(
               'Petra',
-              style:  TextStyle(
+              style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 45.sp,
+                fontSize: 45,
                 shadows: [
                   Shadow(
                     offset: Offset(1, 1),
@@ -42,7 +40,7 @@ Widget customUserFavCard(){
                 borderRadius: BorderRadius.circular(12),
               ),
               child: IconButton(
-                icon: Icon(Icons.delete, color: Colors.white,size: 30.sp,),
+                icon: Icon(Icons.delete, color: Colors.white, size: 30),
                 onPressed: () {},
               ),
             ),

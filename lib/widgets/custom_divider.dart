@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 //codded by zain
 
-Widget customDivider(){
-
+Widget customDivider() {
   return Divider(
-    height: 50.h,
+    height: 50,
     thickness: 2,
     color: Colors.black,
-    endIndent: 50.w,
-    indent: 50.w,
+    endIndent: 50,
+    indent: 50,
   );
 }
