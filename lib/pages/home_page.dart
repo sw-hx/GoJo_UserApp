@@ -1,14 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:go_jo_user_application/pages/notifications_page.dart';
 import 'package:go_jo_user_application/pages/profile_page.dart';
-import 'package:go_jo_user_application/widgets/bottom_nav_bar.dart';
-import 'package:go_jo_user_application/widgets/places.dart';
-import 'package:go_jo_user_application/widgets/placesCard.dart';
-import 'package:go_jo_user_application/widgets/popularPlaceCard.dart';
+import 'package:go_jo_user_application/common_components/bottom_nav_bar.dart';
+import 'package:go_jo_user_application/components/components_HomePage/selector_places.dart';
+import 'package:go_jo_user_application/components/components_HomePage/places_Card.dart';
+import 'package:go_jo_user_application/components/components_HomePage/popularPlace_Card.dart';
 
 /// coded by [suhaib]
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomePage extends StatefulWidget {
+  final bool showBookingConfirmation;
+  const HomePage({Key? key, this.showBookingConfirmation = false}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.showBookingConfirmation) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showTopNotification(context, "Your booking has been confirmed!");
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +40,6 @@ class HomePage extends StatelessWidget {
                 height: 80,
                 child: Row(
                   children: [
-                    //عشان يخلي الاسم والصوره للانتقال لصفحه ال profile
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -55,15 +71,14 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
 
-                    const Spacer(), //space
-                    // الاشعارات
+                    const Spacer(),
                     Stack(
                       children: [
                         IconButton(
                           icon: const Icon(
                             Icons.notifications,
                             color: Color.fromRGBO(18, 54, 69, 1),
-                            size: 45,
+                            size: 40,
                           ),
                           onPressed: () {
                             Navigator.push(
@@ -75,16 +90,16 @@ class HomePage extends StatelessWidget {
                           },
                         ),
                         Positioned(
-                          right: 10,
+                          right: 3,
                           top: 10,
                           child: Container(
-                            width: 15,
-                            height: 15,
+                            width: 12,
+                            height: 12,
                             decoration: BoxDecoration(
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.3),
-                                  blurRadius: 5,
+                                  blurRadius: 1,
                                   offset: const Offset(0, 6),
                                 ),
                               ],
@@ -100,7 +115,6 @@ class HomePage extends StatelessWidget {
                 ),
               ),
 
-              // Discover title
               const Text(
                 'Discover',
                 style: TextStyle(
@@ -115,7 +129,6 @@ class HomePage extends StatelessWidget {
               ),
               const SizedBox(height: 25),
 
-              //search baaaar مع ظل
               Container(
                 height: 45,
                 decoration: BoxDecoration(
@@ -141,7 +154,6 @@ class HomePage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    //شكل الsearch
                     Container(
                       width: 39,
                       height: 39,
@@ -161,10 +173,8 @@ class HomePage extends StatelessWidget {
 
               const SizedBox(height: 25),
               PlacesSelector(),
-              //////////////////////////////////
               const SizedBox(height: 25),
               PlaceCardsList(),
-              /////////////////////////////////
               const SizedBox(height: 15),
 
               const Text(
@@ -183,10 +193,79 @@ class HomePage extends StatelessWidget {
         ),
       ),
 
-      ///////////////////////////////////////////////////
       bottomNavigationBar: const BottomNavBar(currentIndex: 0),
     );
   }
 }
 
-//coded by suhaib
+/// coded by [suhaib]
+OverlayEntry? topNotification;
+
+void showTopNotification(BuildContext context, String message) {
+  topNotification?.remove();
+
+  final overlay = Overlay.of(context);
+  late OverlayEntry overlayEntry;
+
+  overlayEntry = OverlayEntry(
+    builder: (context) => Positioned(
+      top: 50,
+      left: 20,
+      right: 20,
+      child: Material(
+        color: Colors.transparent,
+        child: Dismissible(
+          key: UniqueKey(),
+          direction: DismissDirection.up,
+          onDismissed: (direction) {
+            hideTopNotification();
+          },
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            decoration: BoxDecoration(
+              color: const Color(0xFF256D85),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.check_circle, color: Colors.white, size: 28),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    message,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+
+  overlay.insert(overlayEntry);
+  topNotification = overlayEntry;
+
+  Future.delayed(const Duration(seconds: 5), () {
+    hideTopNotification();
+  });
+}
+
+void hideTopNotification() {
+  topNotification?.remove();
+  topNotification=null;
+}

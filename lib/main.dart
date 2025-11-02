@@ -31,7 +31,7 @@
 // }
 
 import 'package:flutter/material.dart';
-import 'screens/login_screen_hala/welcome_screen.dart';
+import 'hala_all/startingUP_screens_H/login_screen_hala/welcome_screen.dart';
 
 void main() {
   runApp(const GojoApp());
