@@ -30,10 +30,22 @@
 //   }
 // }
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:go_jo_user_application/pages/home_page.dart';
+import 'package:go_jo_user_application/services/firebase_auth_service.dart';
+import 'package:go_jo_user_application/services/git_it_service.dart';
+import 'package:go_jo_user_application/services/shared_preferences.dart';
+import 'firebase_options.dart';
 import 'hala_all/startingUP_screens_H/login_screen_hala/welcome_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await SharedPreferencesService.init();
+  setup();//get it
   runApp(const GojoApp());
 }
 
@@ -73,11 +85,19 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   _navigateToWelcome() async {
-    await Future.delayed(const Duration(seconds: 3)); // شاشة ترحيب 3 ثوانٍ
+    await Future.delayed(const Duration(seconds: 3));
+    if(FirebaseAuthService().isLoggedIn()){
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    }
+    else{
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const WelcomeScreen()),
     );
+    }
   }
 
   /// # coded By [Hala]

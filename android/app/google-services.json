@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "890797414019",
+    "project_id": "gojo-app-b2497",
+    "storage_bucket": "gojo-app-b2497.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890797414019:android:c7c8d73c8cee0ab7106db6",
+        "android_client_info": {
+          "package_name": "com.example.go_jo_user_application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "890797414019-pshcsshjcus4hopej17j6er9gm96no4e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIv4J5WzZkNeOZ9kw6K9eO7lFpSsGjG-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "890797414019-pshcsshjcus4hopej17j6er9gm96no4e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "890797414019-j8bmtmqfmteb4428uo8cmscqe4u9cts1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.goJoUserApplication"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
