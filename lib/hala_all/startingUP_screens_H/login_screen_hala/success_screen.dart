@@ -43,7 +43,7 @@ class SuccessScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "Hi,Suhaib $username",
+                    "Hi, $username",
                     style: const TextStyle(
                       color: Color(0xFF3D7C91),
                       fontSize: 50,

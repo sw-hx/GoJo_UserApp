@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GOJO_App</string>
+    <string name="facebook_app_id">1585169025806762</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">aed4aea470d42bdaf8b2a917c3f7c3e5</string>
+
+
+</resources>

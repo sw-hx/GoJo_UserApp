@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_jo_user_application/constants.dart';
 import 'package:go_jo_user_application/pages/notifications_page.dart';
 import 'package:go_jo_user_application/pages/profile_page.dart';
 import 'package:go_jo_user_application/common_components/bottom_nav_bar.dart';
 import 'package:go_jo_user_application/components/components_HomePage/selector_places.dart';
 import 'package:go_jo_user_application/components/components_HomePage/places_Card.dart';
 import 'package:go_jo_user_application/components/components_HomePage/popularPlace_Card.dart';
+
+import '../helpers/getUser.dart';
+import '../services/shared_preferences.dart';
 
 /// coded by [suhaib]
 class HomePage extends StatefulWidget {
@@ -51,17 +55,12 @@ class _HomePageState extends State<HomePage> {
                       },
                       child: Row(
                         children: [
-                          ClipOval(
-                            child: Image.network(
-                              'https://cdn.racingnews365.com/2025/Hamilton/_1092x683_crop_center-center_85_none/XPB_1358753_HiRes.jpg?v=1752766813',
-                              height: 50,
-                              width: 50,
-                              fit: BoxFit.cover,
+                            CircleAvatar(
+                              child: Text(getUserData().name[0].toUpperCase()),
                             ),
-                          ),
                           const SizedBox(width: 10),
-                          const Text(
-                            'Suhaib Samaneh',
+                           Text(
+                            getUserData().name,
                             style: TextStyle(
                               color: Color.fromRGBO(18, 54, 69, 1),
                               fontSize: 18,
@@ -70,7 +69,6 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-
                     const Spacer(),
                     Stack(
                       children: [

@@ -1,23 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_jo_user_application/common_components/bottom_nav_bar.dart';
+import '../domain/models/user_model.dart';
 import '../hala_all/startingUP_screens_H/login_screen_hala/welcome_screen.dart';
 import '../common_components/custom_returnArrow.dart';
+import '../helpers/getUser.dart';
 import 'Bugs_pages/bugs_page.dart';
 import 'home_page.dart';
 
 /// coded by [suhaib]
 
-class UserProfile {
-  final String name;
-  final String email;
-  final String imageUrl;
-
-  const UserProfile({
-    required this.name,
-    required this.email,
-    required this.imageUrl,
-  });
-}
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -28,14 +19,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool allowNotifications = false;
-
-  // Sample user data
-  final UserProfile user = const UserProfile(
-    name: "Suhaib Samaneh",
-    email: "suhaib@gmail.com",
-    imageUrl:
-    "https://cdn.racingnews365.com/2025/Hamilton/_1092x683_crop_center-center_85_none/XPB_1358753_HiRes.jpg?v=1752766813",
-  );
+  UserModel user=getUserData();
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 CircleAvatar(
                   radius: 80,
-                  backgroundImage: NetworkImage(user.imageUrl),
+                  child: Text(user.name[0].toUpperCase(),style: TextStyle(fontSize: 50),),
                 ),
                 const SizedBox(height: 15),
 
