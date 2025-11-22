@@ -3,14 +3,14 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:go_jo_user_application/constants.dart';
-import 'package:go_jo_user_application/domain/models/user_model.dart';
+import 'package:go_jo_user_application/core/constants.dart';
 
+import '../../domain/errors/failures.dart';
 import '../../domain/repos/auth_repo.dart';
-import '../../errors/failures.dart';
 import '../../services/database_service.dart';
 import '../../services/firebase_auth_service.dart';
 import '../../services/shared_preferences.dart';
+import '../models/user_model.dart';
 
 class AuthRepoImpl implements AuthRepo {
 

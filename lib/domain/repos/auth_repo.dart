@@ -1,7 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:go_jo_user_application/domain/models/user_model.dart';
 
-import '../../errors/failures.dart';
+import '../../data/models/user_model.dart';
+import '../errors/failures.dart';
+
 
 abstract class AuthRepo {
 

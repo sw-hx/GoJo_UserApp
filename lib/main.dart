@@ -32,12 +32,12 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:go_jo_user_application/pages/home_page.dart';
+import 'package:go_jo_user_application/presentation/hala_all/startingUP_screens_H/login_screen_hala/welcome_screen.dart';
+import 'package:go_jo_user_application/presentation/pages/home_page.dart';
 import 'package:go_jo_user_application/services/firebase_auth_service.dart';
 import 'package:go_jo_user_application/services/git_it_service.dart';
 import 'package:go_jo_user_application/services/shared_preferences.dart';
 import 'firebase_options.dart';
-import 'hala_all/startingUP_screens_H/login_screen_hala/welcome_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
