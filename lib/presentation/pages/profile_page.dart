@@ -39,12 +39,12 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 CircleAvatar(
                   radius: 80,
-                  child: Text(user.name[0].toUpperCase(),style: TextStyle(fontSize: 50),),
+                  child: Text(user.personFullName[0].toUpperCase(),style: TextStyle(fontSize: 50),),
                 ),
                 const SizedBox(height: 15),
 
                 Text(
-                  user.name,
+                  user.personFullName,
                   style: const TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
@@ -94,7 +94,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       const Text("Name", style: TextStyle(color: Colors.black54)),
                       const SizedBox(height: 5),
                       Text(
-                        user.name,
+                        user.personFullName,
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),

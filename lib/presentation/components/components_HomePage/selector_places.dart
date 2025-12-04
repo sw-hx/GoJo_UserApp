@@ -11,10 +11,18 @@ class PlacesSelector extends StatefulWidget {
 class placesSelector extends State<PlacesSelector> {
   final List<String> categories = [
     'All',
-    'Petra',
-    'Wadi Rum',
-    'Dead Sea',
-    'Amman',
+    "Amman",
+    "Zarqa",
+    "Irbid",
+    "Aqaba",
+    "Balqa",
+    "Madaba",
+    "Mafraq",
+    "Jerash",
+    "Ajloun",
+    "Karak",
+    "Tafilah",
+    "Maan",
   ];
 
   String selectedCategory = 'All';

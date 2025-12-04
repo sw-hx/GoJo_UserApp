@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../data/models/user_model.dart';
 import '../../../../domain/repos/auth_repo.dart';
 import '../../../../services/git_it_service.dart';
 import '../../../common_components/custom_returnArrow.dart';
@@ -21,7 +22,7 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
-  late String name,email,password;
+  late String name,email,password,username;
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -156,6 +157,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     _buildInput(onSaved: (value){
                       email = value!;
                     }),
+                    _buildLabel("User name"),
+                    _buildInput(onSaved: (value){
+                      username = value!;
+                    }),
 
                     const SizedBox(height: 20),
                     _buildLabel("Password"),
@@ -256,7 +261,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           if (_passwordsMatch) {
                             if(_formKey.currentState!.validate()){
                               _formKey.currentState!.save();
-                              context.read<SignUpCubit>().createUserWithEmailAndPassword(email: email, password: password, name: name);
+                              context.read<SignUpCubit>().createUserWithEmailAndPassword(email: email, password: password, name: name,username: username);
                             }
                           }
                           else{

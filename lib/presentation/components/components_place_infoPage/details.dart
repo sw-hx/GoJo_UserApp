@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 
-
 class DetailBox extends StatelessWidget {
   final String title;
   final String desc;
-  final String imageUrl;
+  final IconData icon;
 
-  const DetailBox({super.key, required this.title, required this.desc, required this.imageUrl});
+  const DetailBox({
+    super.key,
+    required this.title,
+    required this.desc,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +27,7 @@ class DetailBox extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.network(imageUrl, width: 24, height: 24),
+              Icon(icon, color: Colors.white, size: 24),
               const SizedBox(width: 6),
               Text(
                 title,
@@ -44,5 +48,4 @@ class DetailBox extends StatelessWidget {
       ),
     );
   }
-
-  }
+}

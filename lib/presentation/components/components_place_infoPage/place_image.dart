@@ -21,7 +21,9 @@ class PlaceImage extends StatelessWidget {
         children: [
     ClipRRect(
     borderRadius: BorderRadius.circular(16),
-    child: Image.network(imageUrl, height: 120, width: double.infinity, fit: BoxFit.cover),
+    //network
+    //child: Image.network(imageUrl, height: 120, width: double.infinity, fit: BoxFit.cover),
+    child: Image.asset(imageUrl, height: 120, width: double.infinity, fit: BoxFit.cover),
     ),
     Text(name, textAlign: TextAlign.center, style: const TextStyle(fontSize: 45, fontWeight: FontWeight.bold, color: Colors.white, shadows: [Shadow(blurRadius: 8, color: Colors.black54, offset: Offset(2, 2))])),
     Positioned(

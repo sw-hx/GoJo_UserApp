@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../domain/repos/place_repo.dart';
+import '../../services/git_it_service.dart';
+import '../cubits/place_cubit/get_all_places_cubit/get_all_places_cubit.dart';
 import '../pages/events_screen.dart';
 import '../pages/favorites_screen.dart';
 import '../pages/home_page.dart';
@@ -21,7 +25,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
     Widget nextPage;
     switch (index) {
       case 0:
-        nextPage = const HomePage();
+        nextPage = BlocProvider(
+          create: (context) => GetAllPlacesCubit(
+            placeRepo: getIt.get<PlaceRepo>(),
+          )..getAllPlaces(),
+          child: HomePage(),
+        );
         break;
       case 1:
         nextPage = const FavoritesPage();
@@ -30,7 +39,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
         nextPage = const EventsPage();
         break;
       default:
-        nextPage = const HomePage();
+        nextPage =  BlocProvider(
+          create: (context) => GetAllPlacesCubit(
+            placeRepo: getIt.get<PlaceRepo>(),
+          )..getAllPlaces(),
+          child: HomePage(),
+        );
     }
 
     Navigator.pushReplacement(

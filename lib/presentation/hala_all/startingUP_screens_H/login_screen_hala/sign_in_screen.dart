@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
     authRepo:getIt<AuthRepo>(),
   ),
   child: Scaffold(
-      backgroundColor: Colors.white,
+    backgroundColor: Colors.white,
       body: Builder(
         builder: (context) {
           return BlocConsumer<SignInCubit, SignInState>(

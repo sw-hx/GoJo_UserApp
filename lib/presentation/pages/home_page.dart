@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_jo_user_application/core/constants.dart';
+import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_all_places_cubit/get_all_places_cubit.dart';
 import 'package:go_jo_user_application/presentation/pages/profile_page.dart';
 
 import '../../core/helpers/getUser.dart';
+import '../../data/models/place_models/place_model.dart';
 import '../common_components/bottom_nav_bar.dart';
 import '../components/components_HomePage/places_Card.dart';
 import '../components/components_HomePage/popularPlace_Card.dart';
@@ -19,6 +22,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<dynamic> places = [];
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +37,22 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    return BlocConsumer<GetAllPlacesCubit, GetAllPlacesState>(
+  listener: (context, state) {
+    if(state is GetAllPlacesSuccess){
+      setState(() {
+        places = state.places;
+      });
+
+    }
+    else if(state is GetAllPlacesFailure){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(state.message)),
+      );
+
+    }
+  },
+  builder: (context, state) {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -55,11 +76,11 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         children: [
                             CircleAvatar(
-                              child: Text(getUserData().name[0].toUpperCase()),
+                              child: Text(getUserData().personFullName[0].toUpperCase()),
                             ),
                           const SizedBox(width: 10),
                            Text(
-                            getUserData().name,
+                            getUserData().personFullName,
                             style: TextStyle(
                               color: Color.fromRGBO(18, 54, 69, 1),
                               fontSize: 18,
@@ -171,7 +192,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 25),
               PlacesSelector(),
               const SizedBox(height: 25),
-              PlaceCardsList(),
+              PlaceCardsList(places: places),
               const SizedBox(height: 15),
 
               const Text(
@@ -192,6 +213,8 @@ class _HomePageState extends State<HomePage> {
 
       bottomNavigationBar: const BottomNavBar(currentIndex: 0),
     );
+  },
+);
   }
 }
 

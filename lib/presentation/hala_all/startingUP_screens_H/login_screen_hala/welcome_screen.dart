@@ -119,7 +119,8 @@ class WelcomeScreen extends StatelessWidget {
                                     imagePath: "assets/images/google.jpg",
                                     text: "Continue with Google",
                                     onTap: () {
-                                      context.read<SignInCubit>().signInWithGoogle();
+
+                                      //context.read<SignInCubit>().signInWithGoogle();
 
                                     },
                                   ),
@@ -130,7 +131,7 @@ class WelcomeScreen extends StatelessWidget {
                                     "assets/images/2023_Facebook_icon.svg.png",
                                     text: "Continue with Facebook",
                                     onTap: () {
-                                      context.read<SignInCubit>().signInWithFacebook();
+                                      //context.read<SignInCubit>().signInWithFacebook();
 
                                     },
                                   ),
