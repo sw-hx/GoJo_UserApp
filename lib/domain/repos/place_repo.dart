@@ -4,7 +4,7 @@ abstract class PlaceRepo {
 
   Future<List<dynamic>> getAllPlaces();
 
-  Future<List<dynamic>> getPlacesByParentPlace(String parentPlaceId);
+  Future<List<dynamic>> getPlacesByParentPlace(String parentPlace);
 
   Future<PlaceModel> getPlaceInfo(String placeName);
 

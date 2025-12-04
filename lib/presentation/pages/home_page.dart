@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_jo_user_application/core/constants.dart';
 import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_all_places_cubit/get_all_places_cubit.dart';
+import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
 import 'package:go_jo_user_application/presentation/pages/profile_page.dart';
 
 import '../../core/helpers/getUser.dart';
@@ -23,6 +24,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<dynamic> places = [];
+  bool placesExist = true;
 
   @override
   void initState() {
@@ -37,18 +39,23 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<GetAllPlacesCubit, GetAllPlacesState>(
+    return BlocConsumer<GetPlacesByParentPlaceCubit, GetPlacesByParentPlaceState>(
   listener: (context, state) {
-    if(state is GetAllPlacesSuccess){
+    if(state is GetPlacesByParentPlaceSuccess){
       setState(() {
         places = state.places;
+        placesExist = true;
       });
 
     }
-    else if(state is GetAllPlacesFailure){
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(state.message)),
-      );
+    if(state is GetPlacesByParentPlaceFailure){
+     if(state.message.contains('no places')){
+       setState(() {
+         places = [];
+         placesExist = false;
+       });
+     }
+
 
     }
   },
@@ -192,7 +199,42 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 25),
               PlacesSelector(),
               const SizedBox(height: 25),
-              PlaceCardsList(places: places),
+              placesExist ? PlaceCardsList(places: places) : Container(
+                width: double.infinity,
+                height: 250,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                margin: const EdgeInsets.only(bottom: 15),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF23627E).withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: const Color(0xFF23627E), width: 1.5),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.location_off, size: 60, color: Color(0xFF23627E)),
+                    SizedBox(height: 15),
+                    Text(
+                      'No destinations available',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF11324D),
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Try choosing another area',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(height: 15),
 
               const Text(

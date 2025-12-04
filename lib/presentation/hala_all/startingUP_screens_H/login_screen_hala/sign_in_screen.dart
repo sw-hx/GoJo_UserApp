@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_jo_user_application/presentation/hala_all/startingUP_screens_H/login_screen_hala/welcome_screen.dart';
 import '../../../../domain/repos/auth_repo.dart';
+import '../../../../domain/repos/place_repo.dart' show PlaceRepo;
 import '../../../../services/git_it_service.dart';
 import '../../../common_components/custom_progress_hud.dart';
 import '../../../common_components/custom_returnArrow.dart';
 import '../../../common_components/custom_snackbar.dart';
+import '../../../cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
 import '../../../cubits/signIn_cubit/sign_in_cubit.dart';
 import '../../../pages/home_page.dart';
 import 'forgot_password_screen.dart';
@@ -46,7 +48,12 @@ class _LoginScreenState extends State<LoginScreen> {
               if(state is SignInSuccess){
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HomePage()));
+            MaterialPageRoute(builder: (context) => BlocProvider(
+  create: (context) => GetPlacesByParentPlaceCubit(
+    placeRepo:getIt<PlaceRepo>()..getPlacesByParentPlace('ALL'),
+  ),
+  child: HomePage(),
+)));
               }
               if(state is SignInFailure){
           CustomSnackBar.show(context: context, message: state.message.substring(11));

@@ -9,10 +9,10 @@ class GetPlacesByParentPlaceCubit extends Cubit<GetPlacesByParentPlaceState> {
   GetPlacesByParentPlaceCubit({required this.placeRepo}) : super(GetPlacesByParentPlaceInitial());
   final PlaceRepo placeRepo;
 
-  Future<void> getPlacesByParentPlace(String parentPlaceId) async {
+  Future<void> getPlacesByParentPlace(String parentPlace) async {
     emit(GetPlacesByParentPlaceLoading());
     try {
-      final places = await placeRepo.getPlacesByParentPlace(parentPlaceId);
+      final places = await placeRepo.getPlacesByParentPlace(parentPlace);
       emit(GetPlacesByParentPlaceSuccess(places: places));
     } catch (e) {
       emit(GetPlacesByParentPlaceFailure(message: e.toString()));

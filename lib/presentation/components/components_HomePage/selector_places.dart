@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
 /// coded by [suhaib]
 
 class PlacesSelector extends StatefulWidget {
@@ -41,10 +44,18 @@ class placesSelector extends State<PlacesSelector> {
           final selected = category == selectedCategory;
 
           return GestureDetector(
-            onTap: () => setState(() {
+            onTap: () {
+            setState(() {
               selectedCategory = category;
-            }),
-            child: Container(
+            });
+
+            final cubit = context.read<GetPlacesByParentPlaceCubit>();
+
+              cubit.getPlacesByParentPlace(category);
+
+          },
+
+          child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 3),
               decoration: BoxDecoration(
                 color: selected

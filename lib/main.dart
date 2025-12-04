@@ -36,6 +36,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_jo_user_application/data/models/user_model.dart';
 import 'package:go_jo_user_application/domain/repos/place_repo.dart';
 import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_all_places_cubit/get_all_places_cubit.dart';
+import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
 import 'package:go_jo_user_application/presentation/hala_all/startingUP_screens_H/login_screen_hala/welcome_screen.dart';
 import 'package:go_jo_user_application/presentation/pages/home_page.dart';
 import 'package:go_jo_user_application/services/firebase_auth_service.dart';
@@ -97,9 +98,9 @@ class _SplashScreenState extends State<SplashScreen> {
         context,
         MaterialPageRoute(builder: (context) =>
             BlocProvider(
-              create: (context) => GetAllPlacesCubit(
+              create: (context) => GetPlacesByParentPlaceCubit(
                   placeRepo: getIt.get<PlaceRepo>()
-              )..getAllPlaces(),
+              )..getPlacesByParentPlace('All'),
               child: HomePage(),
             )),
       );

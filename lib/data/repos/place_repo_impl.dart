@@ -24,13 +24,14 @@ class PlaceRepoImpl implements PlaceRepo {
 
 
   @override
-  Future<List<PlaceModel>> getPlacesByParentPlace(String parentPlaceId) async {
+  Future<List<PlaceHomePageModel>> getPlacesByParentPlace(String parentPlace) async {
     final response = await authRemoteDataSource.sendRequest(
-      endpoint: '/place/parent/$parentPlaceId',
+      endpoint: '/place?parent_place=${parentPlace.toUpperCase()}',
       method: 'GET',
     ) as List;
-    return response.map((e) => PlaceModel.fromJson(e)).toList();
+    return response.map((e) => PlaceHomePageModel.fromJson(e)).toList();
   }
+
 
   @override
   Future<PlaceModel> getPlaceInfo(String placeName) async {
