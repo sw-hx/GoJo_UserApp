@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_jo_user_application/core/helpers/helpers.dart';
+import 'package:go_jo_user_application/data/models/trip_model.dart';
+import 'package:go_jo_user_application/presentation/cubits/trip_cubit/get_trips_by_place_id_cubit.dart';
 import 'package:intl/intl.dart';
 import '../common_components/custom_returnArrow.dart';
 import '../common_components/bottom_nav_bar.dart';
-import '../components/components_Trips/models.dart';
 import '../components/components_Trips/sort_button.dart';
 import '../components/components_Trips/trip_card.dart';
 import 'booking_page.dart';
 import 'place_info_screen.dart';
+import '../cubits/place_cubit/get_place_info_cubit/get_place_info_cubit.dart';
 
 class TripsCardPage extends StatefulWidget {
   const TripsCardPage({super.key});
@@ -16,163 +20,114 @@ class TripsCardPage extends StatefulWidget {
 }
 
 class _TripsCardPageState extends State<TripsCardPage> {
-  List<Trip> trips = [
-    Trip(
-      company: "Petra Ride Company",
-      launchTime: DateTime(2025, 11, 19, 7, 30),
-      returnTime: DateTime(2025, 11, 19, 20, 30),
-      price: 20.99,
-      from: "Amman",
-      to: "Petra",
-      contactNumber: "00962787498076",
-      details:
-      "Explore the Siq and the Treasury, walking through the narrow canyon and capturing stunning photos. Visit historical landmarks like the Roman Theater, Royal Tombs, and Colonnaded Street.",
-      features: ["Air conditioning", "Lunch", "Comfortable chairs", "Tour guide"],
-      galleryImages: [
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKYY_HMrttR9FYDV9wTc85VZjSoAkcg1CMzA&s",
-        "https://wp.expatexplore.com/wp-content/uploads/2015/06/current-branding-Coach-and-Group.jpg",
-        "https://wildlandtrekking.com/content/uploads/2021/08/guidedgroup-1200x901.jpg",
-      ],
-      thumbnail: "https://wp.expatexplore.com/wp-content/uploads/2015/06/current-branding-Coach-and-Group.jpg",
-    ),
-    Trip(
-      company: "New Land Company",
-      launchTime: DateTime(2025, 11, 19, 12, 0),
-      returnTime: DateTime(2025, 11, 19, 20, 0),
-      price: 23.99,
-      from: "Zarqa",
-      to: "Petra",
-      contactNumber: "00962798765432",
-      details: "Experience the magic of Petra with professional guides and a comfortable bus. Lunch and refreshments included.",
-      features: ["Lunch", "Wi-Fi", "Tour guide", "Photo stops"],
-      galleryImages: [
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKYY_HMrttR9FYDV9wTc85VZjSoAkcg1CMzA&s",
-        "https://wp.expatexplore.com/wp-content/uploads/2015/06/current-branding-Coach-and-Group.jpg",
-        "https://wildlandtrekking.com/content/uploads/2021/08/guidedgroup-1200x901.jpg",
-      ],
-      thumbnail: "https://wp.expatexplore.com/wp-content/uploads/2015/06/current-branding-Coach-and-Group.jpg",
-    ),
-    Trip(
-      company: "Jenny Company",
-      launchTime: DateTime(2025, 11, 20, 7, 30),
-      returnTime: DateTime(2025, 11, 21, 0, 0),
-      price: 40.0,
-      from: "Irbid",
-      to: "Petra",
-      contactNumber: "00962791234567",
-      details: "Enjoy a premium overnight trip to Petra with a night tour and luxury buses.",
-      features: ["Night tour", "Luxury bus", "Snacks", "Wi-Fi"],
-      galleryImages: [
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKYY_HMrttR9FYDV9wTc85VZjSoAkcg1CMzA&s",
-        "https://wp.expatexplore.com/wp-content/uploads/2015/06/current-branding-Coach-and-Group.jpg",
-        "https://wildlandtrekking.com/content/uploads/2021/08/guidedgroup-1200x901.jpg",
-      ],
-      thumbnail: "https://wp.expatexplore.com/wp-content/uploads/2015/06/current-branding-Coach-and-Group.jpg",
-    ),
-    Trip(
-      company: "Sam Company",
-      launchTime: DateTime(2025, 11, 19, 7, 0),
-      returnTime: DateTime(2025, 11, 19, 20, 30),
-      price: 15.0,
-      from: "Aqaba",
-      to: "Petra",
-      contactNumber: "00962795554411",
-      details: "A one-day affordable trip from Aqaba to Petra, great for small groups and families.",
-      features: ["Affordable", "Tour guide", "Snacks"],
-      galleryImages: [
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKYY_HMrttR9FYDV9wTc85VZjSoAkcg1CMzA&s",
-        "https://wp.expatexplore.com/wp-content/uploads/2015/06/current-branding-Coach-and-Group.jpg",
-        "https://wildlandtrekking.com/content/uploads/2021/08/guidedgroup-1200x901.jpg",
-      ],
-      thumbnail: "https://wp.expatexplore.com/wp-content/uploads/2015/06/current-branding-Coach-and-Group.jpg",
-    ),
-    Trip(
-        company: "Jet Company",
-        launchTime: DateTime(2025, 11, 25, 12, 10),
-        returnTime: DateTime(2025, 11, 25, 20, 30),
-        price: 14.99,
-        from: "Amman",
-        to: "Petra",
-        contactNumber: "00962790001234",
-        details: "Enjoy a smooth ride with Jet Company’s new fleet of buses. Refreshments and free Wi-Fi onboard.",
-        features: ["Free Wi-Fi", "Snacks", "Air conditioning"],
-        galleryImages: [
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKYY_HMrttR9FYDV9wTc85VZjSoAkcg1CMzA&s",
-          "https://wp.expatexplore.com/wp-content/uploads/2015/06/current-branding-Coach-and-Group.jpg",
-          "https://wildlandtrekking.com/content/uploads/2021/08/guidedgroup-1200x901.jpg",
-        ],
-        thumbnail: "https://wp.expatexplore.com/wp-content/uploads/2015/06/current-branding-Coach-and-Group.jpg",
-        ),
-  ];
-
+  List<TripModel> trips = [];
   String? sortType;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void sortTrips(String type) {
     setState(() {
       sortType = type;
+
       if (type == 'Lowest Price') {
-        trips.sort((a, b) => a.price.compareTo(b.price));
+        trips.sort((a, b) => (a.price ?? 0).compareTo(b.price ?? 0));
       } else if (type == 'Highest Price') {
-        trips.sort((a, b) => b.price.compareTo(a.price));
+        trips.sort((a, b) => (b.price ?? 0).compareTo(a.price ?? 0));
       } else if (type == 'Earliest Launch') {
-        trips.sort((a, b) => a.launchTime.compareTo(b.launchTime));
+        trips.sort((a, b) => _date(a).compareTo(_date(b)));
       } else if (type == 'Latest Launch') {
-        trips.sort((a, b) => b.launchTime.compareTo(a.launchTime));
+        trips.sort((a, b) => _date(b).compareTo(_date(a)));
       }
     });
   }
 
+  DateTime _date(TripModel t) {
+    return DateTime.parse("${t.lunchDate ?? "2000-01-01"} ${t.lunchHour ?? "00:00:00"}");
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const CustomReturnArrow(targetPage: PlaceInfoScreen()),
-                const SizedBox(height: 30),
-                const Text("Available Trips",
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF11324D))),
-                const SizedBox(height: 8),
-                const Text("Your journey starts here",
-                    style: TextStyle(fontSize: 16, color: Color(0xFF11324D))),
-                /////////////////////////////////
-                const SizedBox(height: 20),
-                SortButton(selectedSort: sortType, onSelect: (value) => sortTrips(value)),
-                ////////////////////////////////
-                const SizedBox(height: 20),
-                /////////////////////////////////
-                for (var trip in trips)
-                  TripCard(
-                    trip: trip,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BookingPage(
-                            companyName: trip.company,
-                            rating: 4,
-                            launchDate: DateFormat('yyyy/MM/dd - h:mm a').format(trip.launchTime),
-                            returnDate: DateFormat('yyyy/MM/dd - h:mm a').format(trip.returnTime),
-                            fromLocation: trip.from,
-                            toLocation: trip.to,
-                            contactNumber: trip.contactNumber,
-                            details: trip.details,
-                            features: trip.features,
-                            galleryImages: trip.galleryImages,
-                            price: trip.price,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-              ],
+    return BlocConsumer<GetTripsByPlaceIdCubit, GetTripsByPlaceIdState>(
+      listener: (context, state) {
+        if (state is GetTripsByPlaceIdSuccess) {
+          setState(() {
+            trips = state.trips;
+          });
+        }
+        if (state is GetTripsByPlaceIdFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const CustomReturnArrow(targetPage: PlaceInfoScreen()),
+                  const SizedBox(height: 30),
+                  const Text("Available Trips",
+                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF11324D))),
+                  const SizedBox(height: 8),
+                  const Text("Your journey starts here",
+                      style: TextStyle(fontSize: 16, color: Color(0xFF11324D))),
+                  const SizedBox(height: 20),
+                  SortButton(selectedSort: sortType, onSelect: sortTrips),
+                  const SizedBox(height: 20),
+
+                  if (state is GetTripsByPlaceIdLoading)
+                    const Center(child: CircularProgressIndicator()),
+
+                  if (state is GetTripsByPlaceIdSuccess)
+                    Column(
+                      children: trips.map((trip) {
+                        final launch = _date(trip);
+                        final returnTime =
+                        DateTime.parse("${trip.returnDate ?? "2000-01-01"} ${trip.returnHour ?? "00:00:00"}");
+
+                        return TripCard(
+                          trip: trip,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => BookingPage(
+                                  companyName: formatPlace(trip.companyOwnTrip),
+                                  rating: 4,
+                                  launchDate: DateFormat('yyyy/MM/dd - h:mm a').format(launch),
+                                  returnDate: DateFormat('yyyy/MM/dd - h:mm a').format(returnTime),
+                                  fromLocation: formatPlace(trip.tripLunchPlace),
+                                  toLocation: formatPlace(trip.placeName),
+                                  contactNumber: trip.contactPhoneNumber ?? "",
+                                  details: trip.tripDetail ?? "",
+                                  features: trip.tripFeatures ?? [],
+                                  galleryImages: [
+                                    trip.tripPhotoOneLink ?? "",
+                                    trip.tripPhotoTwoLink ?? "",
+                                    trip.tripPhotoThreeLink ?? "",
+                                  ],
+                                  price: trip.price ?? 0,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }).toList(),
+                    ),
+                ],
+              ),
             ),
           ),
-        ),
-        bottomNavigationBar: const BottomNavBar(),
+          bottomNavigationBar: const BottomNavBar(),
         );
-    }
+      },
+    );
+  }
 }

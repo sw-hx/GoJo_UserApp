@@ -38,6 +38,6 @@ class PlaceRepoImpl implements PlaceRepo {
       endpoint: '/place/$placeName',
       method: 'GET',
     ) as Map;
-    return PlaceModel.fromJson(response as Map<String, dynamic>) ;
+    return PlaceModel.fromJson(response as Map<String, dynamic>);
   }
 }

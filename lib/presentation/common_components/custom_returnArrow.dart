@@ -14,10 +14,7 @@ class CustomReturnArrow extends StatelessWidget {
           color: Color.fromRGBO(18, 54, 69, 1),
         ),
         onPressed: () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => targetPage),
-          );
+          Navigator.pop(context);
           },
         );
     }

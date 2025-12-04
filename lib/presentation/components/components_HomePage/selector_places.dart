@@ -15,7 +15,7 @@ class placesSelector extends State<PlacesSelector> {
     "Zarqa",
     "Irbid",
     "Aqaba",
-    "Balqa",
+    "Salt",
     "Madaba",
     "Mafraq",
     "Jerash",
@@ -35,7 +35,7 @@ class placesSelector extends State<PlacesSelector> {
         scrollDirection: Axis.horizontal,
         itemCount: categories.length,
         separatorBuilder: (_, __) =>
-            const SizedBox(width: 10), //مساحه بين كل عنصر
+            const SizedBox(width: 10),
         itemBuilder: (context, index) {
           final category = categories[index];
           final selected = category == selectedCategory;

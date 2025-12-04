@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:go_jo_user_application/data/models/review_model.dart';
 import 'commentField.dart';
@@ -10,7 +12,7 @@ class CommentList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int count = showAll ? comments.length : 2;
+    int count = showAll ? comments.length : min(2, comments.length);
 
     return SizedBox(
       height: 130,

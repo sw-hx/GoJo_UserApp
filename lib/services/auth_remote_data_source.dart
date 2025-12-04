@@ -13,6 +13,7 @@ class AuthRemoteDataSource {
     try {
       final response = await dio.request(
         endpoint,
+        queryParameters: method == 'GET' ? data : null,
         data: method == 'GET' ? null : data,
         options: Options(
           method: method,
@@ -38,4 +39,5 @@ class AuthRemoteDataSource {
       throw Exception("Unexpected error: $e");
     }
   }
+
 }

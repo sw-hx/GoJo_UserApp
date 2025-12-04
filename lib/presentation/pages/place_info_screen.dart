@@ -3,11 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:go_jo_user_application/core/helpers/helpers.dart';
 import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_place_info_cubit/get_place_info_cubit.dart';
+import 'package:go_jo_user_application/presentation/pages/home_page.dart';
 import '../../data/models/place_models/place_model.dart';
+import '../../domain/repos/trip_repo.dart';
+import '../../services/git_it_service.dart';
 import '../common_components/button_all.dart';
 import '../common_components/bottom_nav_bar.dart';
 import '../common_components/custom_divider.dart';
 import '../common_components/custom_TitleText.dart';
+import '../common_components/custom_returnArrow.dart';
 import '../components/components_place_infoPage/comments_list.dart';
 import '../components/components_place_infoPage/description_box.dart';
 import '../components/components_place_infoPage/details.dart';
@@ -16,6 +20,7 @@ import '../components/components_place_infoPage/photos.dart';
 import '../components/components_place_infoPage/place_data.dart';
 import '../components/components_place_infoPage/place_image.dart';
 import '../components/components_place_infoPage/weather.dart';
+import '../cubits/trip_cubit/get_trips_by_place_id_cubit.dart';
 import 'trips.dart';
 
 class PlaceInfoScreen extends StatefulWidget {
@@ -55,6 +60,13 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
               padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
               child: ListView(
                 children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomReturnArrow(targetPage: HomePage()),
+                    ],
+                  ),
+                  SizedBox(height: 16),
                   PlaceImage(
                     //place!.mainPhotoLink,
                     imageUrl: "assets/images/petra.jpg",
@@ -78,24 +90,19 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
                       DetailBox(
                         title: "Best Season",
                         desc: place!.bestSeasonToVisit,
-                        icon: Icons.wb_sunny,
+                        imageUrl: "https://cdn-icons-png.flaticon.com/512/869/869869.png",
                       ),
                       DetailBox(
                         title: "Total Visitors",
-                        desc: place!.totalNumberOfVisitor?.toString() ?? "0",
-                        icon: Icons.people,
-                      ),
-                      DetailBox(
-                        title: "This Year",
-                        desc: place!.onThisYear?.toString() ?? "N/A",
-                        icon: Icons.calendar_today,
+                        desc: '${place?.totalNumberOfVisitor ?? 0 } tourists in ${place?.onThisYear}',
+                        imageUrl: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
                       ),
 
                       if (place!.isSevenWonder == true)
                         DetailBox(
                           title: "Seven Wonder",
-                          desc: "Yes",
-                          icon: Icons.workspace_premium,
+                          desc: "",
+                          imageUrl: 'https://images.icon-icons.com/1808/PNG/512/star_115223.png',
                         ),
                     ],
                   ),
@@ -199,7 +206,13 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const TripsCardPage()),
+                        MaterialPageRoute(builder: (_) => BlocProvider(
+                               create: (context) => GetTripsByPlaceIdCubit(
+                                 tripRepo: getIt<TripRepo>(),
+                               )..getTripsByPlaceId(placeId: place!.placeId),
+                                      child: TripsCardPage(),
+)),
+
                       );
                     },
                   ),

@@ -35,12 +35,9 @@ class PlaceCardsList extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (_) =>
                       BlocProvider(
-                        create: (context) => GetPlaceInfoCubit(
-                          placeRepo: getIt<PlaceRepo>(),
-                        )..getPlaceInfo(place.placeName),
+                        create: (context) => GetPlaceInfoCubit(placeRepo: getIt<PlaceRepo>())..getPlaceInfo(place.placeName),
                         child: PlaceInfoScreen(),
                       ),
-
                 ),
               );
             },
