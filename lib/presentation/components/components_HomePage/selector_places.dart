@@ -1,0 +1,83 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
+/// coded by [suhaib]
+
+class PlacesSelector extends StatefulWidget {
+  const PlacesSelector({super.key});
+
+  @override
+  State<PlacesSelector> createState() => placesSelector();
+}
+
+class placesSelector extends State<PlacesSelector> {
+  final List<String> categories = [
+    'All',
+    "Amman",
+    "Zarqa",
+    "Irbid",
+    "Aqaba",
+    "Salt",
+    "Madaba",
+    "Mafraq",
+    "Jerash",
+    "Ajloun",
+    "Karak",
+    "Tafilah",
+    "Maan",
+  ];
+
+  String selectedCategory = 'All';
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 38,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: categories.length,
+        separatorBuilder: (_, __) =>
+            const SizedBox(width: 10),
+        itemBuilder: (context, index) {
+          final category = categories[index];
+          final selected = category == selectedCategory;
+
+          return GestureDetector(
+            onTap: () {
+            setState(() {
+              selectedCategory = category;
+            });
+
+            final cubit = context.read<GetPlacesByParentPlaceCubit>();
+
+              cubit.getPlacesByParentPlace(category);
+
+          },
+
+          child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 3),
+              decoration: BoxDecoration(
+                color: selected
+                    ? const Color.fromRGBO(53, 159, 205, 1)
+                    : const Color.fromRGBO(217, 217, 217, 1),
+                borderRadius: BorderRadius.circular(7676),
+              ),
+              child: Center(
+                child: Text(
+                  category,
+                  style: TextStyle(
+                    color: selected ? Colors.white : Colors.black,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+//coded by suhaib
