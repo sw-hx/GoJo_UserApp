@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
 import '../../domain/repos/place_repo.dart';
 import '../../services/git_it_service.dart';
 import '../cubits/place_cubit/get_all_places_cubit/get_all_places_cubit.dart';
@@ -26,9 +27,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
     switch (index) {
       case 0:
         nextPage = BlocProvider(
-          create: (context) => GetAllPlacesCubit(
+          create: (context) => GetPlacesByParentPlaceCubit(
             placeRepo: getIt.get<PlaceRepo>(),
-          )..getAllPlaces(),
+          )..getPlacesByParentPlace('ALL'),
           child: HomePage(),
         );
         break;
@@ -40,9 +41,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
         break;
       default:
         nextPage =  BlocProvider(
-          create: (context) => GetAllPlacesCubit(
+          create: (context) => GetPlacesByParentPlaceCubit(
             placeRepo: getIt.get<PlaceRepo>(),
-          )..getAllPlaces(),
+          )..getPlacesByParentPlace('ALL'),
           child: HomePage(),
         );
     }
