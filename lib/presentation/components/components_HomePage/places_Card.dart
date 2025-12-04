@@ -5,6 +5,7 @@ import '../../../data/models/place_models/place_model.dart';
 import '../../../domain/repos/place_repo.dart';
 import '../../../services/git_it_service.dart';
 import '../../cubits/place_cubit/get_place_info_cubit/get_place_info_cubit.dart';
+import '../../cubits/place_cubit/write_comment_cubit/write_comment_cubit.dart';
 import '../../pages/place_info_screen.dart';
 
 
@@ -33,13 +34,24 @@ class PlaceCardsList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) =>
+                  builder: (_) => MultiBlocProvider(
+                    providers: [
                       BlocProvider(
-                        create: (context) => GetPlaceInfoCubit(placeRepo: getIt<PlaceRepo>())..getPlaceInfo(place.placeName),
-                        child: PlaceInfoScreen(),
+                        create: (context) => GetPlaceInfoCubit(
+                          placeRepo: getIt<PlaceRepo>(),
+                        )..getPlaceInfo(place.placeName),
                       ),
+                      BlocProvider(
+                        create: (context) => WriteCommentCubit(
+                          placeRepo: getIt<PlaceRepo>(),
+                        ),
+                      ),
+                    ],
+                    child: PlaceInfoScreen(),
+                  ),
                 ),
               );
+
             },
           );
         },
