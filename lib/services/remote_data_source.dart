@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 
-class AuthRemoteDataSource {
+class RemoteDataSource {
   final Dio dio;
 
-  AuthRemoteDataSource(this.dio);
+  RemoteDataSource(this.dio);
 
   Future<dynamic> sendRequest({
     required String endpoint,

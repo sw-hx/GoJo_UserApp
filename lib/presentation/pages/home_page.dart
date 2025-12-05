@@ -204,7 +204,7 @@ class _HomePageState extends State<HomePage> {
                     ? PlaceCardsList(places: places)
                     : Container(
                   width: double.infinity,
-                  height: 250,
+                  height: 235,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   margin: const EdgeInsets.only(bottom: 15),
                   decoration: BoxDecoration(

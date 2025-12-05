@@ -1,11 +1,11 @@
-import 'package:go_jo_user_application/services/auth_remote_data_source.dart';
+import 'package:go_jo_user_application/services/remote_data_source.dart';
 
 import '../../domain/repos/notification_repo.dart';
 import '../models/notification_model.dart';
 
 
 class NotificationRepoImpl implements NotificationRepo {
-  final AuthRemoteDataSource authRemoteDataSource;
+  final RemoteDataSource authRemoteDataSource;
   NotificationRepoImpl({required this.authRemoteDataSource});
 
   @override

@@ -41,7 +41,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const CustomReturnArrow(targetPage: HomePage(),),
+
                     const SizedBox(height: 15),
                     const Text(
                       "Favorites",

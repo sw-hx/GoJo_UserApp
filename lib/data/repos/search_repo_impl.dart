@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:go_jo_user_application/services/auth_remote_data_source.dart';
+import 'package:go_jo_user_application/services/remote_data_source.dart';
 import '../../data/models/search_place_model.dart';
 import '../../domain/repos/search_repo.dart';
 
 class SearchRepoImpl implements SearchRepo {
-  final AuthRemoteDataSource authRemoteDataSource;
+  final RemoteDataSource authRemoteDataSource;
 
   SearchRepoImpl({required this.authRemoteDataSource});
 
