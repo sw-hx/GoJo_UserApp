@@ -6,7 +6,11 @@ import 'package:go_jo_user_application/presentation/components/components_HomePa
 import 'package:go_jo_user_application/presentation/components/components_HomePage/popularPlace_Card.dart';
 import 'package:go_jo_user_application/presentation/components/components_HomePage/selector_places.dart';
 import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
+import 'package:go_jo_user_application/presentation/pages/search_page.dart';
+import '../../domain/repos/search_repo.dart';
+import '../../services/git_it_service.dart';
 import '../cubits/place_cubit/get_topRating_places_cubit/get_top_rating_places_cubit.dart';
+import '../cubits/search_cubit/search_cubit.dart';
 import 'notifications_page.dart';
 import 'profile_page.dart';
 
@@ -134,28 +138,43 @@ class _HomePageState extends State<HomePage> {
                 const Text('Your journey starts here',
                     style: TextStyle(fontSize: 20)),
                 const SizedBox(height: 25),
-                Container(
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => BlocProvider(
+                        create: (_) => SearchCubit(
+                          repo: getIt.get<SearchRepo>(),
+                        ),
+                        child: const SearchPage(),
+                      ),
+                    ),
+                  );
+
+                },
+                child: Container(
                   height: 45,
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.3),
                         blurRadius: 5,
-                        offset: const Offset(0, 6),
+                        offset: Offset(0, 6),
                       ),
                     ],
-                    color: const Color.fromRGBO(18, 54, 69, 1),
+                    color: Color.fromRGBO(18, 54, 69, 1),
                     borderRadius: BorderRadius.circular(40),
                   ),
                   padding: const EdgeInsets.only(left: 15, right: 3),
                   child: Row(
                     children: [
                       const Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Where to go ....',
-                            hintStyle: TextStyle(color: Colors.white70),
-                            border: InputBorder.none,
+                        child: Text(
+                          'Where to go ....',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 16,
                           ),
                         ),
                       ),
@@ -166,13 +185,19 @@ class _HomePageState extends State<HomePage> {
                           color: Color.fromRGBO(58, 186, 242, 1),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.search,
-                            color: Color.fromRGBO(18, 54, 69, 1), size: 40),
+                        child: const Icon(
+                          Icons.search,
+                          color: Color.fromRGBO(18, 54, 69, 1),
+                          size: 40,
+                        ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 25),
+              ),
+
+
+              const SizedBox(height: 25),
                 const PlacesSelector(),
                 const SizedBox(height: 25),
                 placesExist

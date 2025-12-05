@@ -5,9 +5,11 @@ import 'package:get_it/get_it.dart';
 import '../core/constants.dart';
 import '../data/repos/auth_repo_impl.dart';
 import '../data/repos/place_repo_impl.dart';
+import '../data/repos/search_repo_impl.dart';
 import '../data/repos/trip_repo_impl.dart';
 import '../domain/repos/auth_repo.dart';
 import '../domain/repos/place_repo.dart';
+import '../domain/repos/search_repo.dart';
 import '../domain/repos/trip_repo.dart';
 import 'auth_remote_data_source.dart';
 import 'database_service.dart';
@@ -52,6 +54,11 @@ void setup() {
   );
   getIt.registerLazySingleton<TripRepo>(
     () => TripRepoImpl(
+      authRemoteDataSource: getIt.get<AuthRemoteDataSource>(),
+    ),
+  );
+  getIt.registerLazySingleton<SearchRepo>(
+    () => SearchRepoImpl(
       authRemoteDataSource: getIt.get<AuthRemoteDataSource>(),
     ),
   );
