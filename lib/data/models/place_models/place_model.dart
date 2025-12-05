@@ -20,6 +20,7 @@ class PlaceModel {
   final double averagePlaceRating;
   final UserReviewModel? userReview;
   final List<UserReviewModel> listAllUsersReviews;
+  final bool isFavorite;
 
   PlaceModel({
     required this.placeId,
@@ -41,6 +42,7 @@ class PlaceModel {
     required this.averagePlaceRating,
     required this.userReview,
     required this.listAllUsersReviews,
+    required this.isFavorite,
   });
 
   factory PlaceModel.fromJson(Map<String, dynamic> json) {
@@ -68,6 +70,7 @@ class PlaceModel {
       listAllUsersReviews: (json["listAllUsersReviews"] as List)
           .map((e) => UserReviewModel.fromJson(e))
           .toList(),
+      isFavorite: json["isFavorite"],
     );
   }
 
