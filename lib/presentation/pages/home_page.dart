@@ -6,11 +6,13 @@ import 'package:go_jo_user_application/presentation/components/components_HomePa
 import 'package:go_jo_user_application/presentation/components/components_HomePage/popularPlace_Card.dart';
 import 'package:go_jo_user_application/presentation/components/components_HomePage/selector_places.dart';
 import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
+import 'package:go_jo_user_application/presentation/effects/skeleton_place_card.dart';
 import 'package:go_jo_user_application/presentation/pages/search_page.dart';
 import '../../domain/repos/search_repo.dart';
 import '../../services/git_it_service.dart';
 import '../cubits/place_cubit/get_topRating_places_cubit/get_top_rating_places_cubit.dart';
 import '../cubits/search_cubit/search_cubit.dart';
+import '../effects/skeleton_popular_card.dart';
 import 'notifications_page.dart';
 import 'profile_page.dart';
 
@@ -26,6 +28,9 @@ class _HomePageState extends State<HomePage> {
   List<dynamic> places = [];
   bool placesExist = true;
   List<dynamic> topRatedPlaces = [];
+  bool isLoadingPlaces = true;
+  bool isTopRatedLoading = true;
+
 
   @override
   Widget build(BuildContext context) {
@@ -33,34 +38,49 @@ class _HomePageState extends State<HomePage> {
       listeners: [
         BlocListener<GetPlacesByParentPlaceCubit, GetPlacesByParentPlaceState>(
           listener: (context, state) {
+            if (state is GetPlacesByParentPlaceLoading) {
+              isLoadingPlaces = true;
+              setState(() {});
+            }
+
             if (state is GetPlacesByParentPlaceSuccess) {
               places = state.places;
               placesExist = true;
+              isLoadingPlaces = false;
               setState(() {});
             }
+
             if (state is GetPlacesByParentPlaceFailure) {
               if (state.message.contains('no places')) {
                 places = [];
                 placesExist = false;
+                isLoadingPlaces = false;
                 setState(() {});
               }
             }
           },
         ),
+
         BlocListener<GetTopRatingPlacesCubit, GetTopRatingPlacesState>(
           listener: (context, state) {
-            if (state is GetTopRatingPlacesSuccess) {
-              topRatedPlaces = state.places;
+            if (state is GetTopRatingPlacesLoading) {
+              isTopRatedLoading = true;
               setState(() {});
             }
+
+            if (state is GetTopRatingPlacesSuccess) {
+              topRatedPlaces = state.places;
+              isTopRatedLoading = false;
+              setState(() {});
+            }
+
             if (state is GetTopRatingPlacesFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
-              );
-              throw Exception(state.message);
+              isTopRatedLoading = false;
+              setState(() {});
             }
           },
         ),
+
       ],
       child: Scaffold(
         body: SafeArea(
@@ -75,8 +95,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
+                          Navigator.push(context,
                             MaterialPageRoute(builder: (_) => const ProfilePage()),
                           );
                         },
@@ -127,6 +146,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
+
                 const Text(
                   'Discover',
                   style: TextStyle(
@@ -135,72 +155,80 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Text('Your journey starts here',
-                    style: TextStyle(fontSize: 20)),
+                const Text('Your journey starts here', style: TextStyle(fontSize: 20)),
                 const SizedBox(height: 25),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => BlocProvider(
-                        create: (_) => SearchCubit(
-                          repo: getIt.get<SearchRepo>(),
-                        ),
-                        child: const SearchPage(),
-                      ),
-                    ),
-                  );
 
-                },
-                child: Container(
-                  height: 45,
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 5,
-                        offset: Offset(0, 6),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => BlocProvider(
+                          create: (_) => SearchCubit(repo: getIt.get<SearchRepo>()),
+                          child: const SearchPage(),
+                        ),
                       ),
-                    ],
-                    color: Color.fromRGBO(18, 54, 69, 1),
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  padding: const EdgeInsets.only(left: 15, right: 3),
-                  child: Row(
-                    children: [
-                      const Expanded(
-                        child: Text(
-                          'Where to go ....',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 16,
+                    );
+                  },
+                  child: Container(
+                    height: 45,
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 5,
+                          offset: Offset(0, 6),
+                        ),
+                      ],
+                      color: Color.fromRGBO(18, 54, 69, 1),
+                      borderRadius: BorderRadius.circular(40),
+                    ),
+                    padding: const EdgeInsets.only(left: 15, right: 3),
+                    child: Row(
+                      children: [
+                        const Expanded(
+                          child: Text(
+                            'Where to go ....',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        width: 39,
-                        height: 39,
-                        decoration: const BoxDecoration(
-                          color: Color.fromRGBO(58, 186, 242, 1),
-                          shape: BoxShape.circle,
+                        Container(
+                          width: 39,
+                          height: 39,
+                          decoration: const BoxDecoration(
+                            color: Color.fromRGBO(58, 186, 242, 1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.search,
+                            color: Color.fromRGBO(18, 54, 69, 1),
+                            size: 40,
+                          ),
                         ),
-                        child: const Icon(
-                          Icons.search,
-                          color: Color.fromRGBO(18, 54, 69, 1),
-                          size: 40,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
-
-              const SizedBox(height: 25),
+                const SizedBox(height: 25),
                 const PlacesSelector(),
                 const SizedBox(height: 25),
-                placesExist
+
+                isLoadingPlaces
+                    ? SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          SkeletonPlaceCard(),
+                          SkeletonPlaceCard(),
+                          SkeletonPlaceCard()
+                        ],
+                      ),
+                    )
+                    : placesExist
                     ? PlaceCardsList(places: places)
                     : Container(
                   width: double.infinity,
@@ -232,12 +260,15 @@ class _HomePageState extends State<HomePage> {
                       Text(
                         'Try choosing another area',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16, color: Colors.black54),
+                        style: TextStyle(
+                            fontSize: 16, color: Colors.black54),
                       ),
                     ],
                   ),
                 ),
+
                 const SizedBox(height: 15),
+
                 const Text(
                   'Highest Rating',
                   style: TextStyle(
@@ -247,12 +278,25 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                PopularCard(places: topRatedPlaces),
+
+                isTopRatedLoading
+                    ? SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                                        children: const [
+                      SkeletonPopularCard(),
+                      SkeletonPopularCard(),
+                      SkeletonPopularCard(),
+                                        ],
+                                      ),
+                    )
+                    : PopularCard(places: topRatedPlaces),
                 const SizedBox(height: 5),
               ],
             ),
           ),
         ),
+
         bottomNavigationBar: const BottomNavBar(currentIndex: 0),
       ),
     );
