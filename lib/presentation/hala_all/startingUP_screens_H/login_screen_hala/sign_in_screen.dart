@@ -8,6 +8,7 @@ import '../../../common_components/custom_progress_hud.dart';
 import '../../../common_components/custom_returnArrow.dart';
 import '../../../common_components/custom_snackbar.dart';
 import '../../../cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
+import '../../../cubits/place_cubit/get_topRating_places_cubit/get_top_rating_places_cubit.dart';
 import '../../../cubits/signIn_cubit/sign_in_cubit.dart';
 import '../../../pages/home_page.dart';
 import 'forgot_password_screen.dart';
@@ -46,14 +47,26 @@ class _LoginScreenState extends State<LoginScreen> {
           return BlocConsumer<SignInCubit, SignInState>(
             listener: (context, state) {
               if(state is SignInSuccess){
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => BlocProvider(
-  create: (context) => GetPlacesByParentPlaceCubit(
-    placeRepo:getIt<PlaceRepo>()..getPlacesByParentPlace('ALL'),
-  ),
-  child: HomePage(),
-)));
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MultiBlocProvider(
+                      providers: [
+                        BlocProvider(
+                          create: (_) => GetPlacesByParentPlaceCubit(
+                            placeRepo: getIt.get<PlaceRepo>(),
+                          )..getPlacesByParentPlace('ALL'),
+                        ),
+                        BlocProvider(
+                          create: (_) => GetTopRatingPlacesCubit(
+                            placeRepo: getIt.get<PlaceRepo>(),
+                          )..getTopRatingPlaces(),
+                        ),
+                      ],
+                      child: HomePage(),
+                    ),
+                  ),
+                );
               }
               if(state is SignInFailure){
           CustomSnackBar.show(context: context, message: state.message.substring(11));

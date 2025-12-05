@@ -4,6 +4,7 @@ import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_place
 import '../../domain/repos/place_repo.dart';
 import '../../services/git_it_service.dart';
 import '../cubits/place_cubit/get_all_places_cubit/get_all_places_cubit.dart';
+import '../cubits/place_cubit/get_topRating_places_cubit/get_top_rating_places_cubit.dart';
 import '../pages/events_screen.dart';
 import '../pages/favorites_screen.dart';
 import '../pages/home_page.dart';
@@ -26,24 +27,45 @@ class _BottomNavBarState extends State<BottomNavBar> {
     Widget nextPage;
     switch (index) {
       case 0:
-        nextPage = BlocProvider(
-          create: (context) => GetPlacesByParentPlaceCubit(
-            placeRepo: getIt.get<PlaceRepo>(),
-          )..getPlacesByParentPlace('ALL'),
+        nextPage = MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => GetPlacesByParentPlaceCubit(
+                placeRepo: getIt.get<PlaceRepo>(),
+              )..getPlacesByParentPlace('ALL'),
+            ),
+            BlocProvider(
+              create: (context) => GetTopRatingPlacesCubit(
+                placeRepo: getIt.get<PlaceRepo>(),
+              )..getTopRatingPlaces(),
+            ),
+          ],
           child: HomePage(),
         );
         break;
+
       case 1:
         nextPage = const FavoritesPage();
         break;
+
       case 2:
         nextPage = const EventsPage();
         break;
+
       default:
-        nextPage =  BlocProvider(
-          create: (context) => GetPlacesByParentPlaceCubit(
-            placeRepo: getIt.get<PlaceRepo>(),
-          )..getPlacesByParentPlace('ALL'),
+        nextPage = MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => GetPlacesByParentPlaceCubit(
+                placeRepo: getIt.get<PlaceRepo>(),
+              )..getPlacesByParentPlace('ALL'),
+            ),
+            BlocProvider(
+              create: (context) => GetTopRatingPlacesCubit(
+                placeRepo: getIt.get<PlaceRepo>(),
+              )..getTopRatingPlaces(),
+            ),
+          ],
           child: HomePage(),
         );
     }

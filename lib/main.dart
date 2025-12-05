@@ -37,6 +37,7 @@ import 'package:go_jo_user_application/data/models/user_model.dart';
 import 'package:go_jo_user_application/domain/repos/place_repo.dart';
 import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_all_places_cubit/get_all_places_cubit.dart';
 import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
+import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_topRating_places_cubit/get_top_rating_places_cubit.dart';
 import 'package:go_jo_user_application/presentation/hala_all/startingUP_screens_H/login_screen_hala/welcome_screen.dart';
 import 'package:go_jo_user_application/presentation/pages/home_page.dart';
 import 'package:go_jo_user_application/services/firebase_auth_service.dart';
@@ -96,14 +97,25 @@ class _SplashScreenState extends State<SplashScreen> {
     if (user.id.isNotEmpty) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) =>
-            BlocProvider(
-              create: (context) => GetPlacesByParentPlaceCubit(
-                  placeRepo: getIt.get<PlaceRepo>()
-              )..getPlacesByParentPlace('All'),
-              child: HomePage(),
-            )),
+        MaterialPageRoute(
+          builder: (context) => MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) => GetPlacesByParentPlaceCubit(
+                  placeRepo: getIt.get<PlaceRepo>(),
+                )..getPlacesByParentPlace('ALL'),
+              ),
+              BlocProvider(
+                create: (_) => GetTopRatingPlacesCubit(
+                  placeRepo: getIt.get<PlaceRepo>(),
+                )..getTopRatingPlaces(),
+              ),
+            ],
+            child: HomePage(),
+          ),
+        ),
       );
+
     }
     else {
       Navigator.pushReplacement(
