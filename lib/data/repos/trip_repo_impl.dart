@@ -1,9 +1,9 @@
 import '../../domain/repos/trip_repo.dart';
-import '../../services/auth_remote_data_source.dart';
+import '../../services/remote_data_source.dart';
 import '../models/trip_model.dart';
 
 class TripRepoImpl implements TripRepo {
-  AuthRemoteDataSource authRemoteDataSource;
+  RemoteDataSource authRemoteDataSource;
   TripRepoImpl({required this.authRemoteDataSource});
 
   Future<List<TripModel>> getTrips({required int placeId}) async {

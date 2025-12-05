@@ -7,7 +7,7 @@ import 'package:go_jo_user_application/core/constants.dart';
 
 import '../../domain/errors/failures.dart';
 import '../../domain/repos/auth_repo.dart';
-import '../../services/auth_remote_data_source.dart';
+import '../../services/remote_data_source.dart';
 import '../../services/database_service.dart';
 import '../../services/firebase_auth_service.dart';
 import '../../services/secure_storage_service.dart';
@@ -16,7 +16,7 @@ import '../models/user_model.dart';
 
 class AuthRepoImpl implements AuthRepo {
 
-  final AuthRemoteDataSource authRemoteDataSource;
+  final RemoteDataSource authRemoteDataSource;
   final FirebaseAuthService firebaseAuthService;
 
 

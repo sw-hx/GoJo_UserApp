@@ -48,8 +48,7 @@ class EventsPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const CustomReturnArrow(targetPage: HomePage()),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
                   const Text(
                     "Events",
                     style: TextStyle(

@@ -1,14 +1,14 @@
 import 'package:go_jo_user_application/data/models/place_models/place_homePage_model.dart';
 
 import '../../domain/repos/place_repo.dart';
-import '../../services/auth_remote_data_source.dart';
+import '../../services/remote_data_source.dart';
 import '../models/place_models/place_model.dart';
 import '../models/place_models/place_top_rating_model.dart';
 import '../models/review_model.dart';
 
 class PlaceRepoImpl implements PlaceRepo {
 
-  final AuthRemoteDataSource authRemoteDataSource;
+  final RemoteDataSource authRemoteDataSource;
 
   PlaceRepoImpl({required this.authRemoteDataSource});
 
