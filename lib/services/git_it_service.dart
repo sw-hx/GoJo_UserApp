@@ -4,10 +4,12 @@ import 'package:get_it/get_it.dart';
 
 import '../core/constants.dart';
 import '../data/repos/auth_repo_impl.dart';
+import '../data/repos/notification_repo_impl.dart';
 import '../data/repos/place_repo_impl.dart';
 import '../data/repos/search_repo_impl.dart';
 import '../data/repos/trip_repo_impl.dart';
 import '../domain/repos/auth_repo.dart';
+import '../domain/repos/notification_repo.dart';
 import '../domain/repos/place_repo.dart';
 import '../domain/repos/search_repo.dart';
 import '../domain/repos/trip_repo.dart';
@@ -59,6 +61,11 @@ void setup() {
   );
   getIt.registerLazySingleton<SearchRepo>(
     () => SearchRepoImpl(
+      authRemoteDataSource: getIt.get<AuthRemoteDataSource>(),
+    ),
+  );
+  getIt.registerLazySingleton<NotificationRepo>(
+    () => NotificationRepoImpl(
       authRemoteDataSource: getIt.get<AuthRemoteDataSource>(),
     ),
   );

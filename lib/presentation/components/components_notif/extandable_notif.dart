@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'model_notif.dart';
+import '../../../data/models/notification_model.dart';
 
 class ExpandableNotificationCard extends StatefulWidget {
   final NotificationModel notification;
@@ -54,14 +54,14 @@ class _ExpandableNotificationCardState
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        n.companyName,
+                        n.sender,
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
                       ),
-                      if (n.details.isNotEmpty)
+                      if (n.message.isNotEmpty)
                         Icon(
                           _isExpanded ? Icons.expand_less : Icons.expand_more,
                           color: Colors.white70,
@@ -84,7 +84,7 @@ class _ExpandableNotificationCardState
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        n.mainText,
+                        n.subtitle,
                         style: const TextStyle(color: Colors.white70, height: 1.3),
                         maxLines: _isExpanded ? null : 1,
                         overflow: _isExpanded
@@ -102,7 +102,7 @@ class _ExpandableNotificationCardState
                             const Divider(color: Colors.white54, thickness: 1),
                             const SizedBox(height: 8),
                             Text(
-                              n.details,
+                              n.message,
                               style: const TextStyle(color: Colors.white),
                             ),
                           ],
