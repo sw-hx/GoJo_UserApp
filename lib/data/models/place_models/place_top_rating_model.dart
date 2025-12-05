@@ -18,7 +18,7 @@ class PlaceTopRatingModel {
 
     return PlaceTopRatingModel(
       id: json['placeId'],
-      name: formatPlace(json['placeName']),
+      name: json['placeName'],
       rating: double.parse(rawRating.toStringAsFixed(1)),
       mainPhoto: json['mainPhotoLink'],
     );

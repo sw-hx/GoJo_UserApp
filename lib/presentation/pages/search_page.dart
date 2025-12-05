@@ -6,6 +6,7 @@ import 'package:go_jo_user_application/presentation/pages/place_info_screen.dart
 import '../../domain/repos/place_repo.dart';
 import '../../services/git_it_service.dart';
 import '../cubits/place_cubit/get_place_info_cubit/get_place_info_cubit.dart';
+import '../cubits/place_cubit/write_comment_cubit/write_comment_cubit.dart';
 import '../cubits/search_cubit/search_cubit.dart';
 
 class SearchPage extends StatefulWidget {
@@ -125,9 +126,19 @@ class _SearchPageState extends State<SearchPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => BlocProvider(
-                                create: (_) => GetPlaceInfoCubit(placeRepo: getIt.get<PlaceRepo>())..getPlaceInfo(item.placeName)
-                                  ..getPlaceInfo(item.placeName),
+                              builder: (_) =>MultiBlocProvider(
+                                providers: [
+                                  BlocProvider(
+                                    create: (context) => GetPlaceInfoCubit(
+                                      placeRepo: getIt<PlaceRepo>(),
+                                    )..getPlaceInfo(item.placeName),
+                                  ),
+                                  BlocProvider(
+                                    create: (context) => WriteCommentCubit(
+                                      placeRepo: getIt<PlaceRepo>(),
+                                    ),
+                                  ),
+                                ],
                                 child: PlaceInfoScreen(),
                               ),
                             ),
