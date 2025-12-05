@@ -3,6 +3,7 @@ import 'package:go_jo_user_application/data/models/place_models/place_homePage_m
 import '../../domain/repos/place_repo.dart';
 import '../../services/auth_remote_data_source.dart';
 import '../models/place_models/place_model.dart';
+import '../models/place_models/place_top_rating_model.dart';
 import '../models/review_model.dart';
 
 class PlaceRepoImpl implements PlaceRepo {
@@ -55,4 +56,16 @@ class PlaceRepoImpl implements PlaceRepo {
     ) as Map;
     return UserReviewModel.fromJson(response as Map<String, dynamic>);
   }
+
+  @override
+  Future<List<dynamic>> getTopRatingPlaces() async {
+    final response = await authRemoteDataSource.sendRequest(
+      endpoint: '/place/top_ratting/3',
+      method: 'GET',
+    ) as List;
+
+    return response.map((e) => PlaceTopRatingModel.fromJson(e)).toList();
+  }
+
+
 }
