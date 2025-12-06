@@ -4,11 +4,13 @@ import 'package:get_it/get_it.dart';
 
 import '../core/constants.dart';
 import '../data/repos/auth_repo_impl.dart';
+import '../data/repos/event_repo_impl.dart';
 import '../data/repos/notification_repo_impl.dart';
 import '../data/repos/place_repo_impl.dart';
 import '../data/repos/search_repo_impl.dart';
 import '../data/repos/trip_repo_impl.dart';
 import '../domain/repos/auth_repo.dart';
+import '../domain/repos/event_repo.dart';
 import '../domain/repos/notification_repo.dart';
 import '../domain/repos/place_repo.dart';
 import '../domain/repos/search_repo.dart';
@@ -44,29 +46,34 @@ void setup() {
   // Auth Repository
   getIt.registerSingleton<AuthRepo>(
     AuthRepoImpl(
-      authRemoteDataSource: getIt.get<RemoteDataSource>(),
+      remoteDataSource: getIt.get<RemoteDataSource>(),
       firebaseAuthService: getIt.get<FirebaseAuthService>(),
     ),
   );
 
   getIt.registerLazySingleton<PlaceRepo>(
     () => PlaceRepoImpl(
-      authRemoteDataSource: getIt.get<RemoteDataSource>(),
+      remoteDataSource: getIt.get<RemoteDataSource>(),
     ),
   );
   getIt.registerLazySingleton<TripRepo>(
     () => TripRepoImpl(
-      authRemoteDataSource: getIt.get<RemoteDataSource>(),
+      remoteDataSource: getIt.get<RemoteDataSource>(),
     ),
   );
   getIt.registerLazySingleton<SearchRepo>(
     () => SearchRepoImpl(
-      authRemoteDataSource: getIt.get<RemoteDataSource>(),
+      remoteDataSource: getIt.get<RemoteDataSource>(),
     ),
   );
   getIt.registerLazySingleton<NotificationRepo>(
     () => NotificationRepoImpl(
-      authRemoteDataSource: getIt.get<RemoteDataSource>(),
+      remoteDataSource: getIt.get<RemoteDataSource>(),
+    ),
+  );
+  getIt.registerLazySingleton<EventRepo>(
+    () => EventRepoImpl(
+      remoteDataSource: getIt.get<RemoteDataSource>(),
     ),
   );
 }

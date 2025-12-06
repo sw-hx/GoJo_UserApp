@@ -16,12 +16,12 @@ import '../models/user_model.dart';
 
 class AuthRepoImpl implements AuthRepo {
 
-  final RemoteDataSource authRemoteDataSource;
+  final RemoteDataSource remoteDataSource;
   final FirebaseAuthService firebaseAuthService;
 
 
   AuthRepoImpl(
-      {required this.authRemoteDataSource, required this.firebaseAuthService});
+      {required this.remoteDataSource, required this.firebaseAuthService});
 
   @override
   Future<Either<Failure, UserModel>> createUserWithEmailAndPassword({
@@ -31,7 +31,7 @@ class AuthRepoImpl implements AuthRepo {
     required String username,
   }) async {
     try {
-      var user = await authRemoteDataSource.sendRequest(
+      var user = await remoteDataSource.sendRequest(
           endpoint: '/auth/register/user',
           method: 'POST',
           data: {
@@ -54,7 +54,7 @@ class AuthRepoImpl implements AuthRepo {
   Future<Either<Failure, UserModel>> signInWithEmailAndPassword(
       {required String email, required String password}) async {
     try {
-      var user = await authRemoteDataSource.sendRequest(
+      var user = await remoteDataSource.sendRequest(
           endpoint: '/auth/login/user',
           method: 'POST',
           data: {'email': email, 'password': password});
