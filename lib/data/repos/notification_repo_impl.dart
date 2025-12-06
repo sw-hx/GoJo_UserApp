@@ -5,13 +5,13 @@ import '../models/notification_model.dart';
 
 
 class NotificationRepoImpl implements NotificationRepo {
-  final RemoteDataSource authRemoteDataSource;
-  NotificationRepoImpl({required this.authRemoteDataSource});
+  final RemoteDataSource remoteDataSource;
+  NotificationRepoImpl({required this.remoteDataSource});
 
   @override
   Future<List<dynamic>> getNotification() async {
 
-    final response = await authRemoteDataSource.sendRequest(
+    final response = await remoteDataSource.sendRequest(
         endpoint:'/notification' ,
         method: 'GET'
     );
@@ -22,7 +22,7 @@ class NotificationRepoImpl implements NotificationRepo {
   @override
   Future<void> deleteNotification({required int notificationId}) {
     print(notificationId);
-    final response = authRemoteDataSource.sendRequest(
+    final response = remoteDataSource.sendRequest(
         endpoint:'/notification/$notificationId' ,
         method: 'DELETE'
     );

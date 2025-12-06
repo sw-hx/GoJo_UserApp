@@ -3,12 +3,12 @@ import '../../services/remote_data_source.dart';
 import '../models/trip_model.dart';
 
 class TripRepoImpl implements TripRepo {
-  RemoteDataSource authRemoteDataSource;
-  TripRepoImpl({required this.authRemoteDataSource});
+  RemoteDataSource remoteDataSource;
+  TripRepoImpl({required this.remoteDataSource});
 
   Future<List<TripModel>> getTrips({required int placeId}) async {
 
-    final response = await authRemoteDataSource.sendRequest(
+    final response = await remoteDataSource.sendRequest(
       endpoint: '/place/$placeId/trip',
       method: 'GET',
     );

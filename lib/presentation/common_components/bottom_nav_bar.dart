@@ -49,7 +49,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         break;
 
       case 2:
-        nextPage = const EventsPage();
+        nextPage = EventsPage();
         break;
 
       default:

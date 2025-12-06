@@ -8,13 +8,13 @@ import '../models/review_model.dart';
 
 class PlaceRepoImpl implements PlaceRepo {
 
-  final RemoteDataSource authRemoteDataSource;
+  final RemoteDataSource remoteDataSource;
 
-  PlaceRepoImpl({required this.authRemoteDataSource});
+  PlaceRepoImpl({required this.remoteDataSource});
 
   @override
   Future<List<PlaceHomePageModel>> getAllPlaces() async {
-    final response = await authRemoteDataSource.sendRequest(
+    final response = await remoteDataSource.sendRequest(
       endpoint: '/place',
       method: 'GET',
     ) as List;
@@ -27,7 +27,7 @@ class PlaceRepoImpl implements PlaceRepo {
 
   @override
   Future<List<PlaceHomePageModel>> getPlacesByParentPlace(String parentPlace) async {
-    final response = await authRemoteDataSource.sendRequest(
+    final response = await remoteDataSource.sendRequest(
       endpoint: '/place?parent_place=${parentPlace.toUpperCase()}',
       method: 'GET',
     ) as List;
@@ -37,7 +37,7 @@ class PlaceRepoImpl implements PlaceRepo {
 
   @override
   Future<PlaceModel> getPlaceInfo(String placeName) async {
-    final response = await authRemoteDataSource.sendRequest(
+    final response = await remoteDataSource.sendRequest(
       endpoint: '/place/$placeName',
       method: 'GET',
     ) as Map;
@@ -46,7 +46,7 @@ class PlaceRepoImpl implements PlaceRepo {
 
   @override
   Future<UserReviewModel> addReview({required int rating, required String review, required int placeId}) async {
-    final response = await authRemoteDataSource.sendRequest(
+    final response = await remoteDataSource.sendRequest(
       endpoint: '/place/$placeId/review',
       method: 'POST',
       data: {
@@ -59,7 +59,7 @@ class PlaceRepoImpl implements PlaceRepo {
 
   @override
   Future<List<dynamic>> getTopRatingPlaces() async {
-    final response = await authRemoteDataSource.sendRequest(
+    final response = await remoteDataSource.sendRequest(
       endpoint: '/place/top_ratting/3',
       method: 'GET',
     ) as List;

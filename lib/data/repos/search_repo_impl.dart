@@ -4,13 +4,13 @@ import '../../data/models/search_place_model.dart';
 import '../../domain/repos/search_repo.dart';
 
 class SearchRepoImpl implements SearchRepo {
-  final RemoteDataSource authRemoteDataSource;
+  final RemoteDataSource remoteDataSource;
 
-  SearchRepoImpl({required this.authRemoteDataSource});
+  SearchRepoImpl({required this.remoteDataSource});
 
   @override
   Future<List<SearchPlaceModel>> searchPlaces(String query) async {
-    final response = await authRemoteDataSource.sendRequest(
+    final response = await remoteDataSource.sendRequest(
       endpoint: '/search?keyword=$query',
       method: 'GET',
     );
