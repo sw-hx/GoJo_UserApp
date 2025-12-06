@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_jo_user_application/presentation/cubits/favorite_cubit/delete_favorite_cubit/delete_favorite_cubit.dart';
+import '../../data/models/favorite_model.dart';
+import '../../domain/repos/favorite_repo.dart';
+import '../../services/git_it_service.dart';
 import '../common_components/custom_returnArrow.dart';
 import '../common_components/bottom_nav_bar.dart';
 import '../components/components_favoritesPage/favorites_Card.dart';
+import '../cubits/favorite_cubit/get_favorites_cubit/get_favorites_cubit.dart';
 import 'home_page.dart';
 
 class FavoritesPage extends StatefulWidget {
@@ -12,82 +18,117 @@ class FavoritesPage extends StatefulWidget {
 }
 
 class _FavoritesPageState extends State<FavoritesPage> {
-  final List<FavoritePlace> favoritePlaces = [
-    FavoritePlace(
-      name: 'Petra',
-      imageUrl:
-      'https://plus.unsplash.com/premium_photo-1674657644778-1c9f03fd1e55?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3MjAxN3wwfDF8c2VhcmNofDV8fHBldHJhfGVufDB8fHx8MTc2MDUxNTE0MXww&ixlib=rb-4.1.0&q=85&q=85&fmt=jpg&crop=entropy&cs=tinysrgb&w=450',
-    ),
-    FavoritePlace(
-      name: 'Amman',
-      imageUrl:
-      'https://images.unsplash.com/photo-1604510819628-539c92c78658?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3MjAxN3wwfDF8c2VhcmNofDE4fHxhbW1hbnxlbnwwfHx8fDE3NjA1MTM0NDF8MA&ixlib=rb-4.1.0&q=85&q=85&fmt=jpg&crop=entropy&cs=tinysrgb&w=450',
-    ),
-    FavoritePlace(
-      name: 'Dana Reserve',
-      imageUrl:
-      'https://images.unsplash.com/photo-1600945667687-b960ec00404f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3MjAxN3wwfDF8c2VhcmNofDE2fHxKZXJhc2h8ZW58MHx8fHwxNzYwNTE0MDYyfDA&ixlib=rb-4.1.0&q=85&q=85&fmt=jpg&crop=entropy&cs=tinysrgb&w=450',
-    ),
-  ];
+  List<FavoriteModel> favoritePlaces = [];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.grey[100],
-        body: SafeArea(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+          GetFavoritesCubit(
+            favoriteRepo: getIt<FavoriteRepo>(),
+          )
+            ..getFavorites(),
+        ),
+        BlocProvider(
+          create: (context) =>
+              DeleteFavoriteCubit(
+                favoriteRepo: getIt<FavoriteRepo>(),
+              ),
+        ),
+      ],
+      child: BlocConsumer<GetFavoritesCubit, GetFavoritesState>(
+        listener: (context, state) {
+          if (state is GetFavoritesSuccess) {
+            favoritePlaces = state.favorites;
+            setState(() {});
+          }
+          if (state is GetFavoritesFailure) {
+            SnackBar(content: Text(state.message));
+          }
+        },
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: Colors.grey[100],
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
 
-                    const SizedBox(height: 15),
-                    const Text(
-                      "Favorites",
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF11324D),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    const Text(
-                      "Your journey starts here",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFF11324D),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    // الكاردات
-                    Column(
-                      children: favoritePlaces
-                          .asMap()
-                          .entries
-                          .map(
-                            (entry) => Padding(
-                          padding: const EdgeInsets.only(bottom: 18.0),
-                          child: FavoriteCard(
-                            place: entry.value,
-                            onDelete: () {
-                              setState(() {
-                                favoritePlaces.removeAt(entry.key);
-                              });
-                            },
-                          ),
+                      const SizedBox(height: 15),
+                      const Text(
+                        "Favorites",
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF11324D),
                         ),
-                      )
-                          .toList(),
-                    ),
-                  ],
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        "Your journey starts here",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Color(0xFF11324D),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      BlocConsumer<DeleteFavoriteCubit, DeleteFavoriteState>(
+                        listener: (context, state) {
+                          if (state is DeleteFavoriteSuccess) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Favorite deleted successfully")),
+                            );
+                            setState(() {});
+                          }
+                          if (state is DeleteFavoriteFailure) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(state.message)),
+                            );
+                          }
+                        },
+                        builder: (context, state) {
+                          return Column(
+                            children: favoritePlaces
+                                .asMap()
+                                .entries
+                                .map(
+                                  (entry) =>
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom: 18.0),
+                                    child: FavoriteCard(
+                                      place: entry.value,
+                                      onDelete: () {
+                                        setState(() {
+                                          context.read<DeleteFavoriteCubit>().deleteFavorite(favoriteId: entry.value.favoriteId);
+                                          favoritePlaces.removeAt(entry.key);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                            )
+                                .toList(),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-            ),
-      bottomNavigationBar: const BottomNavBar(currentIndex: 1),
+            bottomNavigationBar: const BottomNavBar(currentIndex: 1),
 
+          );
+        },
+      ),
     );
-    }
+  }
 }

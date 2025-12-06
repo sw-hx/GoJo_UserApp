@@ -229,7 +229,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                     )
                     : placesExist
-                    ? PlaceCardsList(places: places)
+                    ? PlaceCardsList(
+                    places: places,
+
+                )
                     : Container(
                   width: double.infinity,
                   height: 235,

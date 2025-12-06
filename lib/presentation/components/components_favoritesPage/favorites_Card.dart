@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 
-class FavoritePlace {
-  final String name;
-  final String imageUrl;
+import '../../../data/models/favorite_model.dart';
 
-  FavoritePlace({required this.name, required this.imageUrl});
-}
 
 class FavoriteCard extends StatelessWidget {
-  final FavoritePlace place;
+  final FavoriteModel place;
   final VoidCallback? onDelete;
 
   const FavoriteCard({super.key, required this.place, this.onDelete});
@@ -37,7 +33,7 @@ class FavoriteCard extends StatelessWidget {
                 child: Stack(
                   children: [
                     Image.network(
-                      place.imageUrl,
+                      place.placeMainPhotoUrl,
                       width: 400,
                       height: cardHeight,
                       fit: BoxFit.cover,
@@ -59,7 +55,7 @@ class FavoriteCard extends StatelessWidget {
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        place.name,
+                        place.placeName,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Colors.white,

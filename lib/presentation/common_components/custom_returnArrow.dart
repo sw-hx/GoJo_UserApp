@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
-class CustomReturnArrow extends StatelessWidget {
+class CustomReturnArrow extends StatefulWidget {
   final Widget targetPage;
 
   const CustomReturnArrow({super.key, required this.targetPage});
 
+  @override
+  State<CustomReturnArrow> createState() => _CustomReturnArrowState();
+}
+
+class _CustomReturnArrowState extends State<CustomReturnArrow> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
@@ -14,7 +19,7 @@ class CustomReturnArrow extends StatelessWidget {
           color: Color.fromRGBO(18, 54, 69, 1),
         ),
         onPressed: () {
-          Navigator.pop(context);
+          Navigator.pop(context, true);
           },
         );
     }

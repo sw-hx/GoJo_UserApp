@@ -5,12 +5,14 @@ import 'package:get_it/get_it.dart';
 import '../core/constants.dart';
 import '../data/repos/auth_repo_impl.dart';
 import '../data/repos/event_repo_impl.dart';
+import '../data/repos/favorite_repo_impl.dart';
 import '../data/repos/notification_repo_impl.dart';
 import '../data/repos/place_repo_impl.dart';
 import '../data/repos/search_repo_impl.dart';
 import '../data/repos/trip_repo_impl.dart';
 import '../domain/repos/auth_repo.dart';
 import '../domain/repos/event_repo.dart';
+import '../domain/repos/favorite_repo.dart';
 import '../domain/repos/notification_repo.dart';
 import '../domain/repos/place_repo.dart';
 import '../domain/repos/search_repo.dart';
@@ -73,6 +75,12 @@ void setup() {
   );
   getIt.registerLazySingleton<EventRepo>(
     () => EventRepoImpl(
+      remoteDataSource: getIt.get<RemoteDataSource>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<FavoriteRepo>(
+    () => FavoriteRepoImpl(
       remoteDataSource: getIt.get<RemoteDataSource>(),
     ),
   );
