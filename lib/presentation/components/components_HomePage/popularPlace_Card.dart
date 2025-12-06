@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_jo_user_application/presentation/pages/place_info_screen.dart';
 import '../../../core/helpers/helpers.dart';
+import '../../../domain/repos/favorite_repo.dart';
 import '../../../domain/repos/place_repo.dart';
 import '../../../services/git_it_service.dart';
+import '../../cubits/favorite_cubit/add_favorite_cubit/add_favorite_cubit.dart';
 import '../../cubits/place_cubit/get_place_info_cubit/get_place_info_cubit.dart';
 import '../../cubits/place_cubit/write_comment_cubit/write_comment_cubit.dart';
 
@@ -35,6 +37,11 @@ class PopularCard extends StatelessWidget {
                       BlocProvider(
                         create: (_) => WriteCommentCubit(
                           placeRepo: getIt.get<PlaceRepo>(),
+                        ),
+                      ),
+                      BlocProvider(
+                        create: (_) => AddFavoriteCubit(
+                          favoriteRepo: getIt.get<FavoriteRepo>(),
                         ),
                       ),
                     ],

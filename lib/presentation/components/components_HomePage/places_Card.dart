@@ -1,37 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_jo_user_application/core/helpers/helpers.dart';
+import 'package:go_jo_user_application/presentation/cubits/favorite_cubit/add_favorite_cubit/add_favorite_cubit.dart';
 import '../../../data/models/place_models/place_model.dart';
+import '../../../domain/repos/favorite_repo.dart';
 import '../../../domain/repos/place_repo.dart';
 import '../../../services/git_it_service.dart';
 import '../../cubits/place_cubit/get_place_info_cubit/get_place_info_cubit.dart';
+import '../../cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
 import '../../cubits/place_cubit/write_comment_cubit/write_comment_cubit.dart';
 import '../../pages/place_info_screen.dart';
 
 
 /// coded by [suhaib]
 
-class PlaceCardsList extends StatelessWidget {
+class PlaceCardsList extends StatefulWidget {
   const PlaceCardsList({super.key, required this.places});
 
   final List<dynamic> places;
 
+  @override
+  State<PlaceCardsList> createState() => _PlaceCardsListState();
+}
 
+class _PlaceCardsListState extends State<PlaceCardsList> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 250,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: places.length,
+        itemCount: widget.places.length,
         itemBuilder: (context, index) {
-          final place = places[index];
+          final place = widget.places[index];
           return PlaceCard(
             title: formatPlace(place.placeName),
             description: place.quickInfo,
             imageUrl: place.mainPhotoLink,
-            onTap: () {
-              Navigator.push(
+            onTap: () async {
+              final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (_) => MultiBlocProvider(
@@ -46,13 +53,25 @@ class PlaceCardsList extends StatelessWidget {
                           placeRepo: getIt<PlaceRepo>(),
                         ),
                       ),
+                      BlocProvider(
+                        create: (context) => AddFavoriteCubit(
+                          favoriteRepo: getIt<FavoriteRepo>(),
+                        ),
+                      ),
                     ],
                     child: PlaceInfoScreen(),
                   ),
                 ),
               );
+              if (result == true) {
+               context.read<GetPlacesByParentPlaceCubit>().getPlacesByParentPlace('ALL');
+               setState(() {});
+              }
 
             },
+            isFavorite: place.isFavorite,
+            placeId: place.placeId,
+
           );
         },
       ),
@@ -64,7 +83,9 @@ class PlaceCard extends StatefulWidget {
   final String imageUrl;
   final String title;
   final String description;
-  final VoidCallback onTap;
+  final Future<void> Function() onTap;
+  final bool isFavorite;
+  final int placeId;
 
   const PlaceCard({
     super.key,
@@ -72,6 +93,8 @@ class PlaceCard extends StatefulWidget {
     required this.title,
     required this.description,
     required this.onTap,
+    required this.isFavorite,
+    required this.placeId,
   });
 
   @override
@@ -79,10 +102,29 @@ class PlaceCard extends StatefulWidget {
 }
 
 class _PlaceCardState extends State<PlaceCard> {
-  bool isFavorite = false;
+  late bool isFav;
+
+  @override
+  void initState() {
+    super.initState();
+    isFav = widget.isFavorite;
+  }
 
   @override
   Widget build(BuildContext context) {
+    return BlocListener<AddFavoriteCubit, AddFavoriteState>(
+      listener: (context, state) {
+        if (state is AddFavoriteFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+        }
+      },
+      child: _buildCard(),
+    );
+  }
+
+  Widget _buildCard() {
     return GestureDetector(
       onTap: widget.onTap,
       child: Container(
@@ -91,10 +133,7 @@ class _PlaceCardState extends State<PlaceCard> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           image: DecorationImage(
-            image: NetworkImage(
-                //widget.imageUrl
-              'https://www.sarayanews.com/image.php?token=e96b92baf594b10580b33117270c9996&size='
-            ),
+            image: NetworkImage(widget.imageUrl),
             fit: BoxFit.cover,
           ),
         ),
@@ -113,24 +152,23 @@ class _PlaceCardState extends State<PlaceCard> {
                 ),
               ),
             ),
-
             Positioned(
               top: 10,
               right: 10,
               child: GestureDetector(
                 onTap: () {
-                  setState(() {
-                    isFavorite = !isFavorite;
-                  });
+                  if (!isFav) {
+                    context.read<AddFavoriteCubit>().addFavorite(widget.placeId);
+                    setState(() => isFav = true);
+                  }
                 },
                 child: Icon(
-                  isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: isFavorite ? Colors.red : Colors.white,
+                  isFav ? Icons.favorite : Icons.favorite_border,
+                  color: isFav ? Colors.red : Colors.white,
                   size: 32,
                 ),
               ),
             ),
-
             Positioned(
               bottom: 10,
               left: 10,
@@ -162,4 +200,3 @@ class _PlaceCardState extends State<PlaceCard> {
     );
   }
 }
-//coded by suhaib

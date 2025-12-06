@@ -20,6 +20,7 @@ import '../components/components_place_infoPage/map.dart';
 import '../components/components_place_infoPage/photos.dart';
 import '../components/components_place_infoPage/place_image.dart';
 import '../components/components_place_infoPage/weather.dart';
+import '../cubits/favorite_cubit/add_favorite_cubit/add_favorite_cubit.dart';
 import '../cubits/trip_cubit/get_trips_by_place_id_cubit.dart';
 import 'trips.dart';
 
@@ -33,9 +34,10 @@ class PlaceInfoScreen extends StatefulWidget {
 class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
   bool isExpanded = false;
   bool showAllComments = false;
-  bool isFavorite = false;
+  late bool isFavorite;
   double userRating = 0.0;
   PlaceModel? place;
+  
 
   final TextEditingController commentController = TextEditingController();
 
@@ -46,6 +48,7 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
         if (state is GetPlaceInfoSuccess) {
           setState(() {
             place = state.place;
+            isFavorite = state.place.isFavorite;
           });
         }
       },
@@ -56,7 +59,17 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
           );
         }
 
-        return Scaffold(
+        return BlocConsumer<AddFavoriteCubit, AddFavoriteState>(
+  listener: (context, state) {
+    if (state is AddFavoriteSuccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(content: Text("Place added to favorites")),
+      );
+    }
+
+  },
+  builder: (context, state) {
+    return Scaffold(
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
@@ -74,7 +87,14 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
                     imageUrl: "assets/images/petra.jpg",
                     name: formatPlace(place!.placeName),
                     isFavorite: isFavorite,
-                    onFavoriteTap: () => setState(() => isFavorite = !isFavorite),
+                    onFavoriteTap: () {
+                      if (!isFavorite) {
+                        context.read<AddFavoriteCubit>().addFavorite(place!.placeId);
+                        setState(() {
+                          isFavorite = true;
+                        });
+                      }
+                    }
                   ),
 
                   const SizedBox(height: 10),
@@ -313,6 +333,8 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
           ),
           bottomNavigationBar: BottomNavBar(currentIndex: 0),
         );
+  },
+);
       },
     );
   }

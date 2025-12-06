@@ -35,6 +35,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_jo_user_application/data/models/user_model.dart';
 import 'package:go_jo_user_application/domain/repos/place_repo.dart';
+import 'package:go_jo_user_application/presentation/cubits/favorite_cubit/add_favorite_cubit/add_favorite_cubit.dart';
 import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_all_places_cubit/get_all_places_cubit.dart';
 import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
 import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_topRating_places_cubit/get_top_rating_places_cubit.dart';
@@ -44,6 +45,7 @@ import 'package:go_jo_user_application/services/firebase_auth_service.dart';
 import 'package:go_jo_user_application/services/git_it_service.dart';
 import 'package:go_jo_user_application/services/shared_preferences.dart';
 import 'core/helpers/getUser.dart';
+import 'domain/repos/favorite_repo.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -109,6 +111,11 @@ class _SplashScreenState extends State<SplashScreen> {
                 create: (_) => GetTopRatingPlacesCubit(
                   placeRepo: getIt.get<PlaceRepo>(),
                 )..getTopRatingPlaces(),
+              ),
+              BlocProvider(
+                  create: (_) => AddFavoriteCubit(
+                      favoriteRepo: getIt.get<FavoriteRepo>()
+                  ),
               ),
             ],
             child: HomePage(),
