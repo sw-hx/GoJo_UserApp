@@ -84,7 +84,7 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
                   const SizedBox(height: 16),
 
                   PlaceImage(
-                    imageUrl: "assets/images/petra.jpg",
+                    imageUrl: place!.mainPhotoLink,
                     name: formatPlace(place!.placeName),
                     isFavorite: isFavorite,
                     onFavoriteTap: () {
@@ -115,7 +115,7 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
                     children: [
                       DetailBox(
                         title: "Best Season",
-                        desc: place!.bestSeasonToVisit,
+                        desc: formatPlace(place!.bestSeasonToVisit),
                         imageUrl: "https://cdn-icons-png.flaticon.com/512/869/869869.png",
                       ),
                       DetailBox(
@@ -139,12 +139,12 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
                     height: 200,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
-                      children: const [
-                        PhotoBox(url: "assets/images/petra.jpg"),
-                        PhotoBox(url: "assets/images/petra.jpg"),
-                        PhotoBox(url: "assets/images/petra.jpg"),
-                        PhotoBox(url: "assets/images/petra.jpg"),
-                        PhotoBox(url: "assets/images/petra.jpg"),
+                      children:  [
+                        PhotoBox(url: place!.subPhotoOneLink),
+                        PhotoBox(url: place!.subPhotoTwoLink),
+                        PhotoBox(url: place!.subPhotoThreeLink),
+                        PhotoBox(url: place!.subPhotoFourLink),
+                        PhotoBox(url: place!.subPhotoFiveLink),
                       ],
                     ),
                   ),

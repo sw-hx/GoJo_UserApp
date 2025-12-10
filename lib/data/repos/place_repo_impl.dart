@@ -60,7 +60,7 @@ class PlaceRepoImpl implements PlaceRepo {
   @override
   Future<List<dynamic>> getTopRatingPlaces() async {
     final response = await remoteDataSource.sendRequest(
-      endpoint: '/place/top_ratting/3',
+      endpoint: '/place/top_rating?size=3',
       method: 'GET',
     ) as List;
 

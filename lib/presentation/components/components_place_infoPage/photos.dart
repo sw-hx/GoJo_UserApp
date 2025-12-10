@@ -11,9 +11,9 @@ class PhotoBox extends StatelessWidget {
         margin: const EdgeInsets.only(right: 20),
         child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            //network
-            //child: Image.network(url, width: 170, height: 250, fit: BoxFit.cover),
-            child: Image.asset(url, width: 170, height: 250, fit: BoxFit.cover),
+
+            child: Image.network(url, width: 170, height: 250, fit: BoxFit.cover),
+
             ),
         );
     }

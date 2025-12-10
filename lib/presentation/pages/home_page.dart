@@ -75,6 +75,9 @@ class _HomePageState extends State<HomePage> {
             }
 
             if (state is GetTopRatingPlacesFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
               isTopRatedLoading = false;
               setState(() {});
             }

@@ -11,7 +11,7 @@ class SearchRepoImpl implements SearchRepo {
   @override
   Future<List<SearchPlaceModel>> searchPlaces(String query) async {
     final response = await remoteDataSource.sendRequest(
-      endpoint: '/search?keyword=$query',
+      endpoint: '/search/place?keyword=$query',
       method: 'GET',
     );
 
