@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/helpers/helpers.dart';
 import '../../../data/models/favorite_model.dart';
 
 
@@ -55,7 +56,7 @@ class FavoriteCard extends StatelessWidget {
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        place.placeName,
+                        formatPlace(place.placeName),
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Colors.white,
