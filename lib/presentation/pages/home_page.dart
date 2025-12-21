@@ -98,26 +98,53 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context,
+                          Navigator.push(
+                            context,
                             MaterialPageRoute(builder: (_) => const ProfilePage()),
                           );
                         },
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              child: Text(getUserData().personFullName[0].toUpperCase()),
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              getUserData().personFullName,
-                              style: const TextStyle(
-                                color: Color.fromRGBO(18, 54, 69, 1),
-                                fontSize: 18,
-                              ),
-                            ),
-                          ],
+                        child: FutureBuilder(
+                          future: getUserData(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return const Row(
+                                children: [
+                                  CircleAvatar(child: Icon(Icons.person)),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    'Guest',
+                                    style: TextStyle(
+                                      color: Color.fromRGBO(18, 54, 69, 1),
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+
+                            final user = snapshot.data!;
+
+                            return Row(
+                              children: [
+                                CircleAvatar(
+                                  child: Text(
+                                    user.personFullName[0].toUpperCase(),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Text(
+                                  user.personFullName,
+                                  style: const TextStyle(
+                                    color: Color.fromRGBO(18, 54, 69, 1),
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       ),
+
                       const Spacer(),
                       Stack(
                         children: [
@@ -303,7 +330,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
 
-        bottomNavigationBar: const BottomNavBar(currentIndex: 0),
+        bottomNavigationBar:const   BottomNavBar(currentIndex: 0),
       ),
     );
   }

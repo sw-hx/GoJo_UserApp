@@ -197,22 +197,6 @@ class WelcomeScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const HomePage()),
-                                );
-                              },
-                              child: const Text(
-                                "Skip for now",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ),
                             SizedBox(height: screenHeight * 0.03),
                           ],
                         ),

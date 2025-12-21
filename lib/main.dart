@@ -1,84 +1,61 @@
-// conflict on suhib
-// import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:go_jo_user_application/pages/home_page.dart';
-
-// void main() {
-//   runApp(const MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-
-//   // This widget is the root of your application.
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       home: ScreenUtilInit(
-//       designSize: const Size(360, 690),
-//       minTextAdapt: true,
-//       splitScreenMode: true,
-//       builder: ( _ , child) {
-//         return MaterialApp(
-//             debugShowCheckedModeBanner: false,
-//             home:HomePage()
-
-//         );
-//       },
-//     ),);
-//   }
-// }
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_jo_user_application/data/models/user_model.dart';
-import 'package:go_jo_user_application/domain/repos/place_repo.dart';
-import 'package:go_jo_user_application/presentation/cubits/favorite_cubit/add_favorite_cubit/add_favorite_cubit.dart';
-import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_all_places_cubit/get_all_places_cubit.dart';
-import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
-import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_topRating_places_cubit/get_top_rating_places_cubit.dart';
-import 'package:go_jo_user_application/presentation/hala_all/startingUP_screens_H/login_screen_hala/welcome_screen.dart';
-import 'package:go_jo_user_application/presentation/pages/home_page.dart';
-import 'package:go_jo_user_application/services/firebase_auth_service.dart';
-import 'package:go_jo_user_application/services/git_it_service.dart';
-import 'package:go_jo_user_application/services/shared_preferences.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'core/helpers/getUser.dart';
+import 'data/models/user_model.dart';
 import 'domain/repos/favorite_repo.dart';
+import 'domain/repos/place_repo.dart';
 import 'firebase_options.dart';
+import 'presentation/cubits/favorite_cubit/add_favorite_cubit/add_favorite_cubit.dart';
+import 'presentation/cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
+import 'presentation/cubits/place_cubit/get_topRating_places_cubit/get_top_rating_places_cubit.dart';
+import 'presentation/hala_all/startingUP_screens_H/login_screen_hala/welcome_screen.dart';
+import 'presentation/pages/home_page.dart';
+import 'services/git_it_service.dart';
+import 'services/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   await SharedPreferencesService.init();
-  setup(); //get it
+  setup(); // get_it
+
   runApp(const GojoApp());
 }
 
 class GojoApp extends StatelessWidget {
   const GojoApp({super.key});
 
-  /// # coded By [Hala]
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'GOJO',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: Colors.blueAccent,
-        scaffoldBackgroundColor: Colors.white,
-        useMaterial3: false,
-      ),
-      home: const SplashScreen(),
+    return ScreenUtilInit(
+      designSize: const Size(375, 812), // baseline (iPhone X)
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp(
+          title: 'GOJO',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primaryColor: Colors.blueAccent,
+            scaffoldBackgroundColor: Colors.white,
+            useMaterial3: false,
+          ),
+          home: child,
+        );
+      },
+      child: const SplashScreen(),
     );
   }
 }
 
-/// # coded By [Hala]
+/// ================= SPLASH =================
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -90,17 +67,21 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _navigateToWelcome();
+    _navigate();
   }
 
-  _navigateToWelcome() async {
+  Future<void> _navigate() async {
     await Future.delayed(const Duration(seconds: 3));
-    UserModel user = getUserData();
-    if (user.id.isNotEmpty) {
+
+    final UserModel? user = await getUserData();
+
+    if (!mounted) return;
+
+    if (user != null && user.id.isNotEmpty) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => MultiBlocProvider(
+          builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider(
                 create: (_) => GetPlacesByParentPlaceCubit(
@@ -113,26 +94,24 @@ class _SplashScreenState extends State<SplashScreen> {
                 )..getTopRatingPlaces(),
               ),
               BlocProvider(
-                  create: (_) => AddFavoriteCubit(
-                      favoriteRepo: getIt.get<FavoriteRepo>()
-                  ),
+                create: (_) => AddFavoriteCubit(
+                  favoriteRepo: getIt.get<FavoriteRepo>(),
+                ),
               ),
             ],
-            child: HomePage(),
+            child: const HomePage(),
           ),
         ),
       );
-
-    }
-    else {
+    } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+        MaterialPageRoute(
+          builder: (_) => const WelcomeScreen(),
+        ),
       );
     }
   }
-
-  /// # coded By [Hala]
 
   @override
   Widget build(BuildContext context) {
@@ -152,4 +131,3 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
-

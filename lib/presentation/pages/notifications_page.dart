@@ -32,7 +32,7 @@ class NotificationsPage extends StatelessWidget {
         listener: (context, state) {
           if (state is DeleteNotificationSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Notification deleted ✔️")),
+              const SnackBar(content: Text("Notification deleted")),
             );
           }
 
@@ -120,7 +120,7 @@ class NotificationsPage extends StatelessWidget {
                                   } catch (_) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                          content: Text("Delete failed ❌")),
+                                          content: Text("Delete failed")),
                                     );
                                   }
                                 },

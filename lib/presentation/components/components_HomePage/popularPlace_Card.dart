@@ -58,8 +58,7 @@ class PopularCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 image: DecorationImage(
                   image: NetworkImage(
-                    //place.mainPhoto
-                    'https://www.sarayanews.com/image.php?token=e96b92baf594b10580b33117270c9996&size=',
+                    place.mainPhoto
                   ),
                   fit: BoxFit.cover,
                 ),
