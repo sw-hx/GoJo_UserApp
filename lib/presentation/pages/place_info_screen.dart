@@ -331,7 +331,7 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
               ),
             ),
           ),
-          bottomNavigationBar: BottomNavBar(currentIndex: 0),
+          bottomNavigationBar: BottomNavBar(),
         );
   },
 );
