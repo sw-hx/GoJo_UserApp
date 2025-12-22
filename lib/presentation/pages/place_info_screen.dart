@@ -291,7 +291,10 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
 
                   customDivider(),
                   customTitleText(title: 'Weather', size: 22),
-                  const WeatherList(),
+                   WeatherList(
+                    weather:place!.weatherResponse ,
+                     days: place!.weatherResponse.length,
+                  ),
 
                   customDivider(),
                   customTitleText(title: 'Map', size: 22),
