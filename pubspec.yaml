@@ -29,6 +29,9 @@ dependencies:
   modal_progress_hud_nsn: ^0.5.1
   dio: ^5.9.0
   flutter_secure_storage: ^9.2.4
+  image_picker: ^1.1.2
+  skeletonizer: ^2.1.1
+  supabase_flutter: ^2.10.3
 
 dev_dependencies:
   flutter_test:

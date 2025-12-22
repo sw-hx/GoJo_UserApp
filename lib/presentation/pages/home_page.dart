@@ -1,15 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_jo_user_application/core/helpers/getUser.dart';
+import 'package:go_jo_user_application/domain/repos/profile_repo.dart';
 import 'package:go_jo_user_application/presentation/common_components/bottom_nav_bar.dart';
 import 'package:go_jo_user_application/presentation/components/components_HomePage/places_Card.dart';
 import 'package:go_jo_user_application/presentation/components/components_HomePage/popularPlace_Card.dart';
 import 'package:go_jo_user_application/presentation/components/components_HomePage/selector_places.dart';
+import 'package:go_jo_user_application/presentation/cubits/edit_profile_cubit/edit_profile_cubit.dart';
 import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
 import 'package:go_jo_user_application/presentation/effects/skeleton_place_card.dart';
 import 'package:go_jo_user_application/presentation/pages/search_page.dart';
 import '../../domain/repos/search_repo.dart';
 import '../../services/git_it_service.dart';
+import '../../services/storage_service.dart';
 import '../cubits/place_cubit/get_topRating_places_cubit/get_top_rating_places_cubit.dart';
 import '../cubits/search_cubit/search_cubit.dart';
 import '../effects/skeleton_popular_card.dart';
@@ -18,7 +23,9 @@ import 'profile_page.dart';
 
 class HomePage extends StatefulWidget {
   final bool showBookingConfirmation;
-  const HomePage({Key? key, this.showBookingConfirmation = false}) : super(key: key);
+
+  const HomePage({Key? key, this.showBookingConfirmation = false})
+    : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -30,7 +37,6 @@ class _HomePageState extends State<HomePage> {
   List<dynamic> topRatedPlaces = [];
   bool isLoadingPlaces = true;
   bool isTopRatedLoading = true;
-
 
   @override
   Widget build(BuildContext context) {
@@ -75,15 +81,14 @@ class _HomePageState extends State<HomePage> {
             }
 
             if (state is GetTopRatingPlacesFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.message)));
               isTopRatedLoading = false;
               setState(() {});
             }
           },
         ),
-
       ],
       child: Scaffold(
         body: SafeArea(
@@ -97,11 +102,25 @@ class _HomePageState extends State<HomePage> {
                   child: Row(
                     children: [
                       GestureDetector(
-                        onTap: () {
-                          Navigator.push(
+                        onTap: ()async {
+                         final result =await Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (_) => const ProfilePage()),
+                            MaterialPageRoute(
+                              builder: (_) => BlocProvider(
+                                create: (context) => EditProfileCubit(
+                                    profileRepo:getIt.get<ProfileRepo>() ,
+                                    storageService:getIt.get<StorageService>()
+                                ),
+                                child: ProfilePage(),
+                              ),
+                            ),
                           );
+                         if(result==true){
+                           setState(() {
+
+                           });
+
+                         }
                         },
                         child: FutureBuilder(
                           future: getUserData(),
@@ -127,10 +146,31 @@ class _HomePageState extends State<HomePage> {
                             return Row(
                               children: [
                                 CircleAvatar(
-                                  child: Text(
-                                    user.personFullName[0].toUpperCase(),
-                                  ),
+                                  radius: 24,
+                                  backgroundColor: Colors.grey.shade300,
+                                  backgroundImage:
+                                      user!.profilePhoto != null &&
+                                          user!.profilePhoto!.isNotEmpty
+                                      ? (user!.profilePhoto!.startsWith('http')
+                                            ? NetworkImage(user!.profilePhoto!)
+                                            : FileImage(
+                                                    File(user!.profilePhoto!),
+                                                  )
+                                                  as ImageProvider)
+                                      : null,
+                                  child:
+                                      user!.profilePhoto == null ||
+                                          user!.profilePhoto!.isEmpty
+                                      ? Text(
+                                          user!.personFullName.isNotEmpty
+                                              ? user!.personFullName[0]
+                                                    .toUpperCase()
+                                              : "?",
+                                          style: const TextStyle(fontSize: 50),
+                                        )
+                                      : null,
                                 ),
+
                                 const SizedBox(width: 10),
                                 Text(
                                   user.personFullName,
@@ -149,12 +189,17 @@ class _HomePageState extends State<HomePage> {
                       Stack(
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.notifications,
-                                color: Color.fromRGBO(18, 54, 69, 1), size: 40),
+                            icon: const Icon(
+                              Icons.notifications,
+                              color: Color.fromRGBO(18, 54, 69, 1),
+                              size: 40,
+                            ),
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (_) => NotificationsPage()),
+                                MaterialPageRoute(
+                                  builder: (_) => NotificationsPage(),
+                                ),
                               );
                             },
                           ),
@@ -185,7 +230,10 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Text('Your journey starts here', style: TextStyle(fontSize: 20)),
+                const Text(
+                  'Your journey starts here',
+                  style: TextStyle(fontSize: 20),
+                ),
                 const SizedBox(height: 25),
 
                 GestureDetector(
@@ -194,7 +242,8 @@ class _HomePageState extends State<HomePage> {
                       context,
                       MaterialPageRoute(
                         builder: (_) => BlocProvider(
-                          create: (_) => SearchCubit(repo: getIt.get<SearchRepo>()),
+                          create: (_) =>
+                              SearchCubit(repo: getIt.get<SearchRepo>()),
                           child: const SearchPage(),
                         ),
                       ),
@@ -249,56 +298,60 @@ class _HomePageState extends State<HomePage> {
 
                 isLoadingPlaces
                     ? SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          SkeletonPlaceCard(),
-                          SkeletonPlaceCard(),
-                          SkeletonPlaceCard()
-                        ],
-                      ),
-                    )
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            SkeletonPlaceCard(),
+                            SkeletonPlaceCard(),
+                            SkeletonPlaceCard(),
+                          ],
+                        ),
+                      )
                     : placesExist
-                    ? PlaceCardsList(
-                    places: places,
-
-                )
+                    ? PlaceCardsList(places: places)
                     : Container(
-                  width: double.infinity,
-                  height: 235,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  margin: const EdgeInsets.only(bottom: 15),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF23627E).withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                        color: const Color(0xFF23627E), width: 1.5),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.location_off,
-                          size: 60, color: Color(0xFF23627E)),
-                      SizedBox(height: 15),
-                      Text(
-                        'No destinations available',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF11324D),
+                        width: double.infinity,
+                        height: 235,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        margin: const EdgeInsets.only(bottom: 15),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF23627E).withOpacity(0.12),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: const Color(0xFF23627E),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(
+                              Icons.location_off,
+                              size: 60,
+                              color: Color(0xFF23627E),
+                            ),
+                            SizedBox(height: 15),
+                            Text(
+                              'No destinations available',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF11324D),
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Try choosing another area',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Try choosing another area',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 16, color: Colors.black54),
-                      ),
-                    ],
-                  ),
-                ),
 
                 const SizedBox(height: 15),
 
@@ -314,15 +367,15 @@ class _HomePageState extends State<HomePage> {
 
                 isTopRatedLoading
                     ? SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                                        children: const [
-                      SkeletonPopularCard(),
-                      SkeletonPopularCard(),
-                      SkeletonPopularCard(),
-                                        ],
-                                      ),
-                    )
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: const [
+                            SkeletonPopularCard(),
+                            SkeletonPopularCard(),
+                            SkeletonPopularCard(),
+                          ],
+                        ),
+                      )
                     : PopularCard(places: topRatedPlaces),
                 const SizedBox(height: 5),
               ],
@@ -330,7 +383,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
 
-        bottomNavigationBar:const   BottomNavBar(currentIndex: 0),
+        bottomNavigationBar: const BottomNavBar(currentIndex: 0),
       ),
     );
   }
