@@ -103,25 +103,53 @@ class BookingPage extends StatelessWidget {
               SizedBox(height: 10.h),
               customDivider(),
 
-              Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(fromLocation,
-                        style: mainText.copyWith(
-                            fontSize: 24.sp, fontWeight: FontWeight.bold)),
-                    SizedBox(width: 20.w),
-                    Icon(Icons.arrow_right_alt_rounded,
-                        color: primaryColor, size: 80.r),
-                    SizedBox(width: 20.w),
-                    Text(toLocation,
-                        style: mainText.copyWith(
-                            fontSize: 24.sp, fontWeight: FontWeight.bold)),
-                  ],
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      fromLocation,
+                      style: mainText.copyWith(
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
 
-              SizedBox(height: 10.h),
+                SizedBox(width: 12.w),
+
+                Icon(
+                  Icons.arrow_right_alt_rounded,
+                  color: primaryColor,
+                  size: 80.r,
+                ),
+
+                SizedBox(width: 12.w),
+
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      toLocation,
+                      style: mainText.copyWith(
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+
+          SizedBox(height: 10.h),
               customDivider(),
 
               Row(

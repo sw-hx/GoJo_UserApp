@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import 'package:go_jo_user_application/presentation/cubits/get_booked_trip_cubit/get_booked_trip_cubit.dart';
 import '../../core/theme.dart';
 import '../../data/models/trip_model.dart';
 import '../common_components/bottom_nav_bar.dart';
 import '../components/components_Trips/trip_card.dart';
 import 'booking_page.dart';
-
-/// coded by [suhaib]
 
 class BookedTripsPage extends StatefulWidget {
   const BookedTripsPage({super.key});
@@ -17,28 +17,6 @@ class BookedTripsPage extends StatefulWidget {
 }
 
 class _BookedTripsPageState extends State<BookedTripsPage> {
-  final List<TripModel> bookedTrips = [
-    TripModel(
-      companyOwnTrip: "GOJO Travel",
-      tripLunchPlace: "Amman",
-      placeName: "Petra",
-      lunchDate: "2025-01-20",
-      lunchHour: "08:00:00",
-      returnDate: "2025-01-20",
-      returnHour: "20:00:00",
-      price: 45,
-      contactPhoneNumber: "0799999999",
-      tripDetail: "One day adventure to Petra",
-      tripFeatures: ["Guide", "Bus", "Lunch"],
-      tripPhotoOneLink:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCrxKwYkErVB1pSvhWq0AKyAgzKYadJMkT4Q&s",
-      tripPhotoTwoLink:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCrxKwYkErVB1pSvhWq0AKyAgzKYadJMkT4Q&s",
-      tripPhotoThreeLink:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCrxKwYkErVB1pSvhWq0AKyAgzKYadJMkT4Q&s",
-    ),
-  ];
-
   DateTime _launchDate(TripModel t) {
     return DateTime.parse(
       "${t.lunchDate ?? "2000-01-01"} ${t.lunchHour ?? "00:00:00"}",
@@ -56,13 +34,12 @@ class _BookedTripsPageState extends State<BookedTripsPage> {
     return Scaffold(
       backgroundColor: DefaultTheme.colorWhite,
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 15),
-
               const Text(
                 "Booked Trips",
                 style: TextStyle(
@@ -80,52 +57,85 @@ class _BookedTripsPageState extends State<BookedTripsPage> {
                 ),
               ),
               const SizedBox(height: 25),
+              Expanded(
+                child: BlocBuilder<GetBookedTripCubit, GetBookedTripState>(
+                  builder: (context, state) {
+                    if (state is GetBookedTripLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
 
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: bookedTrips.length,
-                itemBuilder: (context, index) {
-                  final trip = bookedTrips[index];
-
-                  return TripCard(
-                    trip: trip,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => BookingPage(
-                            tripId: 1,
-                            companyName: trip.companyOwnTrip ?? "",
-                            rating: 4,
-                            launchDate: DateFormat('yyyy/MM/dd - h:mm a')
-                                .format(_launchDate(trip)),
-                            returnDate: DateFormat('yyyy/MM/dd - h:mm a')
-                                .format(_returnDate(trip)),
-                            fromLocation:
-                            trip.tripLunchPlace ?? "",
-                            toLocation:
-                            trip.placeName ?? "",
-                            contactNumber:
-                            trip.contactPhoneNumber ?? "",
-                            details:
-                            trip.tripDetail ?? "",
-                            features:
-                            trip.tripFeatures ?? [],
-                            galleryImages: [
-                              trip.tripPhotoOneLink ?? "",
-                              trip.tripPhotoTwoLink ?? "",
-                              trip.tripPhotoThreeLink ?? "",
-                            ],
-                            price: trip.price ?? 0,
-
-                            showBookNow: false,
+                    if (state is GetBookedTripEmpty) {
+                      return const Center(
+                        child: Text(
+                          "You haven't booked any trips yet",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
                           ),
                         ),
                       );
-                    },
-                  );
-                },
+                    }
+
+                    if (state is GetBookedTripFailure) {
+                      return Center(
+                        child: Text(
+                          state.message,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      );
+                    }
+
+                    if (state is GetBookedTripSuccess) {
+                      return ListView.builder(
+                        itemCount: state.trips.length,
+                        itemBuilder: (context, index) {
+                          final trip = state.trips[index];
+
+                          return TripCard(
+                            trip: trip,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => BookingPage(
+                                    tripId: trip.tripId ?? 0,
+                                    companyName:
+                                    trip.companyOwnTrip ?? "",
+                                    rating: 4,
+                                    launchDate: DateFormat(
+                                        'yyyy/MM/dd - h:mm a')
+                                        .format(_launchDate(trip)),
+                                    returnDate: DateFormat(
+                                        'yyyy/MM/dd - h:mm a')
+                                        .format(_returnDate(trip)),
+                                    fromLocation:
+                                    trip.tripLunchPlace ?? "",
+                                    toLocation: trip.placeName ?? "",
+                                    contactNumber:
+                                    trip.contactPhoneNumber ?? "",
+                                    details: trip.tripDetail ?? "",
+                                    features: trip.tripFeatures ?? [],
+                                    galleryImages: [
+                                      trip.tripPhotoOneLink ?? "",
+                                      trip.tripPhotoTwoLink ?? "",
+                                      trip.tripPhotoThreeLink ?? "",
+                                    ],
+                                    price: trip.price ?? 0,
+                                    showBookNow: false,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      );
+                    }
+
+                    return const SizedBox.shrink();
+                  },
+                ),
               ),
             ],
           ),

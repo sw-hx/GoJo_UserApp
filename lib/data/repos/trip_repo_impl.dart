@@ -30,4 +30,22 @@ class TripRepoImpl implements TripRepo {
     );
   }
 
+  @override
+  Future<List<TripModel>> getBookedTrips()async{
+    final response = await remoteDataSource.sendRequest(
+      endpoint: '/booking',
+      method: 'GET',
+    );
+
+
+    if (response is List) {
+      return response.map((e) => TripModel.fromJson(e)).toList();
+    }
+
+    return [];
+
+  }
+
+
+
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_jo_user_application/presentation/cubits/get_booked_trip_cubit/get_booked_trip_cubit.dart';
 import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
 
 import '../../domain/repos/favorite_repo.dart';
 import '../../domain/repos/place_repo.dart';
+import '../../domain/repos/trip_repo.dart';
 import '../../services/git_it_service.dart';
 
 import '../cubits/favorite_cubit/add_favorite_cubit/add_favorite_cubit.dart';
@@ -36,19 +38,18 @@ class _BottomNavBarState extends State<BottomNavBar> {
         nextPage = MultiBlocProvider(
           providers: [
             BlocProvider(
-              create: (context) => GetPlacesByParentPlaceCubit(
-                placeRepo: getIt.get<PlaceRepo>(),
-              )..getPlacesByParentPlace('ALL'),
+              create: (context) =>
+                  GetPlacesByParentPlaceCubit(placeRepo: getIt.get<PlaceRepo>())
+                    ..getPlacesByParentPlace('ALL'),
             ),
             BlocProvider(
-              create: (context) => GetTopRatingPlacesCubit(
-                placeRepo: getIt.get<PlaceRepo>(),
-              )..getTopRatingPlaces(),
+              create: (context) =>
+                  GetTopRatingPlacesCubit(placeRepo: getIt.get<PlaceRepo>())
+                    ..getTopRatingPlaces(),
             ),
             BlocProvider(
-              create: (_) => AddFavoriteCubit(
-                favoriteRepo: getIt.get<FavoriteRepo>(),
-              ),
+              create: (_) =>
+                  AddFavoriteCubit(favoriteRepo: getIt.get<FavoriteRepo>()),
             ),
           ],
           child: const HomePage(),
@@ -60,11 +61,16 @@ class _BottomNavBarState extends State<BottomNavBar> {
         break;
 
       case 2:
-        nextPage =  EventsPage();
+        nextPage = EventsPage();
         break;
 
       case 3:
-        nextPage = const BookedTripsPage();
+        nextPage = BlocProvider(
+          create: (context) => GetBookedTripCubit(
+              tripRepo:getIt.get<TripRepo>()
+          )..getBookedTrips(),
+          child: BookedTripsPage(),
+        );
         break;
 
       default:
