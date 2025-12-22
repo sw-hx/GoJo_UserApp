@@ -47,4 +47,22 @@ class UserModel {
       password: map['password'] ?? '',
     );
   }
+  UserModel copyWith({
+    String? id,
+    String? personFullName,
+    String? email,
+    String? username,
+    String? profilePhoto,
+    String? password,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      personFullName: personFullName ?? this.personFullName,
+      email: email ?? this.email,
+      username: username ?? this.username,
+      profilePhoto: profilePhoto ?? this.profilePhoto,
+      password: password ?? this.password,
+    );
+  }
+
 }

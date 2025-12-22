@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_jo_user_application/services/supabase_storage.dart';
 
 import 'core/helpers/getUser.dart';
 import 'data/models/user_model.dart';
@@ -25,6 +26,9 @@ void main() async {
 
   await SharedPreferencesService.init();
   setup(); // get_it
+  await SupabaseStorage.initSupabaseStorage();
+  await SupabaseStorage.ensureBucket(Buckets.userProfilePhotos);
+  await SupabaseStorage.ensureBucket(Buckets.ticketPhotos);
 
   runApp(const GojoApp());
 }

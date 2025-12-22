@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../data/models/user_model.dart';
 import '../../services/shared_preferences.dart';
 import '../constants.dart';
@@ -20,3 +22,11 @@ Future<UserModel?> getUserData() async {
     return null;
   }
 }
+
+
+Future<void> saveUserData(UserModel user) async {
+  final prefs = await SharedPreferences.getInstance();
+  final userMap = user.toMap();
+  prefs.setString(userDataKey, jsonEncode(userMap));
+}
+
