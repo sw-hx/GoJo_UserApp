@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import '../login_screen_hala/welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -41,3 +41,4 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
+*/

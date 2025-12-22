@@ -1,4 +1,4 @@
-import 'dart:async';
+/*import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_jo_user_application/core/theme.dart';
@@ -40,3 +40,4 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
+*/
