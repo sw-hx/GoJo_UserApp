@@ -1,4 +1,5 @@
 import 'package:go_jo_user_application/data/models/review_model.dart';
+import 'package:go_jo_user_application/data/models/weather_model.dart';
 
 class PlaceModel {
   final int placeId;
@@ -21,6 +22,7 @@ class PlaceModel {
   final UserReviewModel? userReview;
   final List<UserReviewModel> listAllUsersReviews;
   final bool isFavorite;
+  final List<WeatherModel> weatherResponse;
 
   PlaceModel({
     required this.placeId,
@@ -43,6 +45,7 @@ class PlaceModel {
     required this.userReview,
     required this.listAllUsersReviews,
     required this.isFavorite,
+    required this.weatherResponse,
   });
 
   factory PlaceModel.fromJson(Map<String, dynamic> json) {
@@ -71,6 +74,11 @@ class PlaceModel {
           .map((e) => UserReviewModel.fromJson(e))
           .toList(),
       isFavorite: json["isFavorite"],
+      weatherResponse: json["weatherResponse"] == null
+          ? []
+          : (json["weatherResponse"] as List)
+          .map((e) => WeatherModel.fromJson(e))
+          .toList(),
     );
   }
 
@@ -94,7 +102,11 @@ class PlaceModel {
       "placeLocation": placeLocation,
       "averagePlaceRating": averagePlaceRating,
       "userReview": userReview?.toJson(),
-      "listAllUsersReviews": listAllUsersReviews.map((e) => e.toJson()).toList(),
+      "listAllUsersReviews":
+      listAllUsersReviews.map((e) => e.toJson()).toList(),
+      "isFavorite": isFavorite,
+      "weatherResponse":
+      weatherResponse.map((e) => e.toJson()).toList(),
     };
   }
 }
