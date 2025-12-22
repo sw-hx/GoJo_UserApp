@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_jo_user_application/presentation/pages/payment_pages/payment_page.dart';
 import 'package:go_jo_user_application/presentation/pages/trips.dart';
 
+import '../../domain/repos/trip_repo.dart';
+import '../../services/git_it_service.dart';
 import '../common_components/custom_divider.dart';
 import '../common_components/custom_returnArrow.dart';
 import '../common_components/bottom_nav_bar.dart';
+import '../cubits/user_book_trip_cubit/user_book_trip_cubit.dart';
 
 /// coded by [suhaib]
 class BookingPage extends StatelessWidget {
+  final int tripId;
   final String companyName;
   final int rating;
   final String launchDate;
@@ -20,11 +25,11 @@ class BookingPage extends StatelessWidget {
   final List<String> features;
   final List<String> galleryImages;
   final double price;
-
   final bool showBookNow;
 
   const BookingPage({
     super.key,
+    required this.tripId,
     required this.companyName,
     required this.rating,
     required this.launchDate,
@@ -74,11 +79,12 @@ class BookingPage extends StatelessWidget {
               Row(
                 children: List.generate(
                   5,
-                      (index) => Icon(
-                    index < rating ? Icons.star : Icons.star_border,
-                    color: index < rating ? yellowColor : Colors.grey,
-                    size: 28.r,
-                  ),
+                      (index) =>
+                      Icon(
+                        index < rating ? Icons.star : Icons.star_border,
+                        color: index < rating ? yellowColor : Colors.grey,
+                        size: 28.r,
+                      ),
                 ),
               ),
 
@@ -209,7 +215,15 @@ class BookingPage extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => const PaymentPage(),
+                              builder: (_) =>
+                                  BlocProvider(
+                                    create: (context) => UserBookTripCubit(
+                                      tripRepo: getIt<TripRepo>(),
+                                    ),
+                                    child: PaymentPage(
+                                      tripId: tripId,
+                                    ),
+                                  ),
                             ),
                           );
                         },
@@ -231,19 +245,19 @@ class BookingPage extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                                Icon(Icons.check_circle,
-                                    color: Colors.green, size: 24.r),
-                                SizedBox(width: 10.w),
-                                Text(
-                                  'Booked Successfully',
-                                  style: TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
+                            Icon(Icons.check_circle,
+                                color: Colors.green, size: 24.r),
+                            SizedBox(width: 10.w),
+                            Text(
+                              'Booked Successfully',
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
+                          ],
+                        ),
                       ),
                   ],
                 ),

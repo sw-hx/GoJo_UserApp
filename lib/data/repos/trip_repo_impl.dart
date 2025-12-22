@@ -6,6 +6,7 @@ class TripRepoImpl implements TripRepo {
   RemoteDataSource remoteDataSource;
   TripRepoImpl({required this.remoteDataSource});
 
+  @override
   Future<List<TripModel>> getTrips({required int placeId}) async {
 
     final response = await remoteDataSource.sendRequest(
@@ -13,13 +14,20 @@ class TripRepoImpl implements TripRepo {
       method: 'GET',
     );
 
-    print("RAW RESPONSE => $response");
 
     if (response is List) {
       return response.map((e) => TripModel.fromJson(e)).toList();
     }
 
     return [];
+  }
+
+  @override
+  Future<void> bookTrip({required int tripId})async{
+    final response = await remoteDataSource.sendRequest(
+      endpoint: '/booking/$tripId',
+      method: 'POST',
+    );
   }
 
 }

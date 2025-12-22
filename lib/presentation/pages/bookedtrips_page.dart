@@ -95,6 +95,7 @@ class _BookedTripsPageState extends State<BookedTripsPage> {
                         context,
                         MaterialPageRoute(
                           builder: (_) => BookingPage(
+                            tripId: 1,
                             companyName: trip.companyOwnTrip ?? "",
                             rating: 4,
                             launchDate: DateFormat('yyyy/MM/dd - h:mm a')
