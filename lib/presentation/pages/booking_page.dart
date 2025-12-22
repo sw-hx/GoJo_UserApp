@@ -45,7 +45,7 @@ class BookingPage extends StatelessWidget {
     required this.features,
     required this.galleryImages,
     required this.price,
-    this.showBookNow = true,
+    required this.showBookNow ,
     required this.location,
   });
 

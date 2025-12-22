@@ -116,6 +116,7 @@ class _TripsCardPageState extends State<TripsCardPage> {
                                   ],
                                   price: trip.price ?? 0,
                                   location: trip.tripLunchLocation,
+                                  showBookNow: !(trip.isUserBookedTrip ?? false),
                                 ),
                               ),
                             );

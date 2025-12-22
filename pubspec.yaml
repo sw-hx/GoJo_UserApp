@@ -10,9 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   intl: ^0.18.1
   cached_network_image: ^3.2.3
-
   cupertino_icons: ^1.0.8
   flutter_rating_bar: ^4.0.1
   google_fonts: ^6.3.2
@@ -38,6 +38,14 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/app_icon/app.png"
+  min_sdk_android: 21
+  remove_alpha_ios: true
 
 flutter:
   uses-material-design: true
@@ -50,3 +58,5 @@ flutter:
     - assets/images/2023_Facebook_icon.svg.png
     - assets/images/apple.png
     - assets/images/map_image.png
+    - assets/gif/airline-185.gif
+    - assets/images/app_icon/app.png

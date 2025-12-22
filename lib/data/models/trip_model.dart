@@ -15,6 +15,8 @@ class TripModel {
   final double? price;
   final String? tripLunchLocation;
   final List<String>? tripFeatures;
+  final bool? isUserBookedTrip;
+
 
   TripModel({
     this.tripId,
@@ -33,6 +35,7 @@ class TripModel {
     this.price,
     this.tripLunchLocation,
     this.tripFeatures,
+    this.isUserBookedTrip,
   });
 
   factory TripModel.fromJson(Map<String, dynamic> json) {
@@ -55,6 +58,7 @@ class TripModel {
       tripFeatures: json["tripFeatures"] != null
           ? List<String>.from(json["tripFeatures"])
           : [],
+      isUserBookedTrip: json["isUserBookedTrip"],
     );
   }
 
