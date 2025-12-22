@@ -6,6 +6,7 @@ import '../../core/helpers/getUser.dart';
 import '../../data/models/user_model.dart';
 import '../../domain/repos/ticket_repo.dart';
 import '../../services/git_it_service.dart';
+import '../../services/logout_service.dart';
 import '../../services/storage_service.dart';
 import '../cubits/create_ticket_cubit/create_ticket_cubit.dart';
 import '../cubits/edit_profile_cubit/edit_profile_cubit.dart';
@@ -307,15 +308,18 @@ class _ProfilePageState extends State<ProfilePage> {
                               style: TextStyle(
                                   color: Colors.red, fontSize: 16),
                             ),
-                            onTap: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) =>
-                                  const WelcomeScreen(),
-                                ),
-                              );
-                            },
+                            onTap: () async {
+                              await LogoutService.signOut();
+
+                              if (context.mounted) {
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(builder: (_) => WelcomeScreen()),
+                                      (route) => false,
+                                );
+                              }
+                            }
+
                           ),
                         ],
                       ),

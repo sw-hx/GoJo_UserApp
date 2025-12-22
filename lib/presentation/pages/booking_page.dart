@@ -228,7 +228,7 @@ class BookingPage extends StatelessWidget {
               customDivider(),
 
               Center(
-                child: Row(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Column(
@@ -242,8 +242,9 @@ class BookingPage extends StatelessWidget {
                             style: mainText.copyWith(fontSize: 18.sp)),
                       ],
                     ),
-                    SizedBox(width: 20.w),
-
+                    SizedBox(height: 12.h),
+                    customDivider(),
+                    SizedBox(height: 12.h),
                     if (showBookNow)
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -279,7 +280,7 @@ class BookingPage extends StatelessWidget {
                     else
                       Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 18.w, vertical: 12.h),
+                            horizontal: 16.w, vertical: 12.h),
                         decoration: BoxDecoration(
                           color: Colors.green.withOpacity(0.15),
                           borderRadius: BorderRadius.circular(20.r),
