@@ -4,5 +4,7 @@ abstract class TripRepo {
 
   Future<List<TripModel>> getTrips({required int placeId});
 
+  Future<void> bookTrip({required int tripId});
+
 
 }
