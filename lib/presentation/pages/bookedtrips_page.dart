@@ -124,6 +124,7 @@ class _BookedTripsPageState extends State<BookedTripsPage> {
                                     ],
                                     price: trip.price ?? 0,
                                     showBookNow: false,
+                                    location: trip.tripLunchLocation ?? "",
                                   ),
                                 ),
                               );

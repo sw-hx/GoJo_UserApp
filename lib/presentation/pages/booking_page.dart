@@ -6,9 +6,12 @@ import 'package:go_jo_user_application/presentation/pages/trips.dart';
 
 import '../../domain/repos/trip_repo.dart';
 import '../../services/git_it_service.dart';
+import '../../services/open_map_service.dart';
+import '../common_components/custom_TitleText.dart';
 import '../common_components/custom_divider.dart';
 import '../common_components/custom_returnArrow.dart';
 import '../common_components/bottom_nav_bar.dart';
+import '../components/components_place_infoPage/map.dart';
 import '../cubits/user_book_trip_cubit/user_book_trip_cubit.dart';
 
 /// coded by [suhaib]
@@ -26,6 +29,7 @@ class BookingPage extends StatelessWidget {
   final List<String> galleryImages;
   final double price;
   final bool showBookNow;
+  final String? location;
 
   const BookingPage({
     super.key,
@@ -42,6 +46,7 @@ class BookingPage extends StatelessWidget {
     required this.galleryImages,
     required this.price,
     this.showBookNow = true,
+    required this.location,
   });
 
   @override
@@ -209,6 +214,16 @@ class BookingPage extends StatelessWidget {
                 ),
               ),
 
+              SizedBox(height: 10.h),
+              customDivider(),
+              customTitleText(title: 'Map', size: 22),
+              SizedBox(height: 12.h),
+              GestureDetector(
+                  onTap: ()async{
+                    await OpenMapService.openMapFromUrl(location!);
+                  },
+                  child: Center(child: MapSection())
+              ),
               SizedBox(height: 10.h),
               customDivider(),
 
