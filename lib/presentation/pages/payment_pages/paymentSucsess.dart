@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
+import '../../../core/helpers/getUser.dart';
 import '../../../domain/repos/favorite_repo.dart';
 import '../../../domain/repos/place_repo.dart';
 import '../../../services/git_it_service.dart';
@@ -8,8 +9,8 @@ import '../../common_components/custom_returnArrow.dart';
 import '../../cubits/favorite_cubit/add_favorite_cubit/add_favorite_cubit.dart';
 import '../../cubits/place_cubit/get_topRating_places_cubit/get_top_rating_places_cubit.dart';
 import '../home_page.dart';
+import '../../../data/models/user_model.dart';
 
-/// Coded By [Hala]
 class PaymentSuccessPage extends StatefulWidget {
   const PaymentSuccessPage({Key? key}) : super(key: key);
 
@@ -18,94 +19,116 @@ class PaymentSuccessPage extends StatefulWidget {
 }
 
 class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
-  int selectedIndex = 0;
+  String userName = "Guest";
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    final UserModel? user = await getUserData();
+    if (user != null && user.personFullName != null && user.personFullName!.isNotEmpty) {
+      setState(() {
+        userName = user.personFullName!;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          children: [
-            // السهم في الزاوية العلوية اليسار
-            const Positioned(
-              top: 10,
-              left: 10,
-              child: CustomReturnArrow(targetPage: HomePage()),
-            ),
+        child: Center(
+          child: Stack(
+            children: [
+              const Positioned(
+                top: 10,
+                left: 10,
+                child: CustomReturnArrow(targetPage: HomePage()),
+              ),
 
-            // المحتوى الرئيسي
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  const Spacer(),
-                  const Text(
-                    "Thank you, Suhaib",
-                    style: TextStyle(
-                      color: Color(0xFF256D85),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 26,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    "Your Trip has been booked successfully",
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Color(0xFF083F4F),
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 40),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    const Spacer(),
 
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF256D85),
-                      minimumSize: const Size(200, 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
+                    Text(
+                      "Thank you, $userName",
+                      style: const TextStyle(
+                        color: Color(0xFF256D85),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 26,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    const Text(
+                      "Your trip has been booked successfully",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Color(0xFF083F4F),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    const SizedBox(height: 40),
+
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF256D85),
+                        minimumSize: const Size(200, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => MultiBlocProvider(
+                              providers: [
+                                BlocProvider(
+                                  create: (context) =>
+                                  GetPlacesByParentPlaceCubit(
+                                    placeRepo: getIt<PlaceRepo>(),
+                                  )..getPlacesByParentPlace('ALL'),
+                                ),
+                                BlocProvider(
+                                  create: (context) =>
+                                  GetTopRatingPlacesCubit(
+                                    placeRepo: getIt<PlaceRepo>(),
+                                  )..getTopRatingPlaces(),
+                                ),
+                                BlocProvider(
+                                  create: (_) => AddFavoriteCubit(
+                                    favoriteRepo: getIt<FavoriteRepo>(),
+                                  ),
+                                ),
+                              ],
+                              child: const HomePage(
+                                showBookingConfirmation: true,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        "Done",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              MultiBlocProvider(
-                                providers: [
-                                  BlocProvider(
-                                    create: (context) =>
-                                    GetPlacesByParentPlaceCubit(
-                                        placeRepo: getIt<PlaceRepo>()
-                                    )
-                                      ..getPlacesByParentPlace('ALL'),
-                                  ),
-                                  BlocProvider(
-                                    create: (context) => GetTopRatingPlacesCubit(
-                                      placeRepo: getIt.get<PlaceRepo>(),
-                                    )..getTopRatingPlaces(),
-                                  ),
-                                  BlocProvider(
-                                    create: (_) => AddFavoriteCubit(
-                                      favoriteRepo: getIt.get<FavoriteRepo>(),
-                                    ),
-                                  ),
-                                ],
-                                child: HomePage(showBookingConfirmation: true),
-                              ),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      "Done",
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ),
-                  const Spacer(),
-                ],
+
+                    const Spacer(),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

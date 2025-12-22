@@ -14,7 +14,7 @@ class TripRepoImpl implements TripRepo {
       method: 'GET',
     );
 
-    print(response[0]["isUserBookedTrip"].toString());
+
 
 
     if (response is List) {
