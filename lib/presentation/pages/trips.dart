@@ -115,6 +115,7 @@ class _TripsCardPageState extends State<TripsCardPage> {
                                     trip.tripPhotoThreeLink ?? "",
                                   ],
                                   price: trip.price ?? 0,
+                                  location: trip.tripLunchLocation,
                                 ),
                               ),
                             );

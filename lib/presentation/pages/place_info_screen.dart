@@ -8,6 +8,7 @@ import 'package:go_jo_user_application/presentation/pages/home_page.dart';
 import '../../data/models/place_models/place_model.dart';
 import '../../domain/repos/trip_repo.dart';
 import '../../services/git_it_service.dart';
+import '../../services/open_map_service.dart';
 import '../common_components/button_all.dart';
 import '../common_components/bottom_nav_bar.dart';
 import '../common_components/custom_divider.dart';
@@ -297,7 +298,12 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
 
                   customDivider(),
                   customTitleText(title: 'Map', size: 22),
-                  MapSection(),
+                  GestureDetector(
+                    onTap: ()async{
+                      await OpenMapService.openMapFromUrl(place!.placeLocation);
+                    },
+                      child: MapSection()
+                  ),
 
                   customDivider(),
                   const Text(
