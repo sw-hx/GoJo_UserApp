@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_jo_user_application/services/secure_storage_service.dart';
 import 'package:go_jo_user_application/services/supabase_storage.dart';
 
 import 'core/helpers/getUser.dart';
@@ -77,11 +78,11 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _navigate() async {
     await Future.delayed(const Duration(seconds: 3));
 
-    final UserModel? user = await getUserData();
+    final String? token=await getSavedToken();
 
     if (!mounted) return;
 
-    if (user != null && user.id.isNotEmpty) {
+    if (token != null && token.isNotEmpty) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
