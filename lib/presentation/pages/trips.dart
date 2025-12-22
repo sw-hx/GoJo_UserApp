@@ -10,7 +10,6 @@ import '../components/components_Trips/sort_button.dart';
 import '../components/components_Trips/trip_card.dart';
 import 'booking_page.dart';
 import 'place_info_screen.dart';
-import '../cubits/place_cubit/get_place_info_cubit/get_place_info_cubit.dart';
 
 class TripsCardPage extends StatefulWidget {
   const TripsCardPage({super.key});
@@ -22,11 +21,6 @@ class TripsCardPage extends StatefulWidget {
 class _TripsCardPageState extends State<TripsCardPage> {
   List<TripModel> trips = [];
   String? sortType;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   void sortTrips(String type) {
     setState(() {
@@ -45,25 +39,27 @@ class _TripsCardPageState extends State<TripsCardPage> {
   }
 
   DateTime _date(TripModel t) {
-    return DateTime.parse("${t.lunchDate ?? "2000-01-01"} ${t.lunchHour ?? "00:00:00"}");
+    return DateTime.parse(
+      "${t.lunchDate ?? "2000-01-01"} ${t.lunchHour ?? "00:00:00"}",
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<GetTripsByPlaceIdCubit, GetTripsByPlaceIdState>(
-      listener: (context, state) {
+    return BlocBuilder<GetTripsByPlaceIdCubit, GetTripsByPlaceIdState>(
+      builder: (context, state) {
         if (state is GetTripsByPlaceIdSuccess) {
-          setState(() {
-            trips = state.trips;
+          trips = state.trips;
+        }
+
+        if (state is GetTripsByPlaceIdFailure) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
           });
         }
-        if (state is GetTripsByPlaceIdFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
-        }
-      },
-      builder: (context, state) {
+
         return Scaffold(
           body: SafeArea(
             child: SingleChildScrollView(
@@ -73,24 +69,91 @@ class _TripsCardPageState extends State<TripsCardPage> {
                 children: [
                   const CustomReturnArrow(targetPage: PlaceInfoScreen()),
                   const SizedBox(height: 30),
-                  const Text("Available Trips",
-                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF11324D))),
+
+                  const Text(
+                    "Available Trips",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF11324D),
+                    ),
+                  ),
+
                   const SizedBox(height: 8),
-                  const Text("Your journey starts here",
-                      style: TextStyle(fontSize: 16, color: Color(0xFF11324D))),
+
+                  const Text(
+                    "Your journey starts here",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFF11324D),
+                    ),
+                  ),
+
                   const SizedBox(height: 20),
-                  SortButton(selectedSort: sortType, onSelect: sortTrips),
+
+                  SortButton(
+                    selectedSort: sortType,
+                    onSelect: sortTrips,
+                  ),
+
                   const SizedBox(height: 20),
 
                   if (state is GetTripsByPlaceIdLoading)
                     const Center(child: CircularProgressIndicator()),
 
                   if (state is GetTripsByPlaceIdSuccess)
-                    Column(
+                    if (trips.isEmpty)
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 60),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(24),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF11324D).withOpacity(0.08),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.travel_explore,
+                                  size: 64,
+                                  color: Color(0xFF11324D),
+                                ),
+                              ),
+
+                              const SizedBox(height: 24),
+
+                              const Text(
+                                "No Trips Available",
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF11324D),
+                                ),
+                              ),
+
+                              const SizedBox(height: 8),
+
+                              const Text(
+                                "Check back later or explore another destination",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                  Column(
                       children: trips.map((trip) {
                         final launch = _date(trip);
-                        final returnTime =
-                        DateTime.parse("${trip.returnDate ?? "2000-01-01"} ${trip.returnHour ?? "00:00:00"}");
+                        final returnTime = DateTime.parse(
+                          "${trip.returnDate ?? "2000-01-01"} ${trip.returnHour ?? "00:00:00"}",
+                        );
 
                         return TripCard(
                           trip: trip,
