@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../../../data/models/user_model.dart';
-import 'image_text_field.dart';
+import 'circular_image_text_field.dart';
 
 class EditProfileBottomSheet extends StatefulWidget {
   final UserModel user;
@@ -65,7 +65,7 @@ class _EditProfileBottomSheetState extends State<EditProfileBottomSheet> {
 
           const SizedBox(height: 25),
 
-          ImageTextField(
+          CircularImageTextField(
             image: selectedImage,
             onChanged: (file) {
               setState(() => selectedImage = file);

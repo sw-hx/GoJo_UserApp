@@ -12,6 +12,7 @@ import '../data/repos/notification_repo_impl.dart';
 import '../data/repos/place_repo_impl.dart';
 import '../data/repos/profile_repo_impl.dart';
 import '../data/repos/search_repo_impl.dart';
+import '../data/repos/ticket_repo_impl.dart';
 import '../data/repos/trip_repo_impl.dart';
 import '../domain/repos/auth_repo.dart';
 import '../domain/repos/event_repo.dart';
@@ -20,6 +21,7 @@ import '../domain/repos/notification_repo.dart';
 import '../domain/repos/place_repo.dart';
 import '../domain/repos/profile_repo.dart';
 import '../domain/repos/search_repo.dart';
+import '../domain/repos/ticket_repo.dart';
 import '../domain/repos/trip_repo.dart';
 import 'remote_data_source.dart';
 import 'database_service.dart';
@@ -93,6 +95,12 @@ void setup() {
 
   getIt.registerLazySingleton<ProfileRepo>(
     () => ProfileRepoImpl(
+      remoteDataSource: getIt.get<RemoteDataSource>(),
+    ),
+  );
+
+  getIt.registerLazySingleton<TicketRepo>(
+    () => TicketRepoImpl(
       remoteDataSource: getIt.get<RemoteDataSource>(),
     ),
   );
