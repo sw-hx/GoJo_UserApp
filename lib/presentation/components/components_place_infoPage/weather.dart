@@ -4,12 +4,10 @@ import 'place_weather.dart';
 
 class WeatherList extends StatelessWidget {
   final List<WeatherModel> weather;
-  final int days;
 
   const WeatherList({
     super.key,
     required this.weather,
-    this.days = 4,
   });
 
   @override
@@ -21,8 +19,7 @@ class WeatherList extends StatelessWidget {
       );
     }
 
-    final int itemCount =
-    weather.length < days ? weather.length : days;
+    final int itemCount = weather.length ;
 
     return SizedBox(
       height: 120,
