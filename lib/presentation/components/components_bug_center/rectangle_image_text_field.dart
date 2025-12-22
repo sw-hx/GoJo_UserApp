@@ -4,21 +4,22 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class ImageTextField extends StatefulWidget {
+class RectangleImageTextField extends StatefulWidget {
   final File? image;
   final Function(File?) onChanged;
 
-  const ImageTextField({
+  const RectangleImageTextField({
     super.key,
     required this.image,
     required this.onChanged,
   });
 
   @override
-  State<ImageTextField> createState() => _ImageTextFieldState();
+  State<RectangleImageTextField> createState() =>
+      _RectangleImageTextFieldState();
 }
 
-class _ImageTextFieldState extends State<ImageTextField> {
+class _RectangleImageTextFieldState extends State<RectangleImageTextField> {
   bool isLoading = false;
 
   Future<void> pickImage() async {
@@ -36,23 +37,24 @@ class _ImageTextFieldState extends State<ImageTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final double size = 160.w;
+    final double width = 300.w;
+    final double height = 180.h;
 
     return Skeletonizer(
       enabled: isLoading,
       child: GestureDetector(
         onTap: pickImage,
         child: Stack(
-          alignment: Alignment.center,
           children: [
             Container(
-              width: size,
-              height: size,
+              width: width,
+              height: height,
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
+                borderRadius: BorderRadius.circular(16.r),
                 border: Border.all(color: Colors.black, width: 2.w),
               ),
-              child: ClipOval(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16.r),
                 child: widget.image != null
                     ? Image.file(
                   widget.image!,
@@ -60,8 +62,8 @@ class _ImageTextFieldState extends State<ImageTextField> {
                 )
                     : Center(
                   child: Icon(
-                    Icons.add_a_photo_outlined,
-                    size: 40.sp,
+                    Icons.add_photo_alternate_outlined,
+                    size: 48.sp,
                     color: Colors.grey,
                   ),
                 ),
@@ -81,7 +83,7 @@ class _ImageTextFieldState extends State<ImageTextField> {
                     ),
                     child: Icon(
                       Icons.delete,
-                      size: 23.sp,
+                      size: 22.sp,
                       color: Colors.white,
                     ),
                   ),

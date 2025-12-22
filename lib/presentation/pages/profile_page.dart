@@ -4,6 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import '../../core/helpers/getUser.dart';
 import '../../data/models/user_model.dart';
+import '../../domain/repos/ticket_repo.dart';
+import '../../services/git_it_service.dart';
+import '../../services/storage_service.dart';
+import '../cubits/create_ticket_cubit/create_ticket_cubit.dart';
 import '../cubits/edit_profile_cubit/edit_profile_cubit.dart';
 import '../common_components/bottom_nav_bar.dart';
 import '../components/components_edit_profile/edit_profile_bottom_sheet.dart';
@@ -61,8 +65,6 @@ class _ProfilePageState extends State<ProfilePage> {
           await saveUserData(user!);
 
           setState(() {});
-
-
         }
 
 
@@ -157,16 +159,17 @@ class _ProfilePageState extends State<ProfilePage> {
                             borderRadius:
                             BorderRadius.vertical(top: Radius.circular(25)),
                           ),
-                          builder: (_) => EditProfileBottomSheet(
-                            user: user!,
-                            onSave: (newName, newImage) {
-                              context.read<EditProfileCubit>().editProfile(
-                                username: user!.username,
-                                fullName: newName,
-                                newImage: newImage,
-                              );
-                            },
-                          ),
+                          builder: (_) =>
+                              EditProfileBottomSheet(
+                                user: user!,
+                                onSave: (newName, newImage) {
+                                  context.read<EditProfileCubit>().editProfile(
+                                    username: user!.username,
+                                    fullName: newName,
+                                    newImage: newImage,
+                                  );
+                                },
+                              ),
                         );
                       },
                       child: const Text(
@@ -278,7 +281,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) =>
-                                  const BugsReportScreen(),
+                                      BlocProvider(
+                                        create: (context) => CreateTicketCubit(
+                                          ticketRepo:getIt<TicketRepo>(),
+                                          storageService:getIt<StorageService>(),
+                                        ),
+                                        child: BugsReportScreen(
+                                          username: user!.username,
+                                          name: user!.personFullName,
+                                        ),
+                                      ),
                                 ),
                               );
                             },
