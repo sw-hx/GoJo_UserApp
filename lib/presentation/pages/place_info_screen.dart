@@ -293,7 +293,6 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
                   customTitleText(title: 'Weather', size: 22),
                    WeatherList(
                     weather:place!.weatherResponse ,
-                     days: place!.weatherResponse.length,
                   ),
 
                   customDivider(),
