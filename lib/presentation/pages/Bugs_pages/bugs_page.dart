@@ -82,9 +82,8 @@ class _BugsReportScreenState extends State<BugsReportScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const CustomReturnArrow(targetPage: ProfilePage()),
-                    SizedBox(height: 20.h),
+                    SizedBox(height: 5.h),
 
-                    /// ================= HEADER =================
                     Row(
                       children: [
                         Icon(
@@ -104,7 +103,7 @@ class _BugsReportScreenState extends State<BugsReportScreen> {
                       ],
                     ),
 
-                    SizedBox(height: 40.h),
+                    SizedBox(height: 25.h),
 
                     /// ================= ISSUE TYPE =================
                     Text(

@@ -77,7 +77,7 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: DefaultTheme.colorWhite,
       body: Center(
         child: Image.asset(
-          'assets/gif/ezgif-88c760f9e451773f.gif',
+          'assets/gif/ezgif-722273373c807a09-ezgif.com-video-to-gif-converter.gif',
           width: double.infinity,
           height: double.infinity,
           fit: BoxFit.fill,
