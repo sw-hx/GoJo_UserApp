@@ -66,7 +66,6 @@ class WelcomeScreen extends StatelessWidget {
                                 logoWidth: screenWidth * 0.2,
                               ),
                             ),
-                            // ✅ حجم النص يتأقلم تلقائياً حسب الشاشة
                             FittedBox(
                               fit: BoxFit.scaleDown,
                               child: const Text(
@@ -105,38 +104,80 @@ class WelcomeScreen extends StatelessWidget {
                               ),
                               child: Column(
                                 children: [
-                                  const Text(
-                                    "Continue with",
-                                    style: TextStyle(
-                                      fontSize: 25,
-                                      color: Color(0xFF0B3C49),
-                                      fontWeight: FontWeight.bold,
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      color:  const Color(0xFF6A1B2D),
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          const Text(
+                                            "Coming Soon",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
+                                              letterSpacing: 1,
+                                              shadows: [
+                                                BoxShadow(
+                                                  color: Colors.black26,
+                                                  offset: Offset(1, 2),
+                                                  blurRadius: 4,
+                                                ),
+                                              ]
+                                            ),
+                                          ),
+                                          SizedBox(height: 8,),
+                                          const Text(
+                                            "Continue with",
+                                            style: TextStyle(
+                                              fontSize: 25,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              shadows: [
+                                                BoxShadow(
+                                                  color: Colors.black26,
+                                                  offset: Offset(1, 2),
+                                                  blurRadius: 4,
+                                                ),
+                                              ]
+                                            ),
+                                          ),
+                                          const SizedBox(height: 25),
+
+                                          _buildWhiteButton(
+                                            imagePath: "assets/images/google.jpg",
+                                            text: "Continue with Google",
+                                            onTap: () {
+
+                                              //context.read<SignInCubit>().signInWithGoogle();
+
+                                            },
+                                          ),
+                                          const SizedBox(height: 14),
+
+                                          _buildWhiteButton(
+                                            imagePath:
+                                            "assets/images/2023_Facebook_icon.svg.png",
+                                            text: "Continue with Facebook",
+                                            onTap: () {
+                                              //context.read<SignInCubit>().signInWithFacebook();
+
+                                            },
+                                          ),
+                                          const SizedBox(height: 6),
+                                        ],
+                                      ),
                                     ),
                                   ),
+
                                   const SizedBox(height: 25),
-
-                                  _buildWhiteButton(
-                                    imagePath: "assets/images/google.jpg",
-                                    text: "Continue with Google",
-                                    onTap: () {
-
-                                      //context.read<SignInCubit>().signInWithGoogle();
-
-                                    },
-                                  ),
-                                  const SizedBox(height: 14),
-
-                                  _buildWhiteButton(
-                                    imagePath:
-                                    "assets/images/2023_Facebook_icon.svg.png",
-                                    text: "Continue with Facebook",
-                                    onTap: () {
-                                      //context.read<SignInCubit>().signInWithFacebook();
-
-                                    },
-                                  ),
-                                  const SizedBox(height: 14),
-                                  const SizedBox(height: 20),
 
                                   const Text(
                                     "or",

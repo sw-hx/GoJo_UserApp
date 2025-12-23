@@ -31,7 +31,7 @@ class PlaceCardsList extends StatelessWidget {
 
           return PlaceCard(
             key: ValueKey(place.placeId),
-            title: formatPlace(place.placeName),
+            title: formatName(place.placeName),
             description: place.quickInfo,
             imageUrl: place.mainPhotoLink,
             isFavorite: place.isFavorite,

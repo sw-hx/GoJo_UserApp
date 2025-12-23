@@ -49,7 +49,7 @@ class DetailBox extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             desc,
-            style: const TextStyle(fontSize: 12, color: Colors.white70),
+            style: const TextStyle(fontSize: 14, color: Colors.white70,fontWeight: FontWeight.bold),
           ),
         ],
       ),

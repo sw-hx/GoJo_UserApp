@@ -18,6 +18,7 @@ import '../common_components/custom_divider.dart';
 import '../common_components/custom_TitleText.dart';
 import '../common_components/custom_returnArrow.dart';
 
+import '../components/components_place_infoPage/commentField.dart';
 import '../components/components_place_infoPage/comments_list.dart';
 import '../components/components_place_infoPage/description_box.dart';
 import '../components/components_place_infoPage/details.dart';
@@ -96,7 +97,7 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
                       widget.heroTag == null
                           ? PlaceImage(
                         imageUrl: place!.mainPhotoLink,
-                        name: formatPlace(place!.placeName),
+                        name: formatName(place!.placeName),
                         isFavorite: isFavorite,
                         onFavoriteTap: _toggleFavorite,
                       )
@@ -104,7 +105,7 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
                         tag: widget.heroTag!,
                         child: PlaceImage(
                           imageUrl: place!.mainPhotoLink,
-                          name: formatPlace(place!.placeName),
+                          name: formatName(place!.placeName),
                           isFavorite: isFavorite,
                           onFavoriteTap: _toggleFavorite,
                         ),
@@ -114,7 +115,7 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
 
                       /// ================= DESCRIPTION =================
                       DescriptionBox(
-                        name: formatPlace(place!.placeName),
+                        name: formatName(place!.placeName),
                         description: place!.placeInfo,
                         isExpanded: isExpanded,
                         toggleExpand: () =>
@@ -130,7 +131,7 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
                         children: [
                           DetailBox(
                             title: "Best Season",
-                            desc: formatPlace(place!.bestSeasonToVisit),
+                            desc: formatName(place!.bestSeasonToVisit),
                             imageUrl:
                             "https://cdn-icons-png.flaticon.com/512/869/869869.png",
                           ),
@@ -212,7 +213,9 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
                       customDivider(),
                       customTitleText(title: 'Your Review', size: 22),
 
-                      _buildReviewBox(context),
+                      place?.userReview==null ? _buildReviewBox(context)
+                          :
+                      CommentField(review: place!.userReview!),
 
                       customDivider(),
                       customTitleText(title: 'Weather', size: 22),
@@ -331,6 +334,7 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
           BlocConsumer<WriteCommentCubit, WriteCommentState>(
             listener: (context, wcState) {
               if (wcState is WriteCommentSuccess) {
+                context.read<GetPlaceInfoCubit>().getPlaceInfo(place!.placeName);
                 setState(() {
                   place!.listAllUsersReviews
                       .insert(0, wcState.review);
@@ -371,6 +375,7 @@ class _PlaceInfoScreenState extends State<PlaceInfoScreen> {
                       commentController.text.trim(),
                       placeId: place!.placeId,
                     );
+                    
                   },
                   child: wcState is WriteCommentLoading
                       ? const CircularProgressIndicator(

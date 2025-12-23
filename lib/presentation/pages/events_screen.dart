@@ -74,7 +74,7 @@ class _EventsPageState extends State<EventsPage> {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 20),
                           child: EventCard(
-                            title: formatPlace(event.bigTitleName),
+                            title: formatName(event.bigTitleName),
                             time: event.timeOnly,
                             date: event.formattedDate,
                             description: event.eventInformation,

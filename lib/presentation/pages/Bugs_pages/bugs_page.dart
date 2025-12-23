@@ -215,18 +215,20 @@ class _BugsReportScreenState extends State<BugsReportScreen> {
                     ),
                     SizedBox(height: 10.h),
 
-                    Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
-                      children: [
-                        _priorityButton(
-                            "HIGH_PRIORITY", Colors.red),
-                        _priorityButton(
-                            "MEDIUM_PRIORITY", Colors.orange),
-                        _priorityButton(
-                            "LOW_PRIORITY", Colors.green),
-                      ],
+                    SizedBox(
+                      height: 42.h,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          _priorityButton("HIGH_PRIORITY", Colors.red),
+                          SizedBox(width: 12.w),
+                          _priorityButton("MEDIUM_PRIORITY", Colors.orange),
+                          SizedBox(width: 12.w),
+                          _priorityButton("LOW_PRIORITY", Colors.green),
+                        ],
+                      ),
                     ),
+
 
                     SizedBox(height: 80.h),
 

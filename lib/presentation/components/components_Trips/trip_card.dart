@@ -62,7 +62,7 @@ class TripCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    formatPlace(trip.companyOwnTrip),
+                    formatName(trip.companyOwnTrip),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 22,
@@ -82,7 +82,7 @@ class TripCard extends StatelessWidget {
 
                   const SizedBox(height: 6),
                   Text(
-                    '${formatPlace(trip.tripLunchPlace)} → ${formatPlace(trip.placeName)}',
+                    '${formatName(trip.tripLunchPlace)} → ${formatName(trip.placeName)}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,

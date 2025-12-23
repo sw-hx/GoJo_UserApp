@@ -56,7 +56,7 @@ class FavoriteCard extends StatelessWidget {
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        formatPlace(place.placeName),
+                        formatName(place.placeName),
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Colors.white,

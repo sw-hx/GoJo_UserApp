@@ -163,12 +163,12 @@ class _TripsCardPageState extends State<TripsCardPage> {
                               MaterialPageRoute(
                                 builder: (_) => BookingPage(
                                   tripId: trip.tripId!,
-                                  companyName: formatPlace(trip.companyOwnTrip),
+                                  companyName: formatName(trip.companyOwnTrip),
                                   rating: 4,
                                   launchDate: DateFormat('yyyy/MM/dd - h:mm a').format(launch),
                                   returnDate: DateFormat('yyyy/MM/dd - h:mm a').format(returnTime),
-                                  fromLocation: formatPlace(trip.tripLunchPlace),
-                                  toLocation: formatPlace(trip.placeName),
+                                  fromLocation: formatName(trip.tripLunchPlace),
+                                  toLocation: formatName(trip.placeName),
                                   contactNumber: trip.contactPhoneNumber ?? "",
                                   details: trip.tripDetail ?? "",
                                   features: trip.tripFeatures ?? [],

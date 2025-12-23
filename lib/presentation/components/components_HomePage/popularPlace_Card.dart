@@ -147,7 +147,7 @@ class _PopularItemState extends State<_PopularItem> {
                       children: [
                         Expanded(
                           child: Text(
-                            formatPlace(place.name),
+                            formatName(place.name),
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 16,
