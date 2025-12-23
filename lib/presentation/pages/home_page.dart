@@ -1,7 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:go_jo_user_application/core/helpers/getUser.dart';
 import 'package:go_jo_user_application/domain/repos/profile_repo.dart';
 import 'package:go_jo_user_application/presentation/common_components/bottom_nav_bar.dart';
@@ -12,6 +14,8 @@ import 'package:go_jo_user_application/presentation/cubits/edit_profile_cubit/ed
 import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
 import 'package:go_jo_user_application/presentation/effects/skeleton_place_card.dart';
 import 'package:go_jo_user_application/presentation/pages/search_page.dart';
+
+import '../../core/helpers/stretch_scroll_behavior.dart';
 import '../../domain/repos/search_repo.dart';
 import '../../services/git_it_service.dart';
 import '../../services/storage_service.dart';
@@ -23,9 +27,8 @@ import 'profile_page.dart';
 
 class HomePage extends StatefulWidget {
   final bool showBookingConfirmation;
-
   const HomePage({Key? key, this.showBookingConfirmation = false})
-    : super(key: key);
+      : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -42,48 +45,36 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<GetPlacesByParentPlaceCubit, GetPlacesByParentPlaceState>(
+        BlocListener<GetPlacesByParentPlaceCubit,
+            GetPlacesByParentPlaceState>(
           listener: (context, state) {
             if (state is GetPlacesByParentPlaceLoading) {
               isLoadingPlaces = true;
               setState(() {});
-            }
-
-            if (state is GetPlacesByParentPlaceSuccess) {
+            } else if (state is GetPlacesByParentPlaceSuccess) {
               places = state.places;
               placesExist = true;
               isLoadingPlaces = false;
               setState(() {});
-            }
-
-            if (state is GetPlacesByParentPlaceFailure) {
-              if (state.message.contains('no places')) {
-                places = [];
-                placesExist = false;
-                isLoadingPlaces = false;
-                setState(() {});
-              }
+            } else if (state is GetPlacesByParentPlaceFailure) {
+              places = [];
+              placesExist = false;
+              isLoadingPlaces = false;
+              setState(() {});
             }
           },
         ),
-
-        BlocListener<GetTopRatingPlacesCubit, GetTopRatingPlacesState>(
+        BlocListener<GetTopRatingPlacesCubit,
+            GetTopRatingPlacesState>(
           listener: (context, state) {
             if (state is GetTopRatingPlacesLoading) {
               isTopRatedLoading = true;
               setState(() {});
-            }
-
-            if (state is GetTopRatingPlacesSuccess) {
+            } else if (state is GetTopRatingPlacesSuccess) {
               topRatedPlaces = state.places;
               isTopRatedLoading = false;
               setState(() {});
-            }
-
-            if (state is GetTopRatingPlacesFailure) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.message)));
+            } else if (state is GetTopRatingPlacesFailure) {
               isTopRatedLoading = false;
               setState(() {});
             }
@@ -92,298 +83,318 @@ class _HomePageState extends State<HomePage> {
       ],
       child: Scaffold(
         body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+          child: ScrollConfiguration(
+            behavior: StretchScrollBehavior(),
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 15.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+
+                /// ================= HEADER =================
                 SizedBox(
-                  height: 80,
+                  height: 80.h,
                   child: Row(
                     children: [
                       GestureDetector(
-                        onTap: ()async {
-                         final result =await Navigator.push(
+                        onTap: () async {
+                          final result = await Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (_) => BlocProvider(
-                                create: (context) => EditProfileCubit(
-                                    profileRepo:getIt.get<ProfileRepo>() ,
-                                    storageService:getIt.get<StorageService>()
+                                create: (_) => EditProfileCubit(
+                                  profileRepo: getIt.get<ProfileRepo>(),
+                                  storageService:
+                                  getIt.get<StorageService>(),
                                 ),
                                 child: ProfilePage(),
                               ),
                             ),
                           );
-                         if(result==true){
-                           setState(() {
-
-                           });
-
-                         }
+                          if (result == true) setState(() {});
                         },
                         child: FutureBuilder(
                           future: getUserData(),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
-                              return const Row(
-                                children: [
-                                  CircleAvatar(child: Icon(Icons.person)),
-                                  SizedBox(width: 10),
-                                  Text(
-                                    'Guest',
-                                    style: TextStyle(
-                                      color: Color.fromRGBO(18, 54, 69, 1),
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ],
+                              return CircleAvatar(
+                                radius: 24.r,
+                                child: const Icon(Icons.person),
                               );
                             }
-
                             final user = snapshot.data!;
-
                             return Row(
                               children: [
                                 CircleAvatar(
-                                  radius: 24,
-                                  backgroundColor: Colors.grey.shade300,
-                                  backgroundImage:
-                                      user!.profilePhoto != null &&
-                                          user!.profilePhoto!.isNotEmpty
-                                      ? (user!.profilePhoto!.startsWith('http')
-                                            ? NetworkImage(user!.profilePhoto!)
-                                            : FileImage(
-                                                    File(user!.profilePhoto!),
-                                                  )
-                                                  as ImageProvider)
-                                      : null,
-                                  child:
-                                      user!.profilePhoto == null ||
-                                          user!.profilePhoto!.isEmpty
-                                      ? Text(
-                                          user!.personFullName.isNotEmpty
-                                              ? user!.personFullName[0]
-                                                    .toUpperCase()
-                                              : "?",
-                                          style: const TextStyle(fontSize: 50),
-                                        )
+                                  radius: 24.r,
+                                  backgroundImage: user.profilePhoto != null
+                                      ? (user.profilePhoto!.startsWith('http')
+                                      ? NetworkImage(user.profilePhoto!)
+                                      : FileImage(
+                                      File(user.profilePhoto!)))
                                       : null,
                                 ),
-
-                                const SizedBox(width: 10),
+                                SizedBox(width: 10.w),
                                 Text(
                                   user.personFullName,
-                                  style: const TextStyle(
-                                    color: Color.fromRGBO(18, 54, 69, 1),
-                                    fontSize: 18,
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
+                                    color:
+                                    const Color.fromRGBO(18, 54, 69, 1),
                                   ),
                                 ),
                               ],
                             );
                           },
                         ),
-                      ),
+                      )
+                          .animate()
+                          .fadeIn(duration: 400.ms)
+                          .scale(
+                          begin: const Offset(0.8, 0.8),
+                          curve: Curves.easeOutBack),
 
                       const Spacer(),
-                      Stack(
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.notifications,
-                              color: Color.fromRGBO(18, 54, 69, 1),
-                              size: 40,
+
+                      IconButton(
+                        icon: Icon(
+                          Icons.notifications,
+                          size: 38.sp,
+                          color: const Color.fromRGBO(18, 54, 69, 1),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => NotificationsPage(),
                             ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => NotificationsPage(),
-                                ),
-                              );
-                            },
-                          ),
-                          Positioned(
-                            right: 3,
-                            top: 10,
-                            child: Container(
-                              width: 12,
-                              height: 12,
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                shape: BoxShape.circle,
-                                border: Border.all(color: Colors.red, width: 1),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                          );
+                        },
+                      )
+                          .animate(onPlay: (c) => c.repeat())
+                          .scaleXY(
+                          begin: 1,
+                          end: 1.1,
+                          duration: 1200.ms)
+                          .then()
+                          .scaleXY(begin: 1.1, end: 1),
                     ],
                   ),
                 ),
 
-                const Text(
+                /// ================= TITLES =================
+                Text(
                   'Discover',
                   style: TextStyle(
-                    color: Color.fromRGBO(18, 54, 69, 1),
-                    fontSize: 46,
+                    fontSize: 46.sp,
                     fontWeight: FontWeight.bold,
+                    color: const Color.fromRGBO(18, 54, 69, 1),
                   ),
-                ),
-                const Text(
+                )
+                    .animate()
+                    .fadeIn(duration: 500.ms)
+                    .slideX(begin: -0.2),
+
+                Text(
                   'Your journey starts here',
-                  style: TextStyle(fontSize: 20),
-                ),
-                const SizedBox(height: 25),
+                  style: TextStyle(fontSize: 20.sp),
+                )
+                    .animate()
+                    .fadeIn(delay: 200.ms),
 
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => BlocProvider(
-                          create: (_) =>
-                              SearchCubit(repo: getIt.get<SearchRepo>()),
-                          child: const SearchPage(),
+                SizedBox(height: 25.h),
+
+                /// ================= SEARCH =================
+                Hero(
+                  tag: 'search_bar',
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => BlocProvider(
+                            create: (_) => SearchCubit(
+                                repo: getIt.get<SearchRepo>()),
+                            child: const SearchPage(),
+                          ),
                         ),
+                      );
+                    },
+                    child: Container(
+                      height: 45.h,
+                      padding:
+                      EdgeInsets.symmetric(horizontal: 15.w),
+                      decoration: BoxDecoration(
+                        color:
+                        const Color.fromRGBO(18, 54, 69, 1),
+                        borderRadius:
+                        BorderRadius.circular(40.r),
+                        boxShadow: const [
+                          BoxShadow(
+                            blurRadius: 10,
+                            offset: Offset(0, 6),
+                            color: Colors.black26,
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                  child: Container(
-                    height: 45,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          blurRadius: 5,
-                          offset: Offset(0, 6),
-                        ),
-                      ],
-                      color: Color.fromRGBO(18, 54, 69, 1),
-                      borderRadius: BorderRadius.circular(40),
-                    ),
-                    padding: const EdgeInsets.only(left: 15, right: 3),
-                    child: Row(
-                      children: [
-                        const Expanded(
-                          child: Text(
-                            'Where to go ....',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 16,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Where to go ....',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 16.sp,
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          width: 39,
-                          height: 39,
-                          decoration: const BoxDecoration(
-                            color: Color.fromRGBO(58, 186, 242, 1),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.search,
-                            color: Color.fromRGBO(18, 54, 69, 1),
-                            size: 40,
-                          ),
-                        ),
-                      ],
+                          CircleAvatar(
+                            radius: 20.r,
+                            backgroundColor:
+                            const Color.fromRGBO(58, 186, 242, 1),
+                            child: Icon(
+                              Icons.search,
+                              size: 24.sp,
+                              color:
+                              const Color.fromRGBO(18, 54, 69, 1),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
+                )
+                    .animate()
+                    .fadeIn(delay: 300.ms)
+                    .slideY(begin: 0.3),
 
-                const SizedBox(height: 25),
-                const PlacesSelector(),
-                const SizedBox(height: 25),
+                SizedBox(height: 25.h),
 
+                /// ================= SELECTOR =================
+                const PlacesSelector()
+                    .animate()
+                    .fadeIn(delay: 400.ms)
+                    .slideX(begin: 0.3),
+
+                SizedBox(height: 25.h),
+
+                /// ================= PLACES =================
                 isLoadingPlaces
-                    ? SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            SkeletonPlaceCard(),
-                            SkeletonPlaceCard(),
-                            SkeletonPlaceCard(),
-                          ],
-                        ),
-                      )
-                    : placesExist
+                    ? SizedBox(
+                  height: 250.h,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 2,
+                    separatorBuilder: (_, __) => SizedBox(width: 12.w),
+                    itemBuilder: (_, __) => const SkeletonPlaceCard(),
+                  ),
+                ):
+                placesExist
                     ? PlaceCardsList(places: places)
+                    .animate()
+                    .fadeIn(duration: 500.ms)
+                    .slideX(begin: 0.2)
+                    .scale(
+                    begin:
+                    const Offset(0.95, 0.95))
                     : Container(
-                        width: double.infinity,
-                        height: 235,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        margin: const EdgeInsets.only(bottom: 15),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF23627E).withOpacity(0.12),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: const Color(0xFF23627E),
-                            width: 1.5,
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(
-                              Icons.location_off,
-                              size: 60,
-                              color: Color(0xFF23627E),
-                            ),
-                            SizedBox(height: 15),
-                            Text(
-                              'No destinations available',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF11324D),
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Try choosing another area',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ],
+                  width: double.infinity,
+                  height: 235.h,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 20.w),
+                  margin: EdgeInsets.only(
+                      bottom: 15.h),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF23627E)
+                        .withOpacity(0.12),
+                    borderRadius:
+                    BorderRadius.circular(20.r),
+                    border: Border.all(
+                      color:
+                      const Color(0xFF23627E),
+                      width: 1.5.w,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment:
+                    MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.location_off,
+                        size: 60.sp,
+                        color:
+                        const Color(0xFF23627E),
+                      ),
+                      SizedBox(height: 15.h),
+                      Text(
+                        'No destinations available',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 22.sp,
+                          fontWeight:
+                          FontWeight.bold,
+                          color:
+                          const Color(0xFF11324D),
                         ),
                       ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        'Try choosing another area',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+                    .animate()
+                    .fadeIn(duration: 500.ms)
+                    .scale(
+                    begin:
+                    const Offset(0.9, 0.9)),
 
-                const SizedBox(height: 15),
+                SizedBox(height: 20.h),
 
-                const Text(
+                /// ================= TOP RATED =================
+                Text(
                   'Highest Rating',
                   style: TextStyle(
-                    color: Color.fromRGBO(18, 54, 69, 1),
-                    fontSize: 28,
+                    fontSize: 28.sp,
                     fontWeight: FontWeight.bold,
+                    color:
+                    const Color.fromRGBO(18, 54, 69, 1),
                   ),
-                ),
-                const SizedBox(height: 8),
+                )
+                    .animate()
+                    .fadeIn(delay: 500.ms)
+                    .slideX(begin: -0.2),
+
+                SizedBox(height: 10.h),
 
                 isTopRatedLoading
-                    ? SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: const [
-                            SkeletonPopularCard(),
-                            SkeletonPopularCard(),
-                            SkeletonPopularCard(),
-                          ],
-                        ),
-                      )
-                    : PopularCard(places: topRatedPlaces),
-                const SizedBox(height: 5),
+                    ? SizedBox(
+                  height: 250.h,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 3,
+                    separatorBuilder: (_, __) => SizedBox(width: 12.w),
+                    itemBuilder: (_, __) => const SkeletonPlaceCard(),
+                  ),
+                )
+              : PopularCard(places: topRatedPlaces)
+                    .animate()
+                    .fadeIn(duration: 600.ms)
+                    .slideY(begin: 0.2),
+
+                SizedBox(height: 10.h),
               ],
             ),
           ),
         ),
-
-        bottomNavigationBar: const BottomNavBar(currentIndex: 0),
+      ),
+        bottomNavigationBar:const BottomNavBar(currentIndex: 0),
       ),
     );
   }

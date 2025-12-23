@@ -41,7 +41,7 @@ class _PaymentPageState extends State<PaymentPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const PaymentSuccessPage(),
+              builder: (context) => const PaymentSuccessPage (),
             ),
           );
         }

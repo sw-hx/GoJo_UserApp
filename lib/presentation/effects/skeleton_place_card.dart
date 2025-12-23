@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'shimmer_effect.dart';
 
 class SkeletonPlaceCard extends StatelessWidget {
@@ -6,15 +7,17 @@ class SkeletonPlaceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 190,
-      height: 250,
-      margin: const EdgeInsets.only(right: 12),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: const ShimmerEffect(
-          width: double.infinity,
-          height: double.infinity,
+    return SizedBox(
+      width: 190.w,
+      height: 250.h,
+      child: Padding(
+        padding: EdgeInsets.only(right: 12.w),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16.r),
+          child: const ShimmerEffect(
+            width: double.infinity,
+            height: double.infinity,
+          ),
         ),
       ),
     );
