@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_jo_user_application/core/helpers/helpers.dart';
 import 'package:go_jo_user_application/presentation/pages/payment_pages/payment_page.dart';
 import 'package:go_jo_user_application/presentation/pages/trips.dart';
 
@@ -73,7 +74,7 @@ class BookingPage extends StatelessWidget {
               SizedBox(height: 30.h),
 
               Text(
-                companyName,
+                formatName(companyName),
                 style: mainText.copyWith(
                   fontSize: 28.sp,
                   fontWeight: FontWeight.bold,
@@ -113,15 +114,14 @@ class BookingPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      fromLocation,
-                      style: mainText.copyWith(
-                        fontSize: 24.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  child: Text(
+                    fromLocation,
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
+                    textAlign: TextAlign.right,
+                    style: mainText.copyWith(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -137,15 +137,14 @@ class BookingPage extends StatelessWidget {
                 SizedBox(width: 12.w),
 
                 Expanded(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      toLocation,
-                      style: mainText.copyWith(
-                        fontSize: 24.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  child: Text(
+                    formatName(toLocation),
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
+                    textAlign: TextAlign.left,
+                    style: mainText.copyWith(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),

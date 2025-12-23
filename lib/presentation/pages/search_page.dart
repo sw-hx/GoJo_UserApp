@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_jo_user_application/core/helpers/helpers.dart';
@@ -39,19 +38,19 @@ class _SearchPageState extends State<SearchPage> {
         child: Column(
           children: [
             Container(
-              height: 45,
+              height: 52,
               decoration: BoxDecoration(
                 color: Colors.grey.shade200,
                 borderRadius: BorderRadius.circular(40),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
+                    color: Colors.black.withOpacity(0.08),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
-              padding: const EdgeInsets.only(left: 15, right: 10),
+              padding: const EdgeInsets.only(left: 18, right: 12),
               child: Row(
                 children: [
                   Expanded(
@@ -60,15 +59,19 @@ class _SearchPageState extends State<SearchPage> {
                       onChanged: (value) {
                         context.read<SearchCubit>().search(value);
                       },
-                      style: const TextStyle(color: Colors.black),
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
                       decoration: InputDecoration(
-                        hintText: 'Type to search...',
-                        hintStyle: TextStyle(color: Colors.grey.shade600),
+                        hintText: 'Search places...',
+                        hintStyle:
+                        TextStyle(color: Colors.grey.shade600),
                         border: InputBorder.none,
                       ),
                     ),
                   ),
-                  const Icon(Icons.search, color: Colors.black, size: 26),
+                  const Icon(Icons.search, color: Colors.black, size: 28),
                 ],
               ),
             ),
@@ -80,7 +83,8 @@ class _SearchPageState extends State<SearchPage> {
                     return const Center(
                       child: Text(
                         "Start typing to search",
-                        style: TextStyle(color: Colors.black54, fontSize: 16),
+                        style:
+                        TextStyle(color: Colors.black54, fontSize: 16),
                       ),
                     );
                   }
@@ -95,7 +99,8 @@ class _SearchPageState extends State<SearchPage> {
                     return Center(
                       child: Text(
                         state.message,
-                        style: const TextStyle(color: Colors.red, fontSize: 16),
+                        style: const TextStyle(
+                            color: Colors.red, fontSize: 16),
                       ),
                     );
                   }
@@ -107,52 +112,107 @@ class _SearchPageState extends State<SearchPage> {
                       return const Center(
                         child: Text(
                           "No results",
-                          style: TextStyle(color: Colors.black54, fontSize: 16),
+                          style: TextStyle(
+                              color: Colors.black54, fontSize: 16),
                         ),
                       );
                     }
 
-                    return ListView.builder(
+                    return ListView.separated(
                       itemCount: results.length,
+                      separatorBuilder: (_, __) =>
+                      const SizedBox(height: 12),
                       itemBuilder: (context, index) {
                         final item = results[index];
-                        return ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(item.mainPhotoLink),
-                        ),
-                        title: Text(
-                          formatPlace(item.placeName),
-                          style: const TextStyle(color: Colors.black),
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>MultiBlocProvider(
-                                providers: [
-                                  BlocProvider(
-                                    create: (context) => GetPlaceInfoCubit(
-                                      placeRepo: getIt<PlaceRepo>(),
-                                    )..getPlaceInfo(item.placeName),
-                                  ),
-                                  BlocProvider(
-                                    create: (context) => WriteCommentCubit(
-                                      placeRepo: getIt<PlaceRepo>(),
-                                    ),
-                                  ),
-                                  BlocProvider(
-                                    create: (context) => AddFavoriteCubit(
-                                      favoriteRepo: getIt<FavoriteRepo>(),
-                                    ),
-                                  ),
-                                ],
-                                child: PlaceInfoScreen(),
-                              ),
-                            ),
-                          );
-                        },
-                        );
 
+                        return InkWell(
+                          borderRadius: BorderRadius.circular(20),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider(
+                                      create: (context) =>
+                                      GetPlaceInfoCubit(
+                                        placeRepo:
+                                        getIt<PlaceRepo>(),
+                                      )..getPlaceInfo(
+                                          item.placeName),
+                                    ),
+                                    BlocProvider(
+                                      create: (context) =>
+                                          WriteCommentCubit(
+                                            placeRepo:
+                                            getIt<PlaceRepo>(),
+                                          ),
+                                    ),
+                                    BlocProvider(
+                                      create: (context) =>
+                                          AddFavoriteCubit(
+                                            favoriteRepo:
+                                            getIt<FavoriteRepo>(),
+                                          ),
+                                    ),
+                                  ],
+                                  child: const PlaceInfoScreen(),
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(14),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                              BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black
+                                      .withOpacity(0.08),
+                                  blurRadius: 10,
+                                  offset:
+                                  const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                ClipRRect(
+                                  borderRadius:
+                                  BorderRadius.circular(16),
+                                  child: Image.network(
+                                    item.mainPhotoLink,
+                                    width: 72,
+                                    height: 72,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                const SizedBox(width: 14),
+                                Expanded(
+                                  child: Text(
+                                    formatName(item.placeName),
+                                    softWrap: true,
+                                    overflow:
+                                    TextOverflow.visible,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight:
+                                      FontWeight.w600,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 18,
+                                  color: Colors.black54,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
                       },
                     );
                   }

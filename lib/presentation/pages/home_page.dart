@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                             final user = snapshot.data!;
                             return Row(
                               children: [
-                                CircleAvatar(
+                                user.profilePhoto != null ? CircleAvatar(
                                   radius: 24.r,
                                   backgroundImage: user.profilePhoto != null
                                       ? (user.profilePhoto!.startsWith('http')
@@ -133,6 +133,17 @@ class _HomePageState extends State<HomePage> {
                                       : FileImage(
                                       File(user.profilePhoto!)))
                                       : null,
+                                )
+                                :
+                                CircleAvatar(
+                                  radius: 24.r,
+                                  child: Center(child: Text(
+                                      user.personFullName[0],
+                                    style: TextStyle(
+                                      fontSize: 15.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )),
                                 ),
                                 SizedBox(width: 10.w),
                                 Text(

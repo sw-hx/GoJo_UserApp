@@ -1,4 +1,4 @@
-String formatPlace(String? raw) {
+String formatName(String? raw) {
   return raw!
       .replaceAll("_", " ")
       .split(" ")
