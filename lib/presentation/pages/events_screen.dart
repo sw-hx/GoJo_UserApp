@@ -41,6 +41,8 @@ class _EventsPageState extends State<EventsPage> {
         },
         builder: (context, state) {
           return Scaffold(
+            backgroundColor: Colors.white,
+
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
