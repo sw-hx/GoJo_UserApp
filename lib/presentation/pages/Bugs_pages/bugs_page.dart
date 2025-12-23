@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 import '../../common_components/bottom_nav_bar.dart';
@@ -11,7 +12,12 @@ import '../profile_page.dart';
 import 'bugs_thank_page.dart';
 
 class BugsReportScreen extends StatefulWidget {
-  const BugsReportScreen({super.key, required this.username, required this.name});
+  const BugsReportScreen({
+    super.key,
+    required this.username,
+    required this.name,
+  });
+
   final String username;
   final String name;
 
@@ -51,9 +57,7 @@ class _BugsReportScreenState extends State<BugsReportScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (_) =>  BugsThankYouScreen(
-                name: widget.name,
-              ),
+              builder: (_) => BugsThankYouScreen(name: widget.name),
             ),
           );
         }
@@ -72,214 +76,245 @@ class _BugsReportScreenState extends State<BugsReportScreen> {
             inAsyncCall: isLoading,
             dismissible: false,
             child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const CustomReturnArrow(targetPage: ProfilePage()),
-                      const SizedBox(height: 20),
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(20.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const CustomReturnArrow(targetPage: ProfilePage()),
+                    SizedBox(height: 20.h),
 
-                      Row(
-                        children: const [
-                          Icon(
-                            Icons.support_agent_rounded,
-                            color: Color.fromRGBO(18, 54, 69, 1),
-                            size: 40,
+                    /// ================= HEADER =================
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.support_agent_rounded,
+                          color: const Color.fromRGBO(18, 54, 69, 1),
+                          size: 40.sp,
+                        ),
+                        SizedBox(width: 10.w),
+                        Text(
+                          "Bugs Center",
+                          style: TextStyle(
+                            color: const Color.fromRGBO(18, 54, 69, 1),
+                            fontSize: 30.sp,
+                            fontWeight: FontWeight.bold,
                           ),
-                          SizedBox(width: 10),
-                          Text(
-                            "Bugs Center",
-                            style: TextStyle(
-                              color: Color.fromRGBO(18, 54, 69, 1),
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
+                    ),
 
-                      const SizedBox(height: 40),
+                    SizedBox(height: 40.h),
 
-                      const Text(
-                        "Reason for reporting this bug?",
-                        style: TextStyle(fontSize: 15),
-                      ),
-                      const SizedBox(height: 10),
+                    /// ================= ISSUE TYPE =================
+                    Text(
+                      "Reason for reporting this bug?",
+                      style: TextStyle(fontSize: 15.sp),
+                    ),
+                    SizedBox(height: 10.h),
 
-                      SizedBox(
-                        height: 45,
-                        child: ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: issueTypes.length,
-                          separatorBuilder: (_, __) =>
-                          const SizedBox(width: 8),
-                          itemBuilder: (context, index) {
-                            final issue = issueTypes[index];
-                            final isSelected = issue == selectedIssue;
+                    SizedBox(
+                      height: 45.h,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: issueTypes.length,
+                        separatorBuilder: (_, __) =>
+                            SizedBox(width: 8.w),
+                        itemBuilder: (context, index) {
+                          final issue = issueTypes[index];
+                          final isSelected = issue == selectedIssue;
 
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() => selectedIssue = issue);
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 10),
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? const Color(0xff2F7898)
-                                      : const Color(0xFFD0D0D0),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    formatLabel(issue),
-                                    style: TextStyle(
-                                      color: isSelected
-                                          ? Colors.white
-                                          : Colors.black87,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                          return GestureDetector(
+                            onTap: () =>
+                                setState(() => selectedIssue = issue),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 15.w,
+                                vertical: 10.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? const Color(0xff2F7898)
+                                    : const Color(0xFFD0D0D0),
+                                borderRadius:
+                                BorderRadius.circular(20.r),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  formatLabel(issue),
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: isSelected
+                                        ? Colors.white
+                                        : Colors.black87,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                    SizedBox(height: 25.h),
+
+                    /// ================= DESCRIPTION =================
+                    Text(
+                      "Can you provide clarity on the issue?",
+                      style: TextStyle(fontSize: 15.sp),
+                    ),
+                    SizedBox(height: 10.h),
+
+                    Container(
+                      height: 160.h,
+                      padding: EdgeInsets.all(10.w),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(15.r),
+                          bottomLeft: Radius.circular(15.r),
+                          bottomRight: Radius.circular(15.r),
+                        ),
+                      ),
+                      child: TextField(
+                        controller: descriptionController,
+                        maxLines: null,
+                        expands: true,
+                        style: TextStyle(fontSize: 14.sp),
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Describe the problem here...",
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 25.h),
+
+                    /// ================= IMAGE =================
+                    Text(
+                      "Add screenshot (optional)",
+                      style: TextStyle(fontSize: 15.sp),
+                    ),
+                    SizedBox(height: 10.h),
+
+                    Center(
+                      child: RectangleImageTextField(
+                        image: selectedImage,
+                        onChanged: (file) {
+                          setState(() => selectedImage = file);
+                        },
+                      ),
+                    ),
+
+                    SizedBox(height: 25.h),
+
+                    /// ================= PRIORITY =================
+                    Text(
+                      "Bug priority",
+                      style: TextStyle(fontSize: 15.sp),
+                    ),
+                    SizedBox(height: 10.h),
+
+                    Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
+                      children: [
+                        _priorityButton(
+                            "HIGH_PRIORITY", Colors.red),
+                        _priorityButton(
+                            "MEDIUM_PRIORITY", Colors.orange),
+                        _priorityButton(
+                            "LOW_PRIORITY", Colors.green),
+                      ],
+                    ),
+
+                    SizedBox(height: 80.h),
+
+                    /// ================= ACTIONS =================
+                    Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: isLoading
+                              ? null
+                              : () => Navigator.pop(context),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                            Colors.grey.shade200,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 40.w,
+                              vertical: 10.h,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                              BorderRadius.circular(50.r),
+                            ),
+                          ),
+                          child: Text(
+                            "Cancel",
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: isLoading
+                              ? null
+                              : () {
+                            final message =
+                            descriptionController
+                                .text
+                                .trim();
+
+                            if (message.isEmpty) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                      "Please describe the problem before submitting"),
+                                ),
+                              );
+                              return;
+                            }
+
+                            context
+                                .read<CreateTicketCubit>()
+                                .createTicket(
+                              data: {
+                                "message": message,
+                                "priority": selectedPriority,
+                                "tag": selectedIssue,
+                              },
+                              image: selectedImage,
+                              username: widget.username,
                             );
                           },
-                        ),
-                      ),
-
-                      const SizedBox(height: 25),
-
-                      const Text(
-                        "Can you provide clarity on the issue?",
-                        style: TextStyle(fontSize: 15),
-                      ),
-                      const SizedBox(height: 10),
-
-                      Container(
-                        height: 160,
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(15),
-                            bottomLeft: Radius.circular(15),
-                            bottomRight: Radius.circular(15),
-                          ),
-                        ),
-                        child: TextField(
-                          controller: descriptionController,
-                          maxLines: null,
-                          expands: true,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Describe the problem here...",
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 25),
-
-                      const Text(
-                        "Add screenshot (optional)",
-                        style: TextStyle(fontSize: 15),
-                      ),
-                      const SizedBox(height: 10),
-
-                      Center(
-                        child: RectangleImageTextField(
-                          image: selectedImage,
-                          onChanged: (file) {
-                            setState(() => selectedImage = file);
-                          },
-                        ),
-                      ),
-
-                      const SizedBox(height: 25),
-
-                      const Text(
-                        "Bug priority",
-                        style: TextStyle(fontSize: 15),
-                      ),
-                      const SizedBox(height: 10),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _priorityButton("HIGH_PRIORITY", Colors.red),
-                          _priorityButton("MEDIUM_PRIORITY", Colors.orange),
-                          _priorityButton("LOW_PRIORITY", Colors.green),
-                        ],
-                      ),
-
-                      const SizedBox(height: 100),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ElevatedButton(
-                            onPressed:
-                            isLoading ? null : () => Navigator.pop(context),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.grey.shade200,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 40, vertical: 10),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
-                              ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                            const Color(0xff2F7898),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 40.w,
+                              vertical: 10.h,
                             ),
-                            child: const Text(
-                              "Cancel",
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.black),
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                              BorderRadius.circular(50.r),
                             ),
                           ),
-                          ElevatedButton(
-
-                            onPressed: isLoading
-                                ? null
-                                : () {
-                              final message = descriptionController.text.trim();
-
-                              if (message.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Please describe the problem before submitting"),
-                                  ),
-                                );
-                                return;
-                              }
-
-                              context.read<CreateTicketCubit>().createTicket(
-                                data: {
-                                  "message": message,
-                                  "priority": selectedPriority,
-                                  "tag": selectedIssue,
-                                },
-                                image: selectedImage,
-                                username: widget.username,
-                              );
-                            },
-
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xff2F7898),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 40, vertical: 10),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                            ),
-                            child: const Text(
-                              "Submit",
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.white),
+                          child: Text(
+                            "Submit",
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.white,
                             ),
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -296,15 +331,19 @@ class _BugsReportScreenState extends State<BugsReportScreen> {
     return GestureDetector(
       onTap: () => setState(() => selectedPriority = value),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: EdgeInsets.symmetric(
+          horizontal: 12.w,
+          vertical: 8.h,
+        ),
         decoration: BoxDecoration(
           color: isSelected ? color : Colors.white,
-          borderRadius: BorderRadius.circular(50),
-          border: Border.all(color: color, width: 2),
+          borderRadius: BorderRadius.circular(50.r),
+          border: Border.all(color: color, width: 2.w),
         ),
         child: Text(
           formatLabel(value),
           style: TextStyle(
+            fontSize: 13.sp,
             color: isSelected ? Colors.black : color,
             fontWeight: FontWeight.w600,
           ),

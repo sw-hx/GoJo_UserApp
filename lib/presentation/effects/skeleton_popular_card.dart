@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'shimmer_effect.dart';
 
-class SkeletonPopularCard extends StatelessWidget {
-  const SkeletonPopularCard({super.key});
+class SkeletonPupolerCard extends StatelessWidget {
+  const SkeletonPupolerCard({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 240,
-      height: 110,
-      margin: const EdgeInsets.only(right: 10),
+      width: 190,
+      height: 250,
+      margin: const EdgeInsets.only(right: 12),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: const ShimmerEffect(

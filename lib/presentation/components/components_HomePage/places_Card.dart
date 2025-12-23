@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_jo_user_application/core/helpers/helpers.dart';
 import 'package:go_jo_user_application/presentation/cubits/favorite_cubit/add_favorite_cubit/add_favorite_cubit.dart';
 import '../../../data/models/place_models/place_model.dart';
@@ -11,32 +12,30 @@ import '../../cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_
 import '../../cubits/place_cubit/write_comment_cubit/write_comment_cubit.dart';
 import '../../pages/place_info_screen.dart';
 
-
 /// coded by [suhaib]
 
-class PlaceCardsList extends StatefulWidget {
+class PlaceCardsList extends StatelessWidget {
   const PlaceCardsList({super.key, required this.places});
 
   final List<dynamic> places;
 
-  @override
-  State<PlaceCardsList> createState() => _PlaceCardsListState();
-}
-
-class _PlaceCardsListState extends State<PlaceCardsList> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 250,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: widget.places.length,
+        itemCount: places.length,
         itemBuilder: (context, index) {
-          final place = widget.places[index];
+          final place = places[index];
+
           return PlaceCard(
+            key: ValueKey(place.placeId),
             title: formatPlace(place.placeName),
             description: place.quickInfo,
             imageUrl: place.mainPhotoLink,
+            isFavorite: place.isFavorite,
+            placeId: place.placeId,
             onTap: () async {
               final result = await Navigator.push(
                 context,
@@ -44,41 +43,48 @@ class _PlaceCardsListState extends State<PlaceCardsList> {
                   builder: (_) => MultiBlocProvider(
                     providers: [
                       BlocProvider(
-                        create: (context) => GetPlaceInfoCubit(
+                        create: (_) => GetPlaceInfoCubit(
                           placeRepo: getIt<PlaceRepo>(),
                         )..getPlaceInfo(place.placeName),
                       ),
                       BlocProvider(
-                        create: (context) => WriteCommentCubit(
+                        create: (_) => WriteCommentCubit(
                           placeRepo: getIt<PlaceRepo>(),
                         ),
                       ),
                       BlocProvider(
-                        create: (context) => AddFavoriteCubit(
+                        create: (_) => AddFavoriteCubit(
                           favoriteRepo: getIt<FavoriteRepo>(),
                         ),
                       ),
                     ],
-                    child: PlaceInfoScreen(),
+                    child: PlaceInfoScreen(
+                      heroTag: 'place_${place.placeId}',
+                    ),
                   ),
                 ),
               );
+
               if (result == true) {
-               context.read<GetPlacesByParentPlaceCubit>().getPlacesByParentPlace('ALL');
-               setState(() {});
+                context
+                    .read<GetPlacesByParentPlaceCubit>()
+                    .getPlacesByParentPlace('ALL');
               }
-
             },
-            isFavorite: place.isFavorite,
-            placeId: place.placeId,
-
-          );
+          )
+              .animate(delay: (index * 120).ms)
+              .fadeIn(duration: 500.ms)
+              .slideX(begin: 0.3)
+              .scale(begin: const Offset(0.95, 0.95));
         },
       ),
     );
   }
 }
 
+/// =======================================================
+///                        PLACE CARD
+/// =======================================================
 class PlaceCard extends StatefulWidget {
   final String imageUrl;
   final String title;
@@ -115,86 +121,121 @@ class _PlaceCardState extends State<PlaceCard> {
     return BlocListener<AddFavoriteCubit, AddFavoriteState>(
       listener: (context, state) {
         if (state is AddFavoriteFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
-      child: _buildCard(),
-    );
-  }
-
-  Widget _buildCard() {
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: Container(
-        width: 190,
-        margin: const EdgeInsets.only(right: 12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          image: DecorationImage(
-            image: NetworkImage(widget.imageUrl),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.black.withOpacity(0.6),
-                    Colors.transparent,
-                  ],
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedScale(
+          duration: const Duration(milliseconds: 150),
+          scale: 1,
+          child: Container(
+            width: 190,
+            margin: const EdgeInsets.only(right: 12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.25),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
                 ),
-              ),
+              ],
             ),
-            Positioned(
-              top: 10,
-              right: 10,
-              child: GestureDetector(
-                onTap: () {
-                  if (!isFav) {
-                    context.read<AddFavoriteCubit>().addFavorite(widget.placeId);
-                    setState(() => isFav = true);
-                  }
-                },
-                child: Icon(
-                  isFav ? Icons.favorite : Icons.favorite_border,
-                  color: isFav ? Colors.red : Colors.white,
-                  size: 32,
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 10,
-              left: 10,
-              right: 10,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(18),
+              child: Stack(
                 children: [
-                  Text(
-                    widget.title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                  /// 🔥 HERO IMAGE
+                  Hero(
+                    tag: 'place_${widget.placeId}',
+                    child: Image.network(
+                      widget.imageUrl,
+                      height: double.infinity,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  Text(
-                    widget.description,
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 14,
+
+                  /// Gradient
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.black.withOpacity(0.7),
+                          Colors.transparent,
+                        ],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                      ),
                     ),
+                  ),
+
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        if (!isFav) {
+                          context
+                              .read<AddFavoriteCubit>()
+                              .addFavorite(widget.placeId);
+                          setState(() => isFav = true);
+                        }
+                      },
+                      child: Icon(
+                        isFav ? Icons.favorite : Icons.favorite_border,
+                        color: isFav ? Colors.red : Colors.white,
+                        size: 34,
+                      )
+                          .animate(target: isFav ? 1 : 0)
+                          .scale(
+                          begin: const Offset(1, 1),
+                          end: const Offset(1.3, 1.3),
+                          curve: Curves.easeOutBack)
+                          .then()
+                          .scale(end: const Offset(1, 1)),
+                    ),
+                  ),
+
+                  Positioned(
+                    bottom: 12,
+                    left: 12,
+                    right: 12,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          widget.description,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    )
+                        .animate()
+                        .fadeIn(delay: 300.ms)
+                        .slideY(begin: 0.3),
                   ),
                 ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
