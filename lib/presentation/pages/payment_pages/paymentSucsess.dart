@@ -6,6 +6,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_jo_user_application/core/helpers/getUser.dart';
 import 'package:go_jo_user_application/data/models/user_model.dart';
 import 'package:go_jo_user_application/presentation/cubits/place_cubit/get_places_by_parentPlace/get_places_by_parent_place_cubit.dart';
+import '../../../core/helpers/getUser.dart';
 import '../../../domain/repos/favorite_repo.dart';
 import '../../../domain/repos/place_repo.dart';
 import '../../../services/git_it_service.dart';
@@ -13,6 +14,7 @@ import '../../common_components/custom_returnArrow.dart';
 import '../../cubits/favorite_cubit/add_favorite_cubit/add_favorite_cubit.dart';
 import '../../cubits/place_cubit/get_topRating_places_cubit/get_top_rating_places_cubit.dart';
 import '../home_page.dart';
+import '../../../data/models/user_model.dart';
 
 class PaymentSuccessPage extends StatefulWidget {
   const PaymentSuccessPage({Key? key}) : super(key: key);
@@ -52,7 +54,7 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              /// 🔙 Back
+              /// Back
               const CustomReturnArrow(targetPage: HomePage())
                   .animate()
                   .fadeIn(duration: 300.ms)
@@ -60,7 +62,7 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
 
               const Spacer(),
 
-              /// 🎉 Success Card
+              /// Success Card
               Center(
                 child: Container(
                   width: double.infinity,
