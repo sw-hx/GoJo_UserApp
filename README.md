@@ -60,26 +60,26 @@ Make sure you have:
 - A Stripe account
 - Stripe **test keys** (Publishable Key)
 
-
-Check your Flutter installation:
+🛠 Check your Flutter installation:
 
 ```bash
 flutter doctor
 ```
+---
 
 ## ▶️ Installation & Run
-- 1 Clone this repository
+1 - Clone this repository
 ```
 git clone https://github.com/sw-hx/GoJo_UserApp.git
 cd GoJo_UserApp
 ```
 
-- 2 Install dependencies
+2 - Install dependencies
 ```
 flutter pub get
 ```
 
-### -3 Configuration (Required)
+### 3 - Configuration (Required)
 Before running the application, you must update the constants configuration file with your own environment values.
 
 📁 Constants File
@@ -96,42 +96,40 @@ const String stripeSecretKey='sk_test_example';
 const String stripePublishableKey='pk_test_example';
 ```
 
-- 4 Run the application
+4 - Run the application
 ```
 flutter run
 ```
+---
 
 ## 🔑 Authentication
 
 This app uses JWT Authentication provided by the GoJo backend.
 
-- 1 Register / Login via the app UI
-- 2 The app stores a JWT token securely
-- 3 Token is sent with each request in the Authorization: Bearer <token> header
+-  Register / Login via the app UI
+-  The app stores a JWT token securely
+-  Token is sent with each request in the Authorization: Bearer <token> header
 
 This allows access to user specific and protected endpoints.
 
+---
+
 ## 🙏 Special Thanks
-**Suhaib jad fathi samaneh**
+**Suhaib jad fathi samaneh** ([@SHB44X](https://github.com/SHB44X))
 For leading the UI engineering and overall design architecture including:
 
 - User Interface (UI) structure and layout
-
 - User experience flows and screen design
-
 - Animations and visual interactions
 
 His work played a major role in shaping the visual identity and usability of the platform.
 
-**Zain eddin mohammad Ibrahim alsheikh**
+**Zain eddin mohammad Ibrahim alsheikh** ([@Zain-xd-cmd](https://github.com/Zain-xd-cmd))
 For integrating the backend services with the frontend application and making significant contributions to:
 
 - Backend–Frontend communication
-
 - API integration and data handling
-
 - Application testing and validation
-
 - Fixing and reports a lot of bugs for UI and backend logic
 
 His efforts were essential in ensuring system stability and correct functionality.
