@@ -27,8 +27,7 @@ import 'profile_page.dart';
 
 class HomePage extends StatefulWidget {
   final bool showBookingConfirmation;
-  const HomePage({Key? key, this.showBookingConfirmation = false})
-      : super(key: key);
+  const HomePage({super.key, this.showBookingConfirmation = false});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -45,8 +44,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<GetPlacesByParentPlaceCubit,
-            GetPlacesByParentPlaceState>(
+        BlocListener<GetPlacesByParentPlaceCubit, GetPlacesByParentPlaceState>(
           listener: (context, state) {
             if (state is GetPlacesByParentPlaceLoading) {
               isLoadingPlaces = true;
@@ -64,8 +62,7 @@ class _HomePageState extends State<HomePage> {
             }
           },
         ),
-        BlocListener<GetTopRatingPlacesCubit,
-            GetTopRatingPlacesState>(
+        BlocListener<GetTopRatingPlacesCubit, GetTopRatingPlacesState>(
           listener: (context, state) {
             if (state is GetTopRatingPlacesLoading) {
               isTopRatedLoading = true;
@@ -90,322 +87,308 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
-                /// ================= HEADER =================
-                SizedBox(
-                  height: 80.h,
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => BlocProvider(
-                                create: (_) => EditProfileCubit(
-                                  profileRepo: getIt.get<ProfileRepo>(),
-                                  storageService:
-                                  getIt.get<StorageService>(),
-                                ),
-                                child: ProfilePage(),
-                              ),
-                            ),
-                          );
-                          if (result == true) setState(() {});
-                        },
-                        child: FutureBuilder(
-                          future: getUserData(),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return CircleAvatar(
-                                radius: 24.r,
-                                child: const Icon(Icons.person),
-                              );
-                            }
-                            final user = snapshot.data!;
-                            return Row(
-                              children: [
-                                user.profilePhoto != null ? CircleAvatar(
-                                  radius: 24.r,
-                                  backgroundImage: user.profilePhoto != null
-                                      ? (user.profilePhoto!.startsWith('http')
-                                      ? NetworkImage(user.profilePhoto!)
-                                      : FileImage(
-                                      File(user.profilePhoto!)))
-                                      : null,
-                                )
-                                :
-                                CircleAvatar(
-                                  radius: 24.r,
-                                  child: Center(child: Text(
-                                      user.personFullName[0],
-                                    style: TextStyle(
-                                      fontSize: 15.sp,
-                                      fontWeight: FontWeight.bold,
+                  /// ================= HEADER =================
+                  SizedBox(
+                    height: 80.h,
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                              onTap: () async {
+                                final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => BlocProvider(
+                                      create: (_) => EditProfileCubit(
+                                        profileRepo: getIt.get<ProfileRepo>(),
+                                        storageService: getIt
+                                            .get<StorageService>(),
+                                      ),
+                                      child: ProfilePage(),
                                     ),
-                                  )),
-                                ),
-                                SizedBox(width: 10.w),
-                                Text(
-                                  user.personFullName,
-                                  style: TextStyle(
-                                    fontSize: 18.sp,
-                                    color:
-                                    const Color.fromRGBO(18, 54, 69, 1),
                                   ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      )
-                          .animate()
-                          .fadeIn(duration: 400.ms)
-                          .scale(
-                          begin: const Offset(0.8, 0.8),
-                          curve: Curves.easeOutBack),
-
-                      const Spacer(),
-
-                      IconButton(
-                        icon: Icon(
-                          Icons.notifications,
-                          size: 38.sp,
-                          color: const Color.fromRGBO(18, 54, 69, 1),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => NotificationsPage(),
+                                );
+                                if (result == true) setState(() {});
+                              },
+                              child: FutureBuilder(
+                                future: getUserData(),
+                                builder: (context, snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return CircleAvatar(
+                                      radius: 24.r,
+                                      child: const Icon(Icons.person),
+                                    );
+                                  }
+                                  final user = snapshot.data!;
+                                  return Row(
+                                    children: [
+                                      user.profilePhoto != null
+                                          ? CircleAvatar(
+                                              radius: 24.r,
+                                              backgroundImage:
+                                                  user.profilePhoto != null
+                                                  ? (user.profilePhoto!
+                                                            .startsWith('http')
+                                                        ? NetworkImage(
+                                                            user.profilePhoto!,
+                                                          )
+                                                        : FileImage(
+                                                            File(
+                                                              user.profilePhoto!,
+                                                            ),
+                                                          ))
+                                                  : null,
+                                            )
+                                          : CircleAvatar(
+                                              radius: 24.r,
+                                              child: Center(
+                                                child: Text(
+                                                  user.personFullName[0],
+                                                  style: TextStyle(
+                                                    fontSize: 15.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                      SizedBox(width: 10.w),
+                                      Text(
+                                        user.personFullName,
+                                        style: TextStyle(
+                                          fontSize: 18.sp,
+                                          color: const Color.fromRGBO(
+                                            18,
+                                            54,
+                                            69,
+                                            1,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            )
+                            .animate()
+                            .fadeIn(duration: 400.ms)
+                            .scale(
+                              begin: const Offset(0.8, 0.8),
+                              curve: Curves.easeOutBack,
                             ),
-                          );
-                        },
-                      )
-                          .animate(onPlay: (c) => c.repeat())
-                          .scaleXY(
-                          begin: 1,
-                          end: 1.1,
-                          duration: 1200.ms)
-                          .then()
-                          .scaleXY(begin: 1.1, end: 1),
-                    ],
+
+                        const Spacer(),
+
+                        IconButton(
+                              icon: Icon(
+                                Icons.notifications,
+                                size: 38.sp,
+                                color: const Color.fromRGBO(18, 54, 69, 1),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => NotificationsPage(),
+                                  ),
+                                );
+                              },
+                            )
+                            .animate(onPlay: (c) => c.repeat())
+                            .scaleXY(begin: 1, end: 1.1, duration: 1200.ms)
+                            .then()
+                            .scaleXY(begin: 1.1, end: 1),
+                      ],
+                    ),
                   ),
-                ),
 
-                /// ================= TITLES =================
-                Text(
-                  'Discover',
-                  style: TextStyle(
-                    fontSize: 46.sp,
-                    fontWeight: FontWeight.bold,
-                    color: const Color.fromRGBO(18, 54, 69, 1),
-                  ),
-                )
-                    .animate()
-                    .fadeIn(duration: 500.ms)
-                    .slideX(begin: -0.2),
+                  /// ================= TITLES =================
+                  Text(
+                    'Discover',
+                    style: TextStyle(
+                      fontSize: 46.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color.fromRGBO(18, 54, 69, 1),
+                    ),
+                  ).animate().fadeIn(duration: 500.ms).slideX(begin: -0.2),
 
-                Text(
-                  'Your journey starts here',
-                  style: TextStyle(fontSize: 20.sp),
-                )
-                    .animate()
-                    .fadeIn(delay: 200.ms),
+                  Text(
+                    'Your journey starts here',
+                    style: TextStyle(fontSize: 20.sp),
+                  ).animate().fadeIn(delay: 200.ms),
 
-                SizedBox(height: 25.h),
+                  SizedBox(height: 25.h),
 
-                /// ================= SEARCH =================
-                Hero(
-                  tag: 'search_bar',
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => BlocProvider(
-                            create: (_) => SearchCubit(
-                                repo: getIt.get<SearchRepo>()),
-                            child: const SearchPage(),
+                  /// ================= SEARCH =================
+                  Hero(
+                    tag: 'search_bar',
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => BlocProvider(
+                              create: (_) =>
+                                  SearchCubit(repo: getIt.get<SearchRepo>()),
+                              child: const SearchPage(),
+                            ),
                           ),
+                        );
+                      },
+                      child: Container(
+                        height: 45.h,
+                        padding: EdgeInsets.symmetric(horizontal: 15.w),
+                        decoration: BoxDecoration(
+                          color: const Color.fromRGBO(18, 54, 69, 1),
+                          borderRadius: BorderRadius.circular(40.r),
+                          boxShadow: const [
+                            BoxShadow(
+                              blurRadius: 10,
+                              offset: Offset(0, 6),
+                              color: Colors.black26,
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                    child: Container(
-                      height: 45.h,
-                      padding:
-                      EdgeInsets.symmetric(horizontal: 15.w),
-                      decoration: BoxDecoration(
-                        color:
-                        const Color.fromRGBO(18, 54, 69, 1),
-                        borderRadius:
-                        BorderRadius.circular(40.r),
-                        boxShadow: const [
-                          BoxShadow(
-                            blurRadius: 10,
-                            offset: Offset(0, 6),
-                            color: Colors.black26,
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Where to go ....',
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 16.sp,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Where to go ....',
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 16.sp,
+                                ),
                               ),
                             ),
-                          ),
-                          CircleAvatar(
-                            radius: 20.r,
-                            backgroundColor:
-                            const Color.fromRGBO(58, 186, 242, 1),
-                            child: Icon(
-                              Icons.search,
-                              size: 24.sp,
-                              color:
-                              const Color.fromRGBO(18, 54, 69, 1),
+                            CircleAvatar(
+                              radius: 20.r,
+                              backgroundColor: const Color.fromRGBO(
+                                58,
+                                186,
+                                242,
+                                1,
+                              ),
+                              child: Icon(
+                                Icons.search,
+                                size: 24.sp,
+                                color: const Color.fromRGBO(18, 54, 69, 1),
+                              ),
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                )
-                    .animate()
-                    .fadeIn(delay: 300.ms)
-                    .slideY(begin: 0.3),
-
-                SizedBox(height: 25.h),
-
-                /// ================= SELECTOR =================
-                const PlacesSelector()
-                    .animate()
-                    .fadeIn(delay: 400.ms)
-                    .slideX(begin: 0.3),
-
-                SizedBox(height: 25.h),
-
-                /// ================= PLACES =================
-                isLoadingPlaces
-                    ? SizedBox(
-                  height: 250.h,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 2,
-                    separatorBuilder: (_, __) => SizedBox(width: 12.w),
-                    itemBuilder: (_, __) => const SkeletonPlaceCard(),
-                  ),
-                ):
-                placesExist
-                    ? PlaceCardsList(places: places)
-                    .animate()
-                    .fadeIn(duration: 500.ms)
-                    .slideX(begin: 0.2)
-                    .scale(
-                    begin:
-                    const Offset(0.95, 0.95))
-                    : Container(
-                  width: double.infinity,
-                  height: 235.h,
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 20.w),
-                  margin: EdgeInsets.only(
-                      bottom: 15.h),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF23627E)
-                        .withOpacity(0.12),
-                    borderRadius:
-                    BorderRadius.circular(20.r),
-                    border: Border.all(
-                      color:
-                      const Color(0xFF23627E),
-                      width: 1.5.w,
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment:
-                    MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.location_off,
-                        size: 60.sp,
-                        color:
-                        const Color(0xFF23627E),
-                      ),
-                      SizedBox(height: 15.h),
-                      Text(
-                        'No destinations available',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 22.sp,
-                          fontWeight:
-                          FontWeight.bold,
-                          color:
-                          const Color(0xFF11324D),
+                          ],
                         ),
                       ),
-                      SizedBox(height: 8.h),
-                      Text(
-                        'Try choosing another area',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          color: Colors.black54,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-                    .animate()
-                    .fadeIn(duration: 500.ms)
-                    .scale(
-                    begin:
-                    const Offset(0.9, 0.9)),
+                    ),
+                  ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.3),
 
-                SizedBox(height: 20.h),
+                  SizedBox(height: 25.h),
 
-                /// ================= TOP RATED =================
-                Text(
-                  'Highest Rating',
-                  style: TextStyle(
-                    fontSize: 28.sp,
-                    fontWeight: FontWeight.bold,
-                    color:
-                    const Color.fromRGBO(18, 54, 69, 1),
-                  ),
-                )
-                    .animate()
-                    .fadeIn(delay: 500.ms)
-                    .slideX(begin: -0.2),
+                  /// ================= SELECTOR =================
+                  const PlacesSelector()
+                      .animate()
+                      .fadeIn(delay: 400.ms)
+                      .slideX(begin: 0.3),
 
-                SizedBox(height: 10.h),
+                  SizedBox(height: 25.h),
 
-                isTopRatedLoading
-                    ? SizedBox(
-                  height: 250.h,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 3,
-                    separatorBuilder: (_, __) => SizedBox(width: 12.w),
-                    itemBuilder: (_, __) => const SkeletonPlaceCard(),
-                  ),
-                )
-              : PopularCard(places: topRatedPlaces)
-                    .animate()
-                    .fadeIn(duration: 600.ms)
-                    .slideY(begin: 0.2),
+                  /// ================= PLACES =================
+                  isLoadingPlaces
+                      ? SizedBox(
+                          height: 250.h,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 2,
+                            separatorBuilder: (_, __) => SizedBox(width: 12.w),
+                            itemBuilder: (_, __) => const SkeletonPlaceCard(),
+                          ),
+                        )
+                      : placesExist
+                      ? PlaceCardsList(places: places)
+                            .animate()
+                            .fadeIn(duration: 500.ms)
+                            .slideX(begin: 0.2)
+                            .scale(begin: const Offset(0.95, 0.95))
+                      : Container(
+                              width: double.infinity,
+                              height: 235.h,
+                              padding: EdgeInsets.symmetric(horizontal: 20.w),
+                              margin: EdgeInsets.only(bottom: 15.h),
+                              decoration: BoxDecoration(
+                                color: const Color(
+                                  0xFF23627E,
+                                ).withOpacity(0.12),
+                                borderRadius: BorderRadius.circular(20.r),
+                                border: Border.all(
+                                  color: const Color(0xFF23627E),
+                                  width: 1.5.w,
+                                ),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.location_off,
+                                    size: 60.sp,
+                                    color: const Color(0xFF23627E),
+                                  ),
+                                  SizedBox(height: 15.h),
+                                  Text(
+                                    'No destinations available',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 22.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: const Color(0xFF11324D),
+                                    ),
+                                  ),
+                                  SizedBox(height: 8.h),
+                                  Text(
+                                    'Try choosing another area',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                            .animate()
+                            .fadeIn(duration: 500.ms)
+                            .scale(begin: const Offset(0.9, 0.9)),
 
-                SizedBox(height: 10.h),
-              ],
+                  SizedBox(height: 20.h),
+
+                  /// ================= TOP RATED =================
+                  Text(
+                    'Highest Rating',
+                    style: TextStyle(
+                      fontSize: 28.sp,
+                      fontWeight: FontWeight.bold,
+                      color: const Color.fromRGBO(18, 54, 69, 1),
+                    ),
+                  ).animate().fadeIn(delay: 500.ms).slideX(begin: -0.2),
+
+                  SizedBox(height: 10.h),
+
+                  isTopRatedLoading
+                      ? SizedBox(
+                          height: 250.h,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 3,
+                            separatorBuilder: (_, __) => SizedBox(width: 12.w),
+                            itemBuilder: (_, __) => const SkeletonPlaceCard(),
+                          ),
+                        )
+                      : PopularCard(
+                          places: topRatedPlaces,
+                        ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2),
+
+                  SizedBox(height: 10.h),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-        bottomNavigationBar:const BottomNavBar(currentIndex: 0),
+        bottomNavigationBar: const BottomNavBar(currentIndex: 0),
       ),
     );
   }

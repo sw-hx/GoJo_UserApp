@@ -17,7 +17,7 @@ import '../home_page.dart';
 import '../../../data/models/user_model.dart';
 
 class PaymentSuccessPage extends StatefulWidget {
-  const PaymentSuccessPage({Key? key}) : super(key: key);
+  const PaymentSuccessPage({super.key});
 
   @override
   State<PaymentSuccessPage> createState() => _PaymentSuccessPageState();
@@ -34,11 +34,9 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
 
   Future<void> _loadUserName() async {
     final UserModel? user = await getUserData();
-    if (user != null &&
-        user.personFullName != null &&
-        user.personFullName!.isNotEmpty) {
+    if (user != null && user.personFullName.isNotEmpty) {
       setState(() {
-        userName = user.personFullName!;
+        userName = user.personFullName;
       });
     }
   }
@@ -53,76 +51,74 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               /// Back
-              const CustomReturnArrow(targetPage: HomePage())
-                  .animate()
-                  .fadeIn(duration: 300.ms)
-                  .slideX(begin: -0.2),
+              const CustomReturnArrow(
+                targetPage: HomePage(),
+              ).animate().fadeIn(duration: 300.ms).slideX(begin: -0.2),
 
               const Spacer(),
 
               /// Success Card
               Center(
-                child: Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 20.w,
-                    vertical: 30.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
+                    child: Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20.w,
+                        vertical: 30.h,
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(18.r),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: const Color(0xFF256D85).withOpacity(0.12),
-                        ),
-                        child: Icon(
-                          Icons.check_circle_outline,
-                          color: const Color(0xFF256D85),
-                          size: 64.sp,
-                        ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(24.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.08),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
                       ),
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(18.r),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: const Color(0xFF256D85).withOpacity(0.12),
+                            ),
+                            child: Icon(
+                              Icons.check_circle_outline,
+                              color: const Color(0xFF256D85),
+                              size: 64.sp,
+                            ),
+                          ),
 
-                      SizedBox(height: 20.h),
+                          SizedBox(height: 20.h),
 
-                      Text(
-                        "Thank you, $userName ",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: const Color(0xFF256D85),
-                          fontSize: 26.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
+                          Text(
+                            "Thank you, $userName ",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: const Color(0xFF256D85),
+                              fontSize: 26.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                          SizedBox(height: 10.h),
+
+                          Text(
+                            "Your trip has been booked successfully.\nWe wish you a great journey!",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.black54,
+                              height: 1.4,
+                            ),
+                          ),
+                        ],
                       ),
-
-                      SizedBox(height: 10.h),
-
-                      Text(
-                        "Your trip has been booked successfully.\nWe wish you a great journey!",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          color: Colors.black54,
-                          height: 1.4,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
+                    ),
+                  )
                   .animate()
                   .fadeIn(duration: 500.ms)
                   .slideY(begin: 0.3)
@@ -142,22 +138,19 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
                           builder: (_) => MultiBlocProvider(
                             providers: [
                               BlocProvider(
-                                create: (_) =>
-                                GetPlacesByParentPlaceCubit(
+                                create: (_) => GetPlacesByParentPlaceCubit(
                                   placeRepo: getIt<PlaceRepo>(),
                                 )..getPlacesByParentPlace('ALL'),
                               ),
                               BlocProvider(
-                                create: (_) =>
-                                GetTopRatingPlacesCubit(
+                                create: (_) => GetTopRatingPlacesCubit(
                                   placeRepo: getIt<PlaceRepo>(),
                                 )..getTopRatingPlaces(),
                               ),
                               BlocProvider(
-                                create: (_) =>
-                                    AddFavoriteCubit(
-                                      favoriteRepo: getIt<FavoriteRepo>(),
-                                    ),
+                                create: (_) => AddFavoriteCubit(
+                                  favoriteRepo: getIt<FavoriteRepo>(),
+                                ),
                               ),
                             ],
                             child: const HomePage(
@@ -165,7 +158,7 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
                             ),
                           ),
                         ),
-                            (route) => false,
+                        (route) => false,
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -184,10 +177,7 @@ class _PaymentSuccessPageState extends State<PaymentSuccessPage> {
                     ),
                   ),
                 ),
-              )
-                  .animate()
-                  .fadeIn(delay: 400.ms)
-                  .slideY(begin: 0.3),
+              ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.3),
 
               SizedBox(height: 20.h),
             ],

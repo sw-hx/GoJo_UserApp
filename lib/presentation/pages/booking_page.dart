@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_jo_user_application/core/helpers/helpers.dart';
-import 'package:go_jo_user_application/presentation/pages/payment_pages/payment_page.dart';
+import 'package:go_jo_user_application/presentation/cubits/payment_cubits/checkout_cubit/checkout_cubit.dart';
+import 'package:go_jo_user_application/presentation/pages/payment_pages/paymentSucsess.dart';
 import 'package:go_jo_user_application/presentation/pages/trips.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
-import '../../domain/repos/trip_repo.dart';
-import '../../services/git_it_service.dart';
+import '../../data/models/payment_models/payment_intent_input_model.dart';
 import '../../services/open_map_service.dart';
 import '../common_components/custom_TitleText.dart';
 import '../common_components/custom_divider.dart';
@@ -46,7 +47,7 @@ class BookingPage extends StatelessWidget {
     required this.features,
     required this.galleryImages,
     required this.price,
-    required this.showBookNow ,
+    required this.showBookNow,
     required this.location,
   });
 
@@ -62,254 +63,348 @@ class BookingPage extends StatelessWidget {
       fontSize: 16.sp,
     );
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const CustomReturnArrow(targetPage: TripsCardPage()),
-              SizedBox(height: 30.h),
-
-              Text(
-                formatName(companyName),
-                style: mainText.copyWith(
-                  fontSize: 28.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 4.h),
-
-              Row(
-                children: List.generate(
-                  5,
-                      (index) =>
-                      Icon(
-                        index < rating ? Icons.star : Icons.star_border,
-                        color: index < rating ? yellowColor : Colors.grey,
-                        size: 28.r,
-                      ),
-                ),
-              ),
-
-              SizedBox(height: 10.h),
-
-              Text('Launch',
-                  style: mainText.copyWith(
-                      fontSize: 20.sp, fontWeight: FontWeight.bold)),
-              Text(launchDate, style: mainText.copyWith(fontSize: 20.sp)),
-              SizedBox(height: 10.h),
-              Text('Return',
-                  style: mainText.copyWith(
-                      fontSize: 20.sp, fontWeight: FontWeight.bold)),
-              Text(returnDate, style: mainText.copyWith(fontSize: 20.sp)),
-
-              SizedBox(height: 10.h),
-              customDivider(),
-
-          Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Text(
-                    fromLocation,
-                    softWrap: true,
-                    overflow: TextOverflow.visible,
-                    textAlign: TextAlign.right,
-                    style: mainText.copyWith(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.bold,
+    return BlocConsumer<UserBookTripCubit, UserBookTripState>(
+      listener: (context, state) {
+        if (state is UserBookTripFailure) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+        }
+      },
+      builder: (context, state) {
+        return BlocConsumer<CheckoutCubit, CheckoutState>(
+          listener: (context, state) async {
+            if (state is CheckoutSuccess) {
+              await context.read<UserBookTripCubit>().bookTrip(tripId: tripId);
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => PaymentSuccessPage()),
+              );
+            }
+            if (state is CheckoutCancelled) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.message)));
+            }
+            if (state is CheckoutFailure) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.message)));
+              throw Exception(state.message);
+            }
+          },
+          builder: (context, state) {
+            return ModalProgressHUD(
+              inAsyncCall:
+                  state is CheckoutLoading || state is UserBookTripLoading,
+              child: Scaffold(
+                backgroundColor: Colors.white,
+                body: SafeArea(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 16.h,
                     ),
-                  ),
-                ),
-
-                SizedBox(width: 12.w),
-
-                Icon(
-                  Icons.arrow_right_alt_rounded,
-                  color: primaryColor,
-                  size: 80.r,
-                ),
-
-                SizedBox(width: 12.w),
-
-                Expanded(
-                  child: Text(
-                    formatName(toLocation),
-                    softWrap: true,
-                    overflow: TextOverflow.visible,
-                    textAlign: TextAlign.left,
-                    style: mainText.copyWith(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-
-          SizedBox(height: 10.h),
-              customDivider(),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Contact',
-                      style: mainText.copyWith(
-                          fontSize: 18.sp, fontWeight: FontWeight.bold)),
-                  SizedBox(width: 8.w),
-                  Icon(Icons.phone, color: primaryColor, size: 24.r),
-                  SizedBox(width: 12.w),
-                  Text(contactNumber,
-                      style: mainText.copyWith(fontSize: 18.sp)),
-                ],
-              ),
-
-              SizedBox(height: 10.h),
-              customDivider(),
-
-              Text('Details',
-                  style: mainText.copyWith(
-                      fontSize: 24.sp, fontWeight: FontWeight.bold)),
-              SizedBox(height: 10.h),
-              Text(details,
-                  style: mainText.copyWith(
-                      fontSize: 18.sp, height: 1.4)),
-
-              SizedBox(height: 10.h),
-              customDivider(),
-
-              Text('Included Features',
-                  style: mainText.copyWith(
-                      fontSize: 22.sp, fontWeight: FontWeight.bold)),
-              SizedBox(height: 12.h),
-              Wrap(
-                spacing: 10.w,
-                runSpacing: 10.h,
-                children: features
-                    .map((f) =>
-                    _featuresCard(f, yellowColor, primaryColor))
-                    .toList(),
-              ),
-
-              SizedBox(height: 10.h),
-              customDivider(),
-
-              Text('Gallery',
-                  style: mainText.copyWith(
-                      fontSize: 22.sp, fontWeight: FontWeight.bold)),
-              SizedBox(height: 12.h),
-              SizedBox(
-                height: 200.h,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children:
-                  galleryImages.map((e) => _imageCard(e)).toList(),
-                ),
-              ),
-
-              SizedBox(height: 10.h),
-              customDivider(),
-              customTitleText(title: 'Map', size: 22),
-              SizedBox(height: 12.h),
-              GestureDetector(
-                  onTap: ()async{
-                    await OpenMapService.openMapFromUrl(location!);
-                  },
-                  child: Center(child: MapSection())
-              ),
-              SizedBox(height: 10.h),
-              customDivider(),
-
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('$price JD',
-                            style: mainText.copyWith(
-                                fontSize: 30.sp,
-                                fontWeight: FontWeight.bold)),
-                        SizedBox(height: 8.h),
-                        Text('per person',
-                            style: mainText.copyWith(fontSize: 18.sp)),
-                      ],
-                    ),
-                    SizedBox(height: 12.h),
-                    customDivider(),
-                    SizedBox(height: 12.h),
-                    if (showBookNow)
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: primaryColor,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16.w, vertical: 14.h),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.r),
+                        const CustomReturnArrow(targetPage: TripsCardPage()),
+                        SizedBox(height: 30.h),
+
+                        Text(
+                          formatName(companyName),
+                          style: mainText.copyWith(
+                            fontSize: 28.sp,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  BlocProvider(
-                                    create: (context) => UserBookTripCubit(
-                                      tripRepo: getIt<TripRepo>(),
-                                    ),
-                                    child: PaymentPage(
-                                      tripId: tripId,
-                                    ),
-                                  ),
+                        SizedBox(height: 4.h),
+
+                        Row(
+                          children: List.generate(
+                            5,
+                            (index) => Icon(
+                              index < rating ? Icons.star : Icons.star_border,
+                              color: index < rating ? yellowColor : Colors.grey,
+                              size: 28.r,
                             ),
-                          );
-                        },
-                        child: Text(
-                          'BOOK NOW!',
+                          ),
+                        ),
+
+                        SizedBox(height: 10.h),
+
+                        Text(
+                          'Launch',
                           style: mainText.copyWith(
-                              color: yellowColor, fontSize: 24.sp),
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      )
-                    else
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 16.w, vertical: 12.h),
-                        decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(20.r),
-                          border: Border.all(
-                              color: Colors.green, width: 2.w),
+                        Text(
+                          launchDate,
+                          style: mainText.copyWith(fontSize: 20.sp),
                         ),
-                        child: Column(
+                        SizedBox(height: 10.h),
+                        Text(
+                          'Return',
+                          style: mainText.copyWith(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          returnDate,
+                          style: mainText.copyWith(fontSize: 20.sp),
+                        ),
+
+                        SizedBox(height: 10.h),
+                        customDivider(),
+
+                        Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  fromLocation,
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
+                                  textAlign: TextAlign.right,
+                                  style: mainText.copyWith(
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+
+                              SizedBox(width: 12.w),
+
+                              Icon(
+                                Icons.arrow_right_alt_rounded,
+                                color: primaryColor,
+                                size: 80.r,
+                              ),
+
+                              SizedBox(width: 12.w),
+
+                              Expanded(
+                                child: Text(
+                                  formatName(toLocation),
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
+                                  textAlign: TextAlign.left,
+                                  style: mainText.copyWith(
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(height: 10.h),
+                        customDivider(),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.check_circle,
-                                color: Colors.green, size: 24.r),
-                            SizedBox(width: 10.w),
                             Text(
-                              'Booked Successfully',
-                              style: TextStyle(
-                                color: Colors.green,
+                              'Contact',
+                              style: mainText.copyWith(
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
+                            SizedBox(width: 8.w),
+                            Icon(Icons.phone, color: primaryColor, size: 24.r),
+                            SizedBox(width: 12.w),
+                            Text(
+                              contactNumber,
+                              style: mainText.copyWith(fontSize: 18.sp),
+                            ),
                           ],
                         ),
-                      ),
-                  ],
+
+                        SizedBox(height: 10.h),
+                        customDivider(),
+
+                        Text(
+                          'Details',
+                          style: mainText.copyWith(
+                            fontSize: 24.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        Text(
+                          details,
+                          style: mainText.copyWith(
+                            fontSize: 18.sp,
+                            height: 1.4,
+                          ),
+                        ),
+
+                        SizedBox(height: 10.h),
+                        customDivider(),
+
+                        Text(
+                          'Included Features',
+                          style: mainText.copyWith(
+                            fontSize: 22.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                        Wrap(
+                          spacing: 10.w,
+                          runSpacing: 10.h,
+                          children: features
+                              .map(
+                                (f) =>
+                                    _featuresCard(f, yellowColor, primaryColor),
+                              )
+                              .toList(),
+                        ),
+
+                        SizedBox(height: 10.h),
+                        customDivider(),
+
+                        Text(
+                          'Gallery',
+                          style: mainText.copyWith(
+                            fontSize: 22.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                        SizedBox(
+                          height: 200.h,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: galleryImages
+                                .map((e) => _imageCard(e))
+                                .toList(),
+                          ),
+                        ),
+
+                        SizedBox(height: 10.h),
+                        customDivider(),
+                        customTitleText(title: 'Map', size: 22),
+                        SizedBox(height: 12.h),
+                        GestureDetector(
+                          onTap: () async {
+                            await OpenMapService.openMapFromUrl(location!);
+                          },
+                          child: Center(child: MapSection()),
+                        ),
+                        SizedBox(height: 10.h),
+                        customDivider(),
+
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Column(
+                                children: [
+                                  Text(
+                                    '$price JD',
+                                    style: mainText.copyWith(
+                                      fontSize: 30.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8.h),
+                                  Text(
+                                    'per person',
+                                    style: mainText.copyWith(fontSize: 18.sp),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 12.h),
+                              customDivider(),
+                              SizedBox(height: 12.h),
+                              if (showBookNow)
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: primaryColor,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 16.w,
+                                      vertical: 14.h,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.r),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    final double usdPrice = price * 1.41;
+                                    final int amountInCents = (usdPrice * 100)
+                                        .toInt();
+
+                                    final PaymentIntentInputModel
+                                    paymentIntentInputModel =
+                                        PaymentIntentInputModel(
+                                          amount: amountInCents.toString(),
+                                          currency: 'usd',
+                                        );
+                                    context.read<CheckoutCubit>().makePayment(
+                                      paymentIntentInputModel:
+                                          paymentIntentInputModel,
+                                    );
+                                  },
+                                  child: Text(
+                                    'BOOK NOW!',
+                                    style: mainText.copyWith(
+                                      color: yellowColor,
+                                      fontSize: 24.sp,
+                                    ),
+                                  ),
+                                )
+                              else
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 16.w,
+                                    vertical: 12.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.green.withOpacity(0.15),
+                                    borderRadius: BorderRadius.circular(20.r),
+                                    border: Border.all(
+                                      color: Colors.green,
+                                      width: 2.w,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        Icons.check_circle,
+                                        color: Colors.green,
+                                        size: 24.r,
+                                      ),
+                                      SizedBox(width: 10.w),
+                                      Text(
+                                        'Booked Successfully',
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
+                bottomNavigationBar: const BottomNavBar(),
               ),
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: const BottomNavBar(),
+            );
+          },
+        );
+      },
     );
   }
 

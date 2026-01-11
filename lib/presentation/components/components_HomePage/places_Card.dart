@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_jo_user_application/core/helpers/helpers.dart';
 import 'package:go_jo_user_application/presentation/cubits/favorite_cubit/add_favorite_cubit/add_favorite_cubit.dart';
-import '../../../data/models/place_models/place_model.dart';
 import '../../../domain/repos/favorite_repo.dart';
 import '../../../domain/repos/place_repo.dart';
 import '../../../services/git_it_service.dart';
@@ -30,48 +29,48 @@ class PlaceCardsList extends StatelessWidget {
           final place = places[index];
 
           return PlaceCard(
-            key: ValueKey(place.placeId),
-            title: formatName(place.placeName),
-            description: place.quickInfo,
-            imageUrl: place.mainPhotoLink,
-            isFavorite: place.isFavorite,
-            placeId: place.placeId,
-            onTap: () async {
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => MultiBlocProvider(
-                    providers: [
-                      BlocProvider(
-                        create: (_) => GetPlaceInfoCubit(
-                          placeRepo: getIt<PlaceRepo>(),
-                        )..getPlaceInfo(place.placeName),
-                      ),
-                      BlocProvider(
-                        create: (_) => WriteCommentCubit(
-                          placeRepo: getIt<PlaceRepo>(),
+                key: ValueKey(place.placeId),
+                title: formatName(place.placeName),
+                description: place.quickInfo,
+                imageUrl: place.mainPhotoLink,
+                isFavorite: place.isFavorite,
+                placeId: place.placeId,
+                onTap: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => MultiBlocProvider(
+                        providers: [
+                          BlocProvider(
+                            create: (_) =>
+                                GetPlaceInfoCubit(placeRepo: getIt<PlaceRepo>())
+                                  ..getPlaceInfo(place.placeName),
+                          ),
+                          BlocProvider(
+                            create: (_) => WriteCommentCubit(
+                              placeRepo: getIt<PlaceRepo>(),
+                            ),
+                          ),
+                          BlocProvider(
+                            create: (_) => AddFavoriteCubit(
+                              favoriteRepo: getIt<FavoriteRepo>(),
+                            ),
+                          ),
+                        ],
+                        child: PlaceInfoScreen(
+                          heroTag: 'place_${place.placeId}',
                         ),
                       ),
-                      BlocProvider(
-                        create: (_) => AddFavoriteCubit(
-                          favoriteRepo: getIt<FavoriteRepo>(),
-                        ),
-                      ),
-                    ],
-                    child: PlaceInfoScreen(
-                      heroTag: 'place_${place.placeId}',
                     ),
-                  ),
-                ),
-              );
+                  );
 
-              if (result == true) {
-                context
-                    .read<GetPlacesByParentPlaceCubit>()
-                    .getPlacesByParentPlace('ALL');
-              }
-            },
-          )
+                  if (result == true) {
+                    context
+                        .read<GetPlacesByParentPlaceCubit>()
+                        .getPlacesByParentPlace('ALL');
+                  }
+                },
+              )
               .animate(delay: (index * 120).ms)
               .fadeIn(duration: 500.ms)
               .slideX(begin: 0.3)
@@ -121,8 +120,9 @@ class _PlaceCardState extends State<PlaceCard> {
     return BlocListener<AddFavoriteCubit, AddFavoriteState>(
       listener: (context, state) {
         if (state is AddFavoriteFailure) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(state.message)));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       child: GestureDetector(
@@ -178,24 +178,26 @@ class _PlaceCardState extends State<PlaceCard> {
                     child: GestureDetector(
                       onTap: () {
                         if (!isFav) {
-                          context
-                              .read<AddFavoriteCubit>()
-                              .addFavorite(widget.placeId);
+                          context.read<AddFavoriteCubit>().addFavorite(
+                            widget.placeId,
+                          );
                           setState(() => isFav = true);
                         }
                       },
-                      child: Icon(
-                        isFav ? Icons.favorite : Icons.favorite_border,
-                        color: isFav ? Colors.red : Colors.white,
-                        size: 34,
-                      )
-                          .animate(target: isFav ? 1 : 0)
-                          .scale(
-                          begin: const Offset(1, 1),
-                          end: const Offset(1.3, 1.3),
-                          curve: Curves.easeOutBack)
-                          .then()
-                          .scale(end: const Offset(1, 1)),
+                      child:
+                          Icon(
+                                isFav ? Icons.favorite : Icons.favorite_border,
+                                color: isFav ? Colors.red : Colors.white,
+                                size: 34,
+                              )
+                              .animate(target: isFav ? 1 : 0)
+                              .scale(
+                                begin: const Offset(1, 1),
+                                end: const Offset(1.3, 1.3),
+                                curve: Curves.easeOutBack,
+                              )
+                              .then()
+                              .scale(end: const Offset(1, 1)),
                     ),
                   ),
 
@@ -227,10 +229,7 @@ class _PlaceCardState extends State<PlaceCard> {
                           ),
                         ),
                       ],
-                    )
-                        .animate()
-                        .fadeIn(delay: 300.ms)
-                        .slideY(begin: 0.3),
+                    ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.3),
                   ),
                 ],
               ),

@@ -5,8 +5,13 @@ import 'package:intl/intl.dart';
 import 'package:go_jo_user_application/presentation/cubits/get_booked_trip_cubit/get_booked_trip_cubit.dart';
 import '../../core/theme.dart';
 import '../../data/models/trip_model.dart';
+import '../../domain/repos/checkout_repo.dart';
+import '../../domain/repos/trip_repo.dart';
+import '../../services/git_it_service.dart';
 import '../common_components/bottom_nav_bar.dart';
 import '../components/components_Trips/trip_card.dart';
+import '../cubits/payment_cubits/checkout_cubit/checkout_cubit.dart';
+import '../cubits/user_book_trip_cubit/user_book_trip_cubit.dart';
 import 'booking_page.dart';
 
 class BookedTripsPage extends StatefulWidget {
@@ -99,33 +104,50 @@ class _BookedTripsPageState extends State<BookedTripsPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => BookingPage(
-                                    tripId: trip.tripId ?? 0,
-                                    companyName:
-                                    trip.companyOwnTrip ?? "",
-                                    rating: 4,
-                                    launchDate: DateFormat(
-                                        'yyyy/MM/dd - h:mm a')
-                                        .format(_launchDate(trip)),
-                                    returnDate: DateFormat(
-                                        'yyyy/MM/dd - h:mm a')
-                                        .format(_returnDate(trip)),
-                                    fromLocation:
-                                    trip.tripLunchPlace ?? "",
-                                    toLocation: trip.placeName ?? "",
-                                    contactNumber:
-                                    trip.contactPhoneNumber ?? "",
-                                    details: trip.tripDetail ?? "",
-                                    features: trip.tripFeatures ?? [],
-                                    galleryImages: [
-                                      trip.tripPhotoOneLink ?? "",
-                                      trip.tripPhotoTwoLink ?? "",
-                                      trip.tripPhotoThreeLink ?? "",
-                                    ],
-                                    price: trip.price ?? 0,
-                                    showBookNow: false,
-                                    location: trip.tripLunchLocation ?? "",
-                                  ),
+                                  builder: (_) =>
+                                      MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider(
+                                            create: (context) => CheckoutCubit(
+                                              checkoutRepo: getIt.get<CheckoutRepo>(),
+                                            ),
+                                          ),
+                                          BlocProvider(
+                                            create: (context) =>
+                                                UserBookTripCubit(
+                                                  tripRepo: getIt<TripRepo>(),
+                                                ),
+                                          )
+                                        ],
+                                        child: BookingPage(
+                                          tripId: trip.tripId ?? 0,
+                                          companyName:
+                                          trip.companyOwnTrip ?? "",
+                                          rating: 4,
+                                          launchDate: DateFormat(
+                                              'yyyy/MM/dd - h:mm a')
+                                              .format(_launchDate(trip)),
+                                          returnDate: DateFormat(
+                                              'yyyy/MM/dd - h:mm a')
+                                              .format(_returnDate(trip)),
+                                          fromLocation:
+                                          trip.tripLunchPlace ?? "",
+                                          toLocation: trip.placeName ?? "",
+                                          contactNumber:
+                                          trip.contactPhoneNumber ?? "",
+                                          details: trip.tripDetail ?? "",
+                                          features: trip.tripFeatures ?? [],
+                                          galleryImages: [
+                                            trip.tripPhotoOneLink ?? "",
+                                            trip.tripPhotoTwoLink ?? "",
+                                            trip.tripPhotoThreeLink ?? "",
+                                          ],
+                                          price: trip.price ?? 0,
+                                          showBookNow: false,
+                                          location: trip.tripLunchLocation ??
+                                              "",
+                                        ),
+                                      ),
                                 ),
                               );
                             },

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_jo_user_application/presentation/cubits/get_notification_cubit/get_notification_cubit.dart';
-import '../../data/models/notification_model.dart';
 import '../../domain/repos/notification_repo.dart';
 import '../../services/git_it_service.dart';
 import '../common_components/bottom_nav_bar.dart';
@@ -37,10 +36,9 @@ class NotificationsPage extends StatelessWidget {
           }
 
           if (state is DeleteNotificationError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         child: Scaffold(
@@ -73,66 +71,82 @@ class NotificationsPage extends StatelessWidget {
                   const SizedBox(height: 20),
 
                   Expanded(
-                    child: BlocBuilder<GetNotificationCubit, GetNotificationState>(
-                      builder: (context, state) {
-                        if (state is GetNotificationLoading) {
-                          return const Center(child: CircularProgressIndicator());
-                        }
-
-                        if (state is GetNotificationError) {
-                          return Center(child: Text(state.message));
-                        }
-
-                        if (state is GetNotificationSuccess) {
-                          final List<dynamic> notifications =
-                              state.notifications;
-
-                          if (notifications.isEmpty) {
-                            return const Center(child: Text("No notifications found"));
-                          }
-
-                          return ListView.separated(
-                            itemCount: notifications.length,
-                            separatorBuilder: (_, __) =>
-                            const SizedBox(height: 16),
-                            itemBuilder: (context, index) {
-                              final n = notifications[index];
-
-                              return Dismissible(
-                                key: ValueKey(n.notificationId),
-                                direction: DismissDirection.endToStart,
-                                background: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                                  alignment: Alignment.centerRight,
-                                  decoration: BoxDecoration(
-                                    color: Colors.redAccent,
-                                    borderRadius: BorderRadius.circular(18),
-                                  ),
-                                  child: const Icon(
-                                    Icons.delete_forever,
-                                    color: Colors.white,
-                                    size: 30,
-                                  ),
-                                ),
-                                onDismissed: (_) async {
-                                  try {
-                                    await context.read<DeleteNotificationCubit>().deleteNotification(n.notificationId,);
-                                  } catch (_) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text("Delete failed")),
-                                    );
-                                  }
-                                },
-                                child: ExpandableNotificationCard(notification: n),
+                    child:
+                        BlocBuilder<GetNotificationCubit, GetNotificationState>(
+                          builder: (context, state) {
+                            if (state is GetNotificationLoading) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
                               );
-                            },
-                          );
-                        }
+                            }
 
-                        return const SizedBox.shrink();
-                      },
-                    ),
+                            if (state is GetNotificationError) {
+                              return Center(child: Text(state.message));
+                            }
+
+                            if (state is GetNotificationSuccess) {
+                              final List<dynamic> notifications =
+                                  state.notifications;
+
+                              if (notifications.isEmpty) {
+                                return const Center(
+                                  child: Text("No notifications found"),
+                                );
+                              }
+
+                              return ListView.separated(
+                                itemCount: notifications.length,
+                                separatorBuilder: (_, __) =>
+                                    const SizedBox(height: 16),
+                                itemBuilder: (context, index) {
+                                  final n = notifications[index];
+
+                                  return Dismissible(
+                                    key: ValueKey(n.notificationId),
+                                    direction: DismissDirection.endToStart,
+                                    background: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                      ),
+                                      alignment: Alignment.centerRight,
+                                      decoration: BoxDecoration(
+                                        color: Colors.redAccent,
+                                        borderRadius: BorderRadius.circular(18),
+                                      ),
+                                      child: const Icon(
+                                        Icons.delete_forever,
+                                        color: Colors.white,
+                                        size: 30,
+                                      ),
+                                    ),
+                                    onDismissed: (_) async {
+                                      try {
+                                        await context
+                                            .read<DeleteNotificationCubit>()
+                                            .deleteNotification(
+                                              n.notificationId,
+                                            );
+                                      } catch (_) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text("Delete failed"),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child: ExpandableNotificationCard(
+                                      notification: n,
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+
+                            return const SizedBox.shrink();
+                          },
+                        ),
                   ),
                 ],
               ),

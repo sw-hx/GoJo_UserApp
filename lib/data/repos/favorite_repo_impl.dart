@@ -3,7 +3,6 @@ import '../../services/remote_data_source.dart';
 import '../models/favorite_model.dart';
 
 class FavoriteRepoImpl implements FavoriteRepo {
-
   final RemoteDataSource remoteDataSource;
 
   FavoriteRepoImpl({required this.remoteDataSource});
@@ -17,13 +16,10 @@ class FavoriteRepoImpl implements FavoriteRepo {
       );
 
       return (response as List).map((e) => FavoriteModel.fromJson(e)).toList();
-
     } catch (e) {
-
-      throw e;
+      rethrow;
     }
   }
-
 
   @override
   Future<void> addFavorite({required int placeId}) async {
@@ -34,7 +30,7 @@ class FavoriteRepoImpl implements FavoriteRepo {
         data: {},
       );
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -46,7 +42,7 @@ class FavoriteRepoImpl implements FavoriteRepo {
         method: 'DELETE',
       );
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 }

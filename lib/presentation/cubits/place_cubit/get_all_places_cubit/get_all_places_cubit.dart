@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
-import '../../../../data/models/place_models/place_model.dart';
 import '../../../../domain/repos/place_repo.dart';
 
 part 'get_all_places_state.dart';

@@ -6,16 +6,15 @@ import '../../services/shared_preferences.dart';
 import '../constants.dart';
 
 Future<UserModel?> getUserData() async {
-  final String? jsonData =
-  SharedPreferencesService.getString(userDataKey);
+  final String jsonData = SharedPreferencesService.getString(userDataKey);
 
-  if (jsonData == null || jsonData.isEmpty) {
+  if (jsonData.isEmpty) {
     return null;
   }
 
   try {
     final Map<String, dynamic> map =
-    jsonDecode(jsonData) as Map<String, dynamic>;
+        jsonDecode(jsonData) as Map<String, dynamic>;
 
     return UserModel.fromMap(map);
   } catch (e) {
@@ -23,10 +22,8 @@ Future<UserModel?> getUserData() async {
   }
 }
 
-
 Future<void> saveUserData(UserModel user) async {
   final prefs = await SharedPreferences.getInstance();
   final userMap = user.toMap();
   prefs.setString(userDataKey, jsonEncode(userMap));
 }
-
