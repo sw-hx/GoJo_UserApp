@@ -1,9 +1,7 @@
 const String userDataKey = 'userData';
-const String baseApiUrl = 'https://gojordan.me/api';
-const String supabaseUrl = 'https://dtwxzkfiuwnxrwhxdxlx.supabase.co';
-const String supabaseKey =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR0d3h6a2ZpdXdueHJ3aHhkeGx4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NDc0Mjk1NSwiZXhwIjoyMDgwMzE4OTU1fQ.Vrl6XjMfTXwfqjUlzJlxM3Qf657aPmSNqMJUlRnA6kc';
+const String baseApiUrl = 'https://your-backend-domain/api';
+const String supabaseUrl = 'https://your-project-id.supabase.co';
+const String supabaseKey = 'your supabase key';
 
-const String stripeSecretKey='sk_test_51Sht20Er3s10Mggo2srB6hMycNOY2tYLL5FHPa0bQJNlYcg6vuLi7n5m7OHju6muM1iYyKCOUAvUMCoRPYvdWazf00tEqJ4zoW';
-const String stripePublishableKey='pk_test_51Sht20Er3s10MggoH65uEJ3vj4BOhIY98y87ZZ7ArdNZCDSK3yx90b8cnBqdD3gA8PK047IHcnPykyJWEYqmQaCG00Btfu4YL0';
-
+const String stripeSecretKey = 'sk_test_example';
+const String stripePublishableKey = 'pk_test_example';
