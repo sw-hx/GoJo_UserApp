@@ -69,13 +69,13 @@ flutter doctor
 
 ## ▶️ Installation & Run
 1 - Clone this repository
-```
+```bash
 git clone https://github.com/sw-hx/GoJo_UserApp.git
 cd GoJo_UserApp
 ```
 
 2 - Install dependencies
-```
+```bash
 flutter pub get
 ```
 
@@ -86,7 +86,7 @@ Before running the application, you must update the constants configuration file
 
 Update the constants file (for example: lib/core/constants.dart) with the following values:
 
-```
+```dart
 const String userDataKey = 'userData';
 const String baseApiUrl = 'https://your-backend-domain/api';
 const String supabaseUrl = 'https://your-project-id.supabase.co';
@@ -97,7 +97,7 @@ const String stripePublishableKey='pk_test_example';
 ```
 
 4 - Run the application
-```
+```bash
 flutter run
 ```
 ---
