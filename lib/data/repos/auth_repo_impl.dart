@@ -2,26 +2,24 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_jo_user_application/core/constants.dart';
 
 import '../../domain/errors/failures.dart';
 import '../../domain/repos/auth_repo.dart';
 import '../../services/remote_data_source.dart';
-import '../../services/database_service.dart';
 import '../../services/firebase_auth_service.dart';
 import '../../services/secure_storage_service.dart';
 import '../../services/shared_preferences.dart';
 import '../models/user_model.dart';
 
 class AuthRepoImpl implements AuthRepo {
-
   final RemoteDataSource remoteDataSource;
   final FirebaseAuthService firebaseAuthService;
 
-
-  AuthRepoImpl(
-      {required this.remoteDataSource, required this.firebaseAuthService});
+  AuthRepoImpl({
+    required this.remoteDataSource,
+    required this.firebaseAuthService,
+  });
 
   @override
   Future<Either<Failure, UserModel>> createUserWithEmailAndPassword({
@@ -32,39 +30,46 @@ class AuthRepoImpl implements AuthRepo {
   }) async {
     try {
       var user = await remoteDataSource.sendRequest(
-          endpoint: '/auth/register/user',
-          method: 'POST',
-          data: {
-            'email': email,
-            'password': password,
-            'personFullName': name,
-            'username': username
-          });
+        endpoint: '/auth/register/user',
+        method: 'POST',
+        data: {
+          'email': email,
+          'password': password,
+          'personFullName': name,
+          'username': username,
+        },
+      );
       UserModel userModel = UserModel.fromMap(user);
 
       return Right(userModel);
     } catch (e) {
-      log('error in create user with email and password (auth_repo_impl) ${e
-          .toString()}');
+      log(
+        'error in create user with email and password (auth_repo_impl) ${e.toString()}',
+      );
       return Left(ServerFailure(e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, UserModel>> signInWithEmailAndPassword(
-      {required String email, required String password}) async {
+  Future<Either<Failure, UserModel>> signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
     try {
       var user = await remoteDataSource.sendRequest(
-          endpoint: '/auth/login/user',
-          method: 'POST',
-          data: {'email': email, 'password': password});
+        endpoint: '/auth/login/user',
+        method: 'POST',
+        data: {'email': email, 'password': password},
+      );
       print('hi before');
-      UserModel userModel = UserModel(id: user['normalUserId'].toString(),
-          personFullName: user['personFullName'],
-          email: email,
-          username: user['username'],
-          profilePhoto: user['profilePhoto'],
-          password: password);
+      UserModel userModel = UserModel(
+        id: user['normalUserId'].toString(),
+        personFullName: user['personFullName'],
+        email: email,
+        username: user['username'],
+        profilePhoto: user['profilePhoto'],
+        password: password,
+      );
       await saveUserData(user: userModel);
       await saveUserToken(response: user);
       final token = await getSavedToken();
@@ -76,8 +81,9 @@ class AuthRepoImpl implements AuthRepo {
 
       return Right(userModel);
     } on Exception catch (e) {
-      log('error in sign in with email and password (auth_repo_impl) ${e
-          .toString()}');
+      log(
+        'error in sign in with email and password (auth_repo_impl) ${e.toString()}',
+      );
       return Left(ServerFailure(e.toString()));
     }
   }
@@ -87,7 +93,6 @@ class AuthRepoImpl implements AuthRepo {
     var jsonData = jsonEncode(user.toMap());
     await SharedPreferencesService.setString(userDataKey, jsonData);
   }
-
 }
 /*
   @override

@@ -11,7 +11,7 @@ import '../../cubits/user_book_trip_cubit/user_book_trip_cubit.dart';
 /// Coded by [Hala]
 
 class PaymentPage extends StatefulWidget {
-  const PaymentPage({Key? key, required this.tripId}) : super(key: key);
+  const PaymentPage({super.key, required this.tripId});
   final int tripId;
 
   @override
@@ -32,7 +32,7 @@ class _PaymentPageState extends State<PaymentPage> {
     final methods = ["Visa", "PayPal"];
     final icons = [
       "https://logos-world.net/wp-content/uploads/2020/05/Visa-Logo.png",
-      "https://logos-world.net/wp-content/uploads/2024/10/PayPal-Logo-New.png"
+      "https://logos-world.net/wp-content/uploads/2024/10/PayPal-Logo-New.png",
     ];
 
     return BlocConsumer<UserBookTripCubit, UserBookTripState>(
@@ -40,18 +40,13 @@ class _PaymentPageState extends State<PaymentPage> {
         if (state is UserBookTripSuccess) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(
-              builder: (context) => const PaymentSuccessPage (),
-            ),
+            MaterialPageRoute(builder: (context) => const PaymentSuccessPage()),
           );
         }
 
         if (state is UserBookTripFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.red,
-            ),
+            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
           );
         }
       },
@@ -66,15 +61,15 @@ class _PaymentPageState extends State<PaymentPage> {
           child: Scaffold(
             body: SafeArea(
               child: Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 25,
+                  vertical: 15,
+                ),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const CustomReturnArrow(
-                        targetPage: TripsCardPage(),
-                      ),
+                      const CustomReturnArrow(targetPage: TripsCardPage()),
 
                       const SizedBox(height: 30),
 
@@ -103,8 +98,7 @@ class _PaymentPageState extends State<PaymentPage> {
                         children: List.generate(methods.length, (index) {
                           final selected = index == selectedMethod;
                           return GestureDetector(
-                            onTap: () =>
-                                setState(() => selectedMethod = index),
+                            onTap: () => setState(() => selectedMethod = index),
                             child: Padding(
                               padding: const EdgeInsets.only(right: 25),
                               child: Column(
@@ -239,10 +233,7 @@ class _PaymentPageState extends State<PaymentPage> {
             ),
             const Text(
               "Save card for future purchases",
-              style: TextStyle(
-                fontSize: 15,
-                color: Color(0xFF083F4F),
-              ),
+              style: TextStyle(fontSize: 15, color: Color(0xFF083F4F)),
             ),
           ],
         ),
@@ -254,14 +245,13 @@ class _PaymentPageState extends State<PaymentPage> {
             onPressed: state is UserBookTripLoading
                 ? null
                 : () {
-              context.read<UserBookTripCubit>().bookTrip(
-                tripId: widget.tripId,
-              );
-            },
+                    context.read<UserBookTripCubit>().bookTrip(
+                      tripId: widget.tripId,
+                    );
+                  },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF256D85),
-              padding:
-              const EdgeInsets.symmetric(vertical: 15, horizontal: 25),
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 25),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(50),
               ),
@@ -304,14 +294,13 @@ class _PaymentPageState extends State<PaymentPage> {
           onPressed: state is UserBookTripLoading
               ? null
               : () {
-            context.read<UserBookTripCubit>().bookTrip(
-              tripId: widget.tripId,
-            );
-          },
+                  context.read<UserBookTripCubit>().bookTrip(
+                    tripId: widget.tripId,
+                  );
+                },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF256D85),
-            padding:
-            const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
             ),
@@ -331,10 +320,10 @@ class _PaymentPageState extends State<PaymentPage> {
 
   // ================= TEXT FIELD =================
   Widget _textField(
-      TextEditingController controller,
-      String hint, {
-        TextInputType? keyboardType,
-      }) {
+    TextEditingController controller,
+    String hint, {
+    TextInputType? keyboardType,
+  }) {
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
@@ -342,8 +331,10 @@ class _PaymentPageState extends State<PaymentPage> {
         hintText: hint,
         filled: true,
         fillColor: Colors.grey.shade200,
-        contentPadding:
-        const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 12,
+          horizontal: 15,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
           borderSide: BorderSide.none,

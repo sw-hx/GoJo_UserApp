@@ -28,7 +28,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final confirmPasswordController = TextEditingController();
 
   bool _obscurePassword = true;
-  bool _obscureConfirm = true;
+  final bool _obscureConfirm = true;
   bool _passwordsMatch = true;
 
   void _checkPasswords() {
@@ -61,12 +61,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
             SizedBox(height: 10),
-            Text("- Lowercase letters only",
-                style: TextStyle(color: Colors.white, fontSize: 22)),
-            Text("- Underscore (_) allowed",
-                style: TextStyle(color: Colors.white, fontSize: 22)),
-            Text("- No spaces",
-                style: TextStyle(color: Colors.white, fontSize: 22)),
+            Text(
+              "- Lowercase letters only",
+              style: TextStyle(color: Colors.white, fontSize: 22),
+            ),
+            Text(
+              "- Underscore (_) allowed",
+              style: TextStyle(color: Colors.white, fontSize: 22),
+            ),
+            Text(
+              "- No spaces",
+              style: TextStyle(color: Colors.white, fontSize: 22),
+            ),
           ],
         ),
       ),
@@ -96,14 +102,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
             SizedBox(height: 10),
-            Text("- At least 6 characters",
-                style: TextStyle(color: Colors.white, fontSize: 22)),
-            Text("- One uppercase letter",
-                style: TextStyle(color: Colors.white, fontSize: 22)),
-            Text("- One number or symbol",
-                style: TextStyle(color: Colors.white, fontSize: 22)),
-            Text("- No spaces",
-                style: TextStyle(color: Colors.white, fontSize: 22)),
+            Text(
+              "- At least 6 characters",
+              style: TextStyle(color: Colors.white, fontSize: 22),
+            ),
+            Text(
+              "- One uppercase letter",
+              style: TextStyle(color: Colors.white, fontSize: 22),
+            ),
+            Text(
+              "- One number or symbol",
+              style: TextStyle(color: Colors.white, fontSize: 22),
+            ),
+            Text(
+              "- No spaces",
+              style: TextStyle(color: Colors.white, fontSize: 22),
+            ),
           ],
         ),
       ),
@@ -152,9 +166,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           color: Color(0xFF3D7C91),
                         ),
                       ),
-                      const CustomReturnArrow(
-                        targetPage: WelcomeScreen(),
-                      ),
+                      const CustomReturnArrow(targetPage: WelcomeScreen()),
 
                       const Center(
                         child: Text(
@@ -198,15 +210,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         "Username",
                         onInfoTap: _showNameRules,
                       ),
-                      _buildInput(
-                        onSaved: (v) => username = v!,
-                      ),
+                      _buildInput(onSaved: (v) => username = v!),
 
                       const SizedBox(height: 20),
 
                       _buildLabel("Password"),
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(60), // نعومة الأطراف
+                        borderRadius: BorderRadius.circular(
+                          60,
+                        ), // نعومة الأطراف
                         child: Stack(
                           alignment: Alignment.centerRight,
                           children: [
@@ -215,7 +227,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               obscureText: _obscurePassword,
                               onChanged: (_) => _checkPasswords(),
                               validator: (v) =>
-                              v!.isEmpty ? 'Field is required' : null,
+                                  v!.isEmpty ? 'Field is required' : null,
                               onSaved: (v) => password = v!,
                               decoration: InputDecoration(
                                 filled: true,
@@ -259,8 +271,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
 
-
-
                       const SizedBox(height: 20),
 
                       _buildLabel("Confirm Password"),
@@ -271,11 +281,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           obscureText: _obscureConfirm,
                           onChanged: (_) => _checkPasswords(),
                           validator: (v) =>
-                          v!.isEmpty ? 'Field is required' : null,
+                              v!.isEmpty ? 'Field is required' : null,
                           decoration: _inputDecoration(),
                         ),
                       ),
-
 
                       const SizedBox(height: 40),
 
@@ -304,11 +313,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               context
                                   .read<SignUpCubit>()
                                   .createUserWithEmailAndPassword(
-                                email: email,
-                                password: password,
-                                name: name,
-                                username: username,
-                              );
+                                    email: email,
+                                    password: password,
+                                    name: name,
+                                    username: username,
+                                  );
                             }
                           },
                           child: const Text(
@@ -365,8 +374,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget _buildLabelWithInfo(String text,
-      {required VoidCallback onInfoTap}) {
+  Widget _buildLabelWithInfo(String text, {required VoidCallback onInfoTap}) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -374,14 +382,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         const SizedBox(width: 6),
         GestureDetector(
           onTap: onInfoTap,
-          child: const Icon(
-            Icons.info_outline,
-            color: Color(0xff2F7898),
-          ),
+          child: const Icon(Icons.info_outline, color: Color(0xff2F7898)),
         ),
       ],
     );
   }
+
   Widget _buildInput({
     TextEditingController? controller,
     required void Function(String?) onSaved,
@@ -397,7 +403,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-
   InputDecoration _inputDecoration() {
     return InputDecoration(
       filled: true,
@@ -407,11 +412,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       focusedBorder: InputBorder.none,
       errorBorder: InputBorder.none,
       focusedErrorBorder: InputBorder.none,
-      contentPadding:
-      const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
     );
   }
-
-
-
 }

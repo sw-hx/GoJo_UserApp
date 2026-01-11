@@ -12,7 +12,7 @@ import 'home_page.dart';
 
 /// coded by [suhaib]
 class EventsPage extends StatefulWidget {
-  EventsPage({super.key});
+  const EventsPage({super.key});
 
   @override
   State<EventsPage> createState() => _EventsPageState();
@@ -25,19 +25,16 @@ class _EventsPageState extends State<EventsPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          EventCubit(
-            eventRepo: getIt<EventRepo>(),
-          )..getEvents(),
+          EventCubit(eventRepo: getIt<EventRepo>())..getEvents(),
       child: BlocConsumer<EventCubit, EventState>(
         listener: (context, state) {
-          if(state is EventSuccess){
-            events = state.events as List<EventModel>;
+          if (state is EventSuccess) {
+            events = state.events;
             setState(() {});
           }
-          if(state is EventError){
+          if (state is EventError) {
             SnackBar(content: Text(state.message));
           }
-
         },
         builder: (context, state) {
           return Scaffold(
@@ -109,5 +106,4 @@ class Event {
     required this.description,
     required this.image,
   });
-
 }

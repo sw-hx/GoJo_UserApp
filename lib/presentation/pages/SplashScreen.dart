@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _navigate() {
-    Timer(const Duration(milliseconds: 3800), () async {
+    Timer(const Duration(milliseconds: 3110), () async {
       final String? token = await getSavedToken();
 
       if (!mounted) return;

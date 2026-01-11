@@ -16,7 +16,7 @@ class EventRepoImpl implements EventRepo {
       );
       return (response as List).map((e) => EventModel.fromJson(e)).toList();
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 }

@@ -1,43 +1,41 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-
 class FirebaseAuthService {
-
-
-  Future<User> createUserWithEmailAndPassword({required String email, required String password}) async {
+  Future<User> createUserWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
     try {
       final credential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+          .createUserWithEmailAndPassword(email: email, password: password);
       return credential.user!;
     } on FirebaseAuthException catch (e) {
       log(
-          'error in create user with email and password (firebase_auth_service) ${e
-              .toString()}');
+        'error in create user with email and password (firebase_auth_service) ${e.toString()}',
+      );
       if (e.code == 'weak-password') {
         throw Exception('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
         throw Exception('The account already exists for that email.');
-      }
-      else {
+      } else {
         throw Exception(e.toString());
       }
     } catch (e) {
       log(
-          'error in create user with email and password (firebase_auth_service) ${e
-              .toString()}');
+        'error in create user with email and password (firebase_auth_service) ${e.toString()}',
+      );
       throw Exception(e.toString());
     }
   }
 
-  Future<User> signInWithEmailAndPassword({required String email, required String password}) async {
+  Future<User> signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
@@ -45,17 +43,18 @@ class FirebaseAuthService {
       );
       return credential.user!;
     } on FirebaseAuthException catch (e) {
-      log('error in sign in with email and password (firebase_auth_service) ${e
-          .toString()}');
+      log(
+        'error in sign in with email and password (firebase_auth_service) ${e.toString()}',
+      );
       if (e.code == 'invalid-credential') {
         throw Exception('Email or password is incorrect');
-      }
-      else {
+      } else {
         throw Exception(e.code);
       }
     } catch (e) {
-      log('error in sign in with email and password (firebase_auth_service) ${e
-          .toString()}');
+      log(
+        'error in sign in with email and password (firebase_auth_service) ${e.toString()}',
+      );
       throw Exception(e.toString());
     }
   }
@@ -65,7 +64,8 @@ class FirebaseAuthService {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
 
     // Create a new credential
     final credential = GoogleAuthProvider.credential(
@@ -79,7 +79,6 @@ class FirebaseAuthService {
 
   Future<User?> signInWithFacebook() async {
     try {
-
       final LoginResult loginResult = await FacebookAuth.instance.login(
         permissions: ['public_profile', 'email'],
       );
@@ -91,14 +90,12 @@ class FirebaseAuthService {
             throw Exception("There is no access token from facebook");
           }
 
-
-          final OAuthCredential credential =
-          FacebookAuthProvider.credential(accessToken.tokenString);
-
+          final OAuthCredential credential = FacebookAuthProvider.credential(
+            accessToken.tokenString,
+          );
 
           UserCredential userCredential = await FirebaseAuth.instance
               .signInWithCredential(credential);
-
 
           print("✅ Facebook Email: ${userCredential.user?.email}");
 
@@ -118,16 +115,11 @@ class FirebaseAuthService {
     }
   }
 
-
-
-  Future deleteUser() async{
-
+  Future deleteUser() async {
     await FirebaseAuth.instance.currentUser!.delete();
   }
 
-  bool isLoggedIn(){
+  bool isLoggedIn() {
     return FirebaseAuth.instance.currentUser != null;
   }
-
-
 }

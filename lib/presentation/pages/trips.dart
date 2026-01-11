@@ -4,10 +4,15 @@ import 'package:go_jo_user_application/core/helpers/helpers.dart';
 import 'package:go_jo_user_application/data/models/trip_model.dart';
 import 'package:go_jo_user_application/presentation/cubits/trip_cubit/get_trips_by_place_id_cubit.dart';
 import 'package:intl/intl.dart';
+import '../../domain/repos/checkout_repo.dart';
+import '../../domain/repos/trip_repo.dart';
+import '../../services/git_it_service.dart';
 import '../common_components/custom_returnArrow.dart';
 import '../common_components/bottom_nav_bar.dart';
 import '../components/components_Trips/sort_button.dart';
 import '../components/components_Trips/trip_card.dart';
+import '../cubits/payment_cubits/checkout_cubit/checkout_cubit.dart';
+import '../cubits/user_book_trip_cubit/user_book_trip_cubit.dart';
 import 'booking_page.dart';
 import 'place_info_screen.dart';
 
@@ -54,9 +59,9 @@ class _TripsCardPageState extends State<TripsCardPage> {
 
         if (state is GetTripsByPlaceIdFailure) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
           });
         }
 
@@ -83,18 +88,12 @@ class _TripsCardPageState extends State<TripsCardPage> {
 
                   const Text(
                     "Your journey starts here",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFF11324D),
-                    ),
+                    style: TextStyle(fontSize: 16, color: Color(0xFF11324D)),
                   ),
 
                   const SizedBox(height: 20),
 
-                  SortButton(
-                    selectedSort: sortType,
-                    onSelect: sortTrips,
-                  ),
+                  SortButton(selectedSort: sortType, onSelect: sortTrips),
 
                   const SizedBox(height: 20),
 
@@ -112,7 +111,9 @@ class _TripsCardPageState extends State<TripsCardPage> {
                               Container(
                                 padding: const EdgeInsets.all(24),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF11324D).withOpacity(0.08),
+                                  color: const Color(
+                                    0xFF11324D,
+                                  ).withOpacity(0.08),
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Icon(
@@ -149,24 +150,42 @@ class _TripsCardPageState extends State<TripsCardPage> {
                       ),
 
                   Column(
-                      children: trips.map((trip) {
-                        final launch = _date(trip);
-                        final returnTime = DateTime.parse(
-                          "${trip.returnDate ?? "2000-01-01"} ${trip.returnHour ?? "00:00:00"}",
-                        );
+                    children: trips.map((trip) {
+                      final launch = _date(trip);
+                      final returnTime = DateTime.parse(
+                        "${trip.returnDate ?? "2000-01-01"} ${trip.returnHour ?? "00:00:00"}",
+                      );
 
-                        return TripCard(
-                          trip: trip,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => BookingPage(
+                      return TripCard(
+                        trip: trip,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => MultiBlocProvider(
+                                providers: [
+                                  BlocProvider(
+                                    create: (context) => CheckoutCubit(
+                                      checkoutRepo: getIt.get<CheckoutRepo>(),
+                                    ),
+                                  ),
+                                  BlocProvider(
+                                     create: (context) =>
+                                       UserBookTripCubit(
+                                          tripRepo: getIt<TripRepo>(),
+                                  ),
+                                  )
+                                ],
+                                child: BookingPage(
                                   tripId: trip.tripId!,
                                   companyName: formatName(trip.companyOwnTrip),
                                   rating: 4,
-                                  launchDate: DateFormat('yyyy/MM/dd - h:mm a').format(launch),
-                                  returnDate: DateFormat('yyyy/MM/dd - h:mm a').format(returnTime),
+                                  launchDate: DateFormat(
+                                    'yyyy/MM/dd - h:mm a',
+                                  ).format(launch),
+                                  returnDate: DateFormat(
+                                    'yyyy/MM/dd - h:mm a',
+                                  ).format(returnTime),
                                   fromLocation: formatName(trip.tripLunchPlace),
                                   toLocation: formatName(trip.placeName),
                                   contactNumber: trip.contactPhoneNumber ?? "",
@@ -179,14 +198,16 @@ class _TripsCardPageState extends State<TripsCardPage> {
                                   ],
                                   price: trip.price ?? 0,
                                   location: trip.tripLunchLocation,
-                                  showBookNow: !(trip.isUserBookedTrip ?? false),
+                                  showBookNow:
+                                      !(trip.isUserBookedTrip ?? false),
                                 ),
                               ),
-                            );
-                          },
-                        );
-                      }).toList(),
-                    ),
+                            ),
+                          );
+                        },
+                      );
+                    }).toList(),
+                  ),
                 ],
               ),
             ),
