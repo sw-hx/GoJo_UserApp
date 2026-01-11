@@ -2,7 +2,6 @@
 
 ![Flutter](https://img.shields.io/badge/built%20with-Flutter-blue)
 ![Dart](https://img.shields.io/badge/lang-Dart-blue)
-![License](https://img.shields.io/badge/license-MIT-yellow)
 
 A cross-platform **Flutter application** for GoJo users that interacts with the **GoJo Backend**.  
 This app allows users to browse places, view details, check weather info, submit reviews, and interact with other GoJo features.  
