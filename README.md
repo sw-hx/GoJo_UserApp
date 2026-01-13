@@ -17,7 +17,9 @@ It provides the **mobile user experience** for the GoJo platform and communicate
 - Places and tourism destinations  
 - Weather forecasts  
 - User profiles and favorites  
-- Reviews and ratings  
+- Reviews and ratings
+- Other users feedback
+- Open support tickets with screenshots (For example: bug reports, help requests, and feedback)
 - Authentication
 - and more !
 
